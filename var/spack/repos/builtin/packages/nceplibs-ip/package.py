@@ -18,5 +18,5 @@ class NceplibsIp(CMakePackage):
 
     version('3.3.3', sha256='d5a569ca7c8225a3ade64ef5cd68f3319bcd11f6f86eb3dba901d93842eb3633')
 
-    # depends_on('foo')
+    depends_on('nceplibs-sp')
 
