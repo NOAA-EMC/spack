@@ -25,7 +25,8 @@ from spack import *
 
 class Nemsio(CMakePackage):
     """
-    Performs I/O for the NCEP models using NEMS. 
+    Performs I/O for the NCEP models using NEMS.
+    This is part of the NCEPLIBS project. 
     """
 
     # FIXME: Add a proper url for your package's homepage here.
@@ -38,7 +39,3 @@ class Nemsio(CMakePackage):
 
     depends_on('w3nco')
     depends_on('bacio')
-
-    def cmake_args(self):
-        args = []
-        return args

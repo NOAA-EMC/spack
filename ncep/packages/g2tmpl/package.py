@@ -35,7 +35,3 @@ class G2tmpl(CMakePackage):
 
     version('1.10.0', sha256='dcc0e40b8952f91d518c59df7af64e099131c17d85d910075bfa474c8822649d')
     version('1.9.1',  sha256='237e8da0add8e0392ad55b2a058b6307ff23c3dee7f5e356b261a10c0afc6823')
-
-    def cmake_args(self):
-        args = []
-        return args

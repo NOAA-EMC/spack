@@ -40,7 +40,3 @@ class G2(CMakePackage):
 
     depends_on('jasper')
     depends_on('libpng')
-
-    def cmake_args(self):
-        args = []
-        return args
