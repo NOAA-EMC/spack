@@ -26,9 +26,8 @@ from spack import *
 class Jasper(CMakePackage):
     """
     JasPer is a software toolkit for the handling of image data. The software provides a means for representing images, and facilitates
-    the manipulation of image data, as well as the import/export of such
-    data in numerous formats (e.g., JPEG-2000 JP2, JPEG, PNM, BMP, Sun
-    Rasterfile, and PGX).
+    the manipulation of image data, as well as the import/export of such data in numerous formats 
+    (e.g., JPEG-2000 JP2, JPEG, PNM, BMP, Sun Rasterfile, and PGX).
     """
 
     homepage = "https://jasper-software.github.io/jasper/"

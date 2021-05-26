@@ -37,5 +37,6 @@ class Nemsio(CMakePackage):
 
     version('2.5.2', sha256='c59e9379969690de8d030cbf4bbbbe3726faf13c304f3b88b0f6aec1496d2c08')
 
+    depends_on('mpi')
     depends_on('w3nco')
     depends_on('bacio')
