@@ -12,6 +12,7 @@ class Jasper(Package):
     homepage = "https://www.ece.uvic.ca/~frodo/jasper/"
     url      = "https://github.com/mdadams/jasper/archive/version-2.0.16.tar.gz"
 
+    version('2.0.25', sha256='f5bc48e2884bcabd2aca1737baff4ca962ec665b6eb673966ced1f7adea07edb')
     version('2.0.16',  sha256='f1d8b90f231184d99968f361884e2054a1714fdbbd9944ba1ae4ebdcc9bbfdb1')
     version('2.0.14',  sha256='85266eea728f8b14365db9eaf1edc7be4c348704e562bb05095b9a077cf1a97b')
     version('1.900.1', sha256='c2b03f28166f9dc8ae434918839ae9aa9962b880fcfd24eebddd0a2daeb9192c')
