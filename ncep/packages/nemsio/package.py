@@ -38,6 +38,7 @@ class Nemsio(CMakePackage):
 
     depends_on('w3nco')
     depends_on('bacio')
+    depends_on('mpi')
 
     def cmake_args(self):
         args = []
