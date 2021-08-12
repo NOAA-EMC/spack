@@ -32,7 +32,7 @@ class Jasper(CMakePackage):
 
     maintainers = ['kgerheiser', 'edwardhartnett', 'Hang-Lei-NOAA']
 
-    version('2.0.32', sha256='19ece30c1f94a44b3deda62f0ffbc7f8e81458b709640b80365234979c538068')
+    version('2.0.32', sha256='a3583a06698a6d6106f2fc413aa42d65d86bedf9a988d60e5cfa38bf72bc64b9')
     version('2.0.31', sha256='d419baa2f8a6ffda18472487f6314f0f08b673204723bf11c3a1f5b3f1b8e768')
     version('2.0.29', sha256='89a0c02df996090e07ff512002d534a1d56a567be7a6422fc6fc6ba79bd500e7')
     version('2.0.28', sha256='6b4e5f682be0ab1a5acb0eeb6bf41d6ce17a658bb8e2dbda95de40100939cc88')
