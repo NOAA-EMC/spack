@@ -70,6 +70,9 @@ class Esmf(MakefilePackage):
         chmod = which('chmod')
         chmod('+x', 'scripts/libs.mvapich2f90')
 
+    def setup_dependent_build_environment(self, env, dependent_spec):
+        env.set('ESMFMKFILE', join_path(self.prefix.lib, 'esmf.mk'))
+
     def url_for_version(self, version):
         if version < Version('8.0.0'):
             return "http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_{0}/esmf_{0}_src.tar.gz".format(version.underscored)
