@@ -1,0 +1,17 @@
+packages:
+  mpi:
+    buildable: False
+
+  python:
+    buildable: False
+
+  intel-mpi:
+    externals:
+      - spec: "intel-mpi@2018.4"
+        modules:
+          - impi/2018.4
+
+  all:
+    compiler: [intel@18.0.5]
+    providers:
+      mpi: [intel-mpi]
