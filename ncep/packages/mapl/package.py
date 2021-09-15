@@ -59,8 +59,9 @@ class Mapl(CMakePackage):
             self.define_from_variant('BUILD_WITH_PFLOGGER', 'pflogger'),
             self.define_from_variant('ESMA_USE_GFE_NAMESPACE', 'esma_gfe_namespace'),
             self.define_from_variant('BUILD_SHARED_MAPL', 'shared'),
-            '-DCMAKE_MODULE_PATH={pwd}/ESMA_cmake;{pwd}/CMakeModules/Modules;{ecbuild_prefix}/share/ecbuild/cmake'.format(pwd=dir,
-                                                                                                                          ecbuild_prefix=ecbuild_prefix),
+            '-DCMAKE_MODULE_PATH={pwd}/ESMA_cmake;{pwd}/CMakeModules/Modules;' +
+            '{ecbuild_prefix}/share/ecbuild/cmake'.format(pwd=dir,
+                                                          ecbuild_prefix=ecbuild_prefix),
             '-DCMAKE_Fortran_FLAGS=-ffree-line-length-none'
         ]
 
