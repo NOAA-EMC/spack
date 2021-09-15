@@ -34,4 +34,3 @@ class Gfsio(CMakePackage):
 
     version('1.4.1', sha256='eab106302f520600decc4f9665d7c6a55e7b4901fab6d9ef40f29702b89b69b1')
     version('1.4.0', sha256='f9a605e5a8b1570b0f1cfb79c9a632386a5bb985f3783edbbd42fdbc2dc9c0c4')
-    
