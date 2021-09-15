@@ -19,4 +19,3 @@ class Bufr(CMakePackage):
     maintainers = ['edwardhartnett', 'kgerheiser', 'Hang-Lei-NOAA']
 
     version('11.5.0', sha256='d154839e29ef1fe82e58cf20232e9f8a4f0610f0e8b6a394b7ca052e58f97f43')
-

@@ -24,10 +24,11 @@ from spack import *
 
 
 class Cdo(AutotoolsPackage):
-    """
-    CDO is a collection of command line Operators to manipulate and analyse Climate and NWP model Data.
-    Supported data formats are GRIB 1/2, netCDF 3/4, SERVICE, EXTRA and IEG. 
-    There are more than 600 operators available.
+    """CDO is a collection of command line Operators to manipulate and
+    analyse Climate and NWP model Data.  Supported data formats are
+    GRIB 1/2, netCDF 3/4, SERVICE, EXTRA and IEG.  There are more than
+    600 operators available.
+
     """
 
     # FIXME: Add a proper url for your package's homepage here.
