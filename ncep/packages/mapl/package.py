@@ -54,7 +54,8 @@ class Mapl(CMakePackage):
     def cmake_args(self):
         dir = os.getcwd()
         ecbuild_prefix = self.spec["ecbuild"].prefix
-        long_arg = '-DCMAKE_MODULE_PATH={pwd}/ESMA_cmake;{pwd}/CMakeModules/Modules;{ecbuild_prefix}/share/ecbuild/cmake'
+        long_arg = '-DCMAKE_MODULE_PATH={pwd}/ESMA_cmake;{pwd}/CMakeModules/Modules;' +
+        '{ecbuild_prefix}/share/ecbuild/cmake'
         args = [
             self.define_from_variant('BUILD_WITH_FLAP', 'flap'),
             self.define_from_variant('BUILD_WITH_PFLOGGER', 'pflogger'),
