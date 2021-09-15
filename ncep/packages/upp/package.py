@@ -47,7 +47,7 @@ class Upp(CMakePackage):
 
     variant('openmp', default=True)
     variant('postexec', default=True)
-    variant('wrf_io', default=False)
+    variant('wrf-io', default=False)
     variant('docs', default=False)
 
     depends_on('mpi')
@@ -63,14 +63,14 @@ class Upp(CMakePackage):
     depends_on('sigio', when='+postexec')
     depends_on('sp', when='+postexec')
     depends_on('w3nco', when='+postexec')
-    depends_on('wrf_io', when='+wrf_io')
+    depends_on('wrf-io', when='+wrf-io')
     depends_on('doxygen', when='+docs')
 
     def cmake_args(self):
         args = [
             self.define_from_variant('OPENMP', 'openmp'),
             self.define_from_variant('BUILD_POSTEXEC', 'postexec'),
-            self.define_from_variant('BUILD_WITH_WRFIO', 'wrf_io'),
+            self.define_from_variant('BUILD_WITH_WRFIO', 'wrf-io'),
             self.define_from_variant('ENABLE_DOCS', 'docs')
         ]
 
