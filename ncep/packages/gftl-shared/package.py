@@ -20,7 +20,7 @@ class GftlShared(CMakePackage):
 
     version('1.3.0', tag='v1.3.0', submodules=True)
     version('1.2.0', tag='v1.2.0', submodules=True)
-    
+
     def cmake_args(self):
         args = []
         return args
