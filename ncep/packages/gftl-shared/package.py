@@ -5,9 +5,12 @@
 
 from spack import *
 
+
 class GftlShared(CMakePackage):
     """
-    Provides common gFTL containers of Fortran intrinsic types that are encountered frequently.
+    Provides common gFTL containers of Fortran intrinsic types that
+    are encountered frequently.
+
     """
 
     homepage = "https://github.com/Goddard-Fortran-Ecosystem/gFTL-shared"

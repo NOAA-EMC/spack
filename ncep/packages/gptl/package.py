@@ -25,7 +25,9 @@ from spack import *
 
 class Gptl(AutotoolsPackage):
     """
-    GPTL is a library to instrument C, C++, and Fortran codes for performance analysis and profiling. 
+    GPTL is a library to instrument C, C++, and Fortran codes for
+    performance analysis and profiling.
+
     """
 
     # FIXME: Add a proper url for your package's homepage here.
@@ -39,7 +41,6 @@ class Gptl(AutotoolsPackage):
     variant('papi', default=False)
     variant('nestedomp', default=False)
     variant('disable-unwind', default=False)
-    
 
     depends_on('mpi')
 

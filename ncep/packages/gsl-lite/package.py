@@ -53,9 +53,13 @@ class GslLite(CMakePackage):
             self.define_from_variant('GSL_LITE_OPT_BUILD_TESTS', 'tests'),
             self.define_from_variant('GSL_LITE_OPT_BUILD_CUDA_TESTS', 'cuda_tests'),
             self.define_from_variant('GSL_LITE_OPT_BUILD_EXAMPLES', 'examples'),
-            self.define_from_variant('GSL_LITE_LOPT_BUILD_STATIC_ANALYSIS_DEMOS', 'static_analysis_demos'),
-            self.define_from_variant('CMAKE_EXPORT_PACKAGE_REGISTRY', 'cmake_export_package_registry'),
-            self.define_from_variant('GSL_LITE_OPT_INSTALL_COMPAT_HEADER', 'compat_header'),
-            self.define_from_variant('GSL_LITE_OPT_INSTALL_LEGACY_HEADERS', 'legacy_headers')
+            self.define_from_variant('GSL_LITE_LOPT_BUILD_STATIC_ANALYSIS_DEMOS',
+                                     'static_analysis_demos'),
+            self.define_from_variant('CMAKE_EXPORT_PACKAGE_REGISTRY',
+                                     'cmake_export_package_registry'),
+            self.define_from_variant('GSL_LITE_OPT_INSTALL_COMPAT_HEADER',
+                                     'compat_header'),
+            self.define_from_variant('GSL_LITE_OPT_INSTALL_LEGACY_HEADERS',
+                                     'legacy_headers')
         ]
         return args

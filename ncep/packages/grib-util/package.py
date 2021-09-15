@@ -25,14 +25,16 @@ from spack import *
 
 class GribUtil(CMakePackage):
     """
-    This is a collection of NCEP GRIB related utilities. This is related to the NCEPLIBS project.
+    This is a collection of NCEP GRIB related utilities. This is
+    related to the NCEPLIBS project.
+
     """
 
     homepage = "https://github.com/NOAA-EMC/NCEPLIBS-grib_util"
     url      = "https://github.com/NOAA-EMC/NCEPLIBS-grib_util/archive/refs/tags/v1.2.2.tar.gz"
 
     maintainers = ['kgerheiser', 'Hang-Lei-NOAA', 'edwardhartnett']
-    
+
     version('1.2.2', sha256='fe9200b715de3ea2cc7007b2b09cd908e67c275cf0053caf5de848c426b8bae4')
 
     variant('openmp', default=False, description='Use OpenMP multithreading')

@@ -25,7 +25,9 @@ from spack import *
 
 class Gfsio(CMakePackage):
     """
-    API to convert GFS Gaussian output into grib output. This is part of the NCEPLIBS project.
+    API to convert GFS Gaussian output into grib output. This is part
+    of the NCEPLIBS project.
+
     """
     homepage = "https://github.com/NOAA-EMC/NCEPLIBS-gfsio"
     url      = "https://github.com/NOAA-EMC/NCEPLIBS-gfsio/archive/refs/tags/v1.4.1.tar.gz"
