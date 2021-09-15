@@ -22,7 +22,7 @@ class Parallelio(CMakePackage):
     version('2_5_0', sha256='685cfe16d5d308b65e86242bcb8acafdfabd1bf4bff964789745c79caea9dca1')
 
     variant('pnetcdf', default=False, description='enable pnetcdf')
-
+    
     depends_on('mpi')
     depends_on('netcdf-c +mpi', type='link')
     depends_on('netcdf-fortran', type='link')
