@@ -29,7 +29,7 @@ class Acts(CMakePackage, CudaPackage):
     propagation and fitting, basic seed finding algorithms.
     """
 
-    homepage = "http://acts.web.cern.ch/ACTS/"
+    homepage = "https://acts.web.cern.ch/ACTS/"
     git      = "https://github.com/acts-project/acts.git"
     maintainers = ['HadrienG2']
 
@@ -38,6 +38,15 @@ class Acts(CMakePackage, CudaPackage):
     # Supported Acts versions
     version('main', branch='main')
     version('master', branch='main', deprecated=True)  # For compatibility
+    version('12.0.1', commit='a80d1ef995d8cdd4190cc09cb249276a3e0161f4', submodules=True)
+    version('12.0.0', commit='e0aa4e7dcb70df025576e050b6e652a2f736454a', submodules=True)
+    version('11.0.0', commit='eac3def261f65b343af6d8ce4bc40443ac57b57e')
+    version('10.0.0', commit='9bfe0b83f277f686408b896a84d2b9b53610f623')
+    version('9.02.0', commit='c438ee490e94eaf1c854a336ef54f398da637a48')
+    version('9.01.0', commit='bf8fd4c03dd94f497d8501df510d8f6a48434afd')
+    version('9.00.1', commit='7d59bc508d898d2cb67ba05a7150a978b9fcc32d')
+    version('9.00.0', commit='e6e3092bf3a9411aac7c11a24d7586abddb75d59')
+    version('8.03.0', commit='601c0a18b6738cae81c3e23422cfeb3ec7bddce9')
     version('8.02.0', commit='f25cf639915fc2ac65b03882ad3eb11fb037ed00')
     version('8.01.0', commit='ccc8c77bbc011f3adc020c565a509815be0ea029')
     version('8.00.0', commit='50c972823144c007b406ae12d7ca25a1e0c35532')

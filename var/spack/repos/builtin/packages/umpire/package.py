@@ -7,6 +7,8 @@ import os
 
 import llnl.util.tty as tty
 
+from spack import *
+
 
 class Umpire(CMakePackage, CudaPackage, ROCmPackage):
     """An application-focused API for memory management on NUMA & GPU
@@ -17,35 +19,39 @@ class Umpire(CMakePackage, CudaPackage, ROCmPackage):
 
     maintainers = ['davidbeckingsale']
 
-    version('develop', branch='develop', submodules='True')
-    version('main', branch='main', submodules='True')
-    version('4.1.2', tag='v4.1.2', submodules='True')
-    version('4.1.1', tag='v4.1.1', submodules='True')
-    version('4.1.0', tag='v4.1.0', submodules='True')
-    version('4.0.1', tag='v4.0.1', submodules='True')
-    version('4.0.0', tag='v4.0.0', submodules='True')
-    version('3.0.0', tag='v3.0.0', submodules='True')
-    version('2.1.0', tag='v2.1.0', submodules='True')
-    version('2.0.0', tag='v2.0.0', submodules='True')
-    version('1.1.0', tag='v1.1.0', submodules='True')
-    version('1.0.1', tag='v1.0.1', submodules='True')
-    version('1.0.0', tag='v1.0.0', submodules='True')
-    version('0.3.5', tag='v0.3.5', submodules='True')
-    version('0.3.4', tag='v0.3.4', submodules='True')
-    version('0.3.3', tag='v0.3.3', submodules='True')
-    version('0.3.2', tag='v0.3.2', submodules='True')
-    version('0.3.1', tag='v0.3.1', submodules='True')
-    version('0.3.0', tag='v0.3.0', submodules='True')
-    version('0.2.4', tag='v0.2.4', submodules='True')
-    version('0.2.3', tag='v0.2.3', submodules='True')
-    version('0.2.2', tag='v0.2.2', submodules='True')
-    version('0.2.1', tag='v0.2.1', submodules='True')
-    version('0.2.0', tag='v0.2.0', submodules='True')
-    version('0.1.4', tag='v0.1.4', submodules='True')
-    version('0.1.3', tag='v0.1.3', submodules='True')
+    version('develop', branch='develop', submodules=True)
+    version('main', branch='main', submodules=True)
+    version('6.0.0', tag='v6.0.0', submodules=True)
+    version('5.0.1', tag='v5.0.1', submodules=True)
+    version('5.0.0', tag='v5.0.0', submodules=True)
+    version('4.1.2', tag='v4.1.2', submodules=True)
+    version('4.1.1', tag='v4.1.1', submodules=True)
+    version('4.1.0', tag='v4.1.0', submodules=True)
+    version('4.0.1', tag='v4.0.1', submodules=True)
+    version('4.0.0', tag='v4.0.0', submodules=True)
+    version('3.0.0', tag='v3.0.0', submodules=True)
+    version('2.1.0', tag='v2.1.0', submodules=True)
+    version('2.0.0', tag='v2.0.0', submodules=True)
+    version('1.1.0', tag='v1.1.0', submodules=True)
+    version('1.0.1', tag='v1.0.1', submodules=True)
+    version('1.0.0', tag='v1.0.0', submodules=True)
+    version('0.3.5', tag='v0.3.5', submodules=True)
+    version('0.3.4', tag='v0.3.4', submodules=True)
+    version('0.3.3', tag='v0.3.3', submodules=True)
+    version('0.3.2', tag='v0.3.2', submodules=True)
+    version('0.3.1', tag='v0.3.1', submodules=True)
+    version('0.3.0', tag='v0.3.0', submodules=True)
+    version('0.2.4', tag='v0.2.4', submodules=True)
+    version('0.2.3', tag='v0.2.3', submodules=True)
+    version('0.2.2', tag='v0.2.2', submodules=True)
+    version('0.2.1', tag='v0.2.1', submodules=True)
+    version('0.2.0', tag='v0.2.0', submodules=True)
+    version('0.1.4', tag='v0.1.4', submodules=True)
+    version('0.1.3', tag='v0.1.3', submodules=True)
 
     patch('camp_target_umpire_3.0.0.patch', when='@3.0.0')
-    patch('cmake_version_check.patch', when='@4.1.0:main')
+    patch('cmake_version_check.patch', when='@4.1')
+    patch('missing_header_for_numeric_limits.patch', when='@4.1:5.0.1')
 
     variant('fortran', default=False, description='Build C/Fortran API')
     variant('c', default=True, description='Build C API')
@@ -61,16 +67,26 @@ class Umpire(CMakePackage, CudaPackage, ROCmPackage):
     depends_on('cmake@3.8:', type='build')
     depends_on('cmake@3.9:', when='+cuda', type='build')
 
-    depends_on('blt@0.4.0:', type='build', when='@4.1.3:')
-    depends_on('blt@:0.3.6', type='build', when='@:4.1.2')
+    depends_on('blt@0.4.1:', type='build', when='@6.0.0:')
+    depends_on('blt@0.4.0:', type='build', when='@4.1.3:5.0.1')
+    depends_on('blt@0.3.6:', type='build', when='@:4.1.2')
 
-    # variants +rocm and amdgpu_targets are not automatically passed to
-    # dependencies, so do it manually.
-    depends_on('camp+rocm', when='+rocm')
-    for val in ROCmPackage.amdgpu_targets:
-        depends_on('camp amdgpu_target=%s' % val, when='amdgpu_target=%s' % val)
+    depends_on('camp', when='@5.0.0:')
+    depends_on('camp@0.2.2', when='@6.0.0:')
+    depends_on('camp@0.1.0', when='@5.0.0:5.0.1')
 
-    depends_on('camp')
+    with when('@5.0.0:'):
+        with when('+cuda'):
+            depends_on('camp+cuda')
+            for sm_ in CudaPackage.cuda_arch_values:
+                depends_on('camp+cuda cuda_arch={0}'.format(sm_),
+                           when='cuda_arch={0}'.format(sm_))
+
+        with when('+rocm'):
+            depends_on('camp+rocm')
+            for arch_ in ROCmPackage.amdgpu_targets:
+                depends_on('camp+rocm amdgpu_target={0}'.format(arch_),
+                           when='amdgpu_target={0}'.format(arch_))
 
     conflicts('+numa', when='@:0.3.2')
     conflicts('~c', when='+fortran', msg='Fortran API requires C API')
@@ -84,7 +100,8 @@ class Umpire(CMakePackage, CudaPackage, ROCmPackage):
 
         options = []
         options.append("-DBLT_SOURCE_DIR={0}".format(spec['blt'].prefix))
-        options.append("-Dcamp_DIR={0}".format(spec['camp'].prefix))
+        if spec.satisfies('@5.0.0:'):
+            options.append("-Dcamp_DIR={0}".format(spec['camp'].prefix))
 
         if '+cuda' in spec:
             options.extend([
@@ -94,6 +111,7 @@ class Umpire(CMakePackage, CudaPackage, ROCmPackage):
             if not spec.satisfies('cuda_arch=none'):
                 cuda_arch = spec.variants['cuda_arch'].value
                 options.append('-DCUDA_ARCH=sm_{0}'.format(cuda_arch[0]))
+                options.append('-DCMAKE_CUDA_ARCHITECTURES={0}'.format(cuda_arch[0]))
                 flag = '-arch sm_{0}'.format(cuda_arch[0])
                 options.append('-DCMAKE_CUDA_FLAGS:STRING={0}'.format(flag))
 

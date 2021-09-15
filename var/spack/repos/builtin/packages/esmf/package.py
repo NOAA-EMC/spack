@@ -3,8 +3,9 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-from spack import *
 import os
+
+from spack import *
 
 
 class Esmf(MakefilePackage):
@@ -23,7 +24,7 @@ class Esmf(MakefilePackage):
     version('7.1.0r', sha256='ae9a5edb8d40ae97a35cbd4bd00b77061f995c77c43d36334dbb95c18b00a889')
 
     variant('mpi',     default=True,  description='Build with MPI support')
-    variant('lapack',  default=True,  description='Build with LAPACK support')
+    variant('external-lapack', default=False, description='Build with external LAPACK support')
     variant('netcdf',  default=True,  description='Build with NetCDF support')
     variant('pnetcdf', default=True,  description='Build with pNetCDF support')
     variant('xerces',  default=True,  description='Build with Xerces support')
@@ -36,7 +37,7 @@ class Esmf(MakefilePackage):
 
     # Optional dependencies
     depends_on('mpi', when='+mpi')
-    depends_on('lapack@3:', when='+lapack')
+    depends_on('lapack@3:', when='+external-lapack')
     depends_on('netcdf-c@3.6:', when='+netcdf')
     depends_on('netcdf-fortran@3.6:', when='+netcdf')
     depends_on('parallel-netcdf@1.2.0:', when='+pnetcdf')
@@ -178,7 +179,9 @@ class Esmf(MakefilePackage):
                 os.environ['ESMF_CXXLINKLIBS'] = '-lmpifort'
             elif '^openmpi' in spec:
                 os.environ['ESMF_COMM'] = 'openmpi'
-            elif '^intel-parallel-studio+mpi' in spec or '^intel-mpi' in spec:
+            elif '^intel-parallel-studio+mpi' in spec or \
+                 '^intel-mpi' in spec or \
+                 '^intel-oneapi-mpi' in spec:
                 os.environ['ESMF_COMM'] = 'intelmpi'
         else:
             # Force use of the single-processor MPI-bypass library.
@@ -188,7 +191,7 @@ class Esmf(MakefilePackage):
         # LAPACK #
         ##########
 
-        if '+lapack' in spec:
+        if '+external-lapack' in spec:
             # A system-dependent external LAPACK/BLAS installation is used
             # to satisfy the external dependencies of the LAPACK-dependent
             # ESMF code.
@@ -202,8 +205,7 @@ class Esmf(MakefilePackage):
             # to the application.
             os.environ['ESMF_LAPACK_LIBS'] = spec['lapack'].libs.link_flags  # noqa
         else:
-            # Disables LAPACK-dependent code.
-            os.environ['ESMF_LAPACK'] = 'OFF'
+            os.environ['ESMF_LAPACK'] = 'internal'
 
         ##########
         # NetCDF #

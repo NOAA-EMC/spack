@@ -12,7 +12,7 @@ class Gatk(Package):
     Variant Discovery in High-Throughput Sequencing Data
     """
 
-    homepage = "https://software.broadinstitute.org/gatk/"
+    homepage = "https://gatk.broadinstitute.org/hc/en-us"
     url = "https://github.com/broadinstitute/gatk/releases/download/4.1.0.0/gatk-4.1.0.0.zip"
     list_url = "https://github.com/broadinstitute/gatk/releases"
 
@@ -89,9 +89,20 @@ class Gatk(Package):
         url="https://storage.googleapis.com/gatk-software/package-archive/gatk/GenomeAnalysisTK-3.8-0-ge9d806836.tar.bz2"
     )
 
+    # Make r a variant. According to the gatk docs it is not essential and not
+    # tested.
+    # https://github.com/broadinstitute/gatk#R
+    # Using R to generate plots
+    # Certain GATK tools may optionally generate plots using the R installation
+    # provided within the conda environment. If you are uninterested in plotting,
+    # R is still required by several of the unit tests. Plotting is currently
+    # untested and should be viewed as a convenience rather than a primary
+    # output.
+    variant('r', default=False, description='Use R for plotting')
+
     depends_on("java@8", type="run")
     depends_on("python@2.6:2.8,3.6:", type="run", when="@4.0:")
-    depends_on("r@3.2:", type="run", when="@4.0:")
+    depends_on("r@3.2:", type="run", when="@4.0: +r")
 
     def install(self, spec, prefix):
         mkdirp(prefix.bin)
