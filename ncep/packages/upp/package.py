@@ -25,7 +25,10 @@ from spack import *
 
 class Upp(CMakePackage):
     """
-    The Unified Post Processor (UPP) software package is a software package designed to generate useful products from raw model output.
+    The Unified Post Processor (UPP) software package is a software
+    package designed to generate useful products from raw model
+    output.
+
     """
 
     homepage = "https://github.com/NOAA-EMC/EMC_post"
@@ -36,7 +39,7 @@ class Upp(CMakePackage):
     git = "https://github.com/NOAA-EMC/EMC_post.git"
 
     version('10.0.8', tag='upp_v10.0.8', submodules=True)
-    version('10.0.7', tag='upp_v10.0.7', submodules=True)        
+    version('10.0.7', tag='upp_v10.0.7', submodules=True)
     version('10.0.6', tag='upp_v10.0.6', submodules=True)
     version('10.0.5', tag='upp_v10.0.5', submodules=True)
     version('10.0.4', tag='upp_v10.0.4', submodules=True)
@@ -46,7 +49,7 @@ class Upp(CMakePackage):
     variant('postexec', default=True)
     variant('wrf_io', default=False)
     variant('docs', default=False)
-    
+
     depends_on('mpi')
     depends_on('netcdf-fortran')
     depends_on('bacio')
@@ -62,8 +65,6 @@ class Upp(CMakePackage):
     depends_on('w3nco', when='+postexec')
     depends_on('wrf_io', when='+wrf_io')
     depends_on('doxygen', when='+docs')
-               
-    
 
     def cmake_args(self):
         args = [
@@ -72,5 +73,5 @@ class Upp(CMakePackage):
             self.define_from_variant('BUILD_WITH_WRFIO', 'wrf_io'),
             self.define_from_variant('ENABLE_DOCS', 'docs')
         ]
-        
+
         return args

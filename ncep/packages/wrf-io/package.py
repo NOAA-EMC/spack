@@ -24,12 +24,11 @@ from spack import *
 
 
 class WrfIo(CMakePackage):
-    """    
-    This is a lightweight WRF-IO API library for Unified Post Processor (UPP). 
-    It reads wrf forecasts (WRF state plus diagnostics). 
+    """
+    This is a lightweight WRF-IO API library for Unified Post Processor (UPP).
+    It reads wrf forecasts (WRF state plus diagnostics).
     It is based on code copied from https://github.com/wrf-model/WRF/tree/master/external/io_netcdf.
     """
-    
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://github.com/NOAA-EMC/NCEPLIBS-wrf_io"

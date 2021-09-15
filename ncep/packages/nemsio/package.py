@@ -25,7 +25,7 @@ from spack import *
 
 class Nemsio(CMakePackage):
     """
-    Performs I/O for the NCEP models using NEMS. 
+    Performs I/O for the NCEP models using NEMS.
     """
 
     # FIXME: Add a proper url for your package's homepage here.

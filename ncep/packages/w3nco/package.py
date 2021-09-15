@@ -25,7 +25,7 @@ from spack import *
 
 class W3nco(CMakePackage):
     """
-    This library contains Fortran 90 decoder/encoder routines for GRIB edition 1. 
+    This library contains Fortran 90 decoder/encoder routines for GRIB edition 1.
     """
 
     homepage = "https://github.com/NOAA-EMC/NCEPLIBS-w3nco"
@@ -34,4 +34,3 @@ class W3nco(CMakePackage):
     maintainers = ['kgerheiser', 'edwardhartnett', 'Hang-Lei-NOAA']
 
     version('2.4.1', sha256='48b06e0ea21d3d0fd5d5c4e7eb50b081402567c1bff6c4abf4fd4f3669070139')
-

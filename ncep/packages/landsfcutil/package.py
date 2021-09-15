@@ -25,7 +25,9 @@ from spack import *
 
 class Landsfcutil(CMakePackage):
     """
-    Utility routines useful for initializing land-surface states in NCEP models. This is part of the NCEPLIBS project.
+    Utility routines useful for initializing land-surface states in
+    NCEP models. This is part of the NCEPLIBS project.
+
     """
 
     homepage = "https://github.com/NOAA-EMC/NCEPLIBS-landsfcutil"

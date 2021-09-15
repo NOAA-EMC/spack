@@ -25,7 +25,9 @@ from spack import *
 
 class Wgrib2(CMakePackage):
     """
-    Provides functionality for interacting with, reading, writing, and manipulating grib2 files.
+    Provides functionality for interacting with, reading, writing, and
+    manipulating grib2 files.
+
     """
 
     # FIXME: Add a proper url for your package's homepage here.

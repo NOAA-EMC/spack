@@ -9,9 +9,11 @@ from spack import *
 class Yafyaml(CMakePackage):
     """
     yet another Fortran (implementation of) YAML
-    
-    The rationale for this one is simply to be compatible with the containers in gFTL. 
-    It is not intended to be a complete YAML parser, just the subset needed by my own projects.
+
+    The rationale for this one is simply to be compatible with the
+    containers in gFTL.  It is not intended to be a complete YAML
+    parser, just the subset needed by my own projects.
+
     """
 
     homepage = "https://github.com/Goddard-Fortran-Ecosystem/yaFyaml"

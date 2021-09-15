@@ -22,11 +22,11 @@
 
 from spack import *
 
+
 class W3emc(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
+    """GRIB1 libraries."""
 
     homepage = "https://github.com/NOAA-EMC/NCEPLIBS-w3emc"
-    #url      = "https://github.com/NOAA-EMC/NCEPLIBS-w3emc/archive/refs/tags/v2.7.3.tar.gz"
     git = "https://github.com/NOAA-EMC/NCEPLIBS-w3emc.git"
 
     maintainers = ['kgerheiser', 'edwardhartnett', 'Hang-Lei-NOAA']

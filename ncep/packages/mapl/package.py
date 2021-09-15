@@ -6,11 +6,16 @@
 from spack import *
 import os
 
+
 class Mapl(CMakePackage):
     """
-    MAPL is a foundation layer of the GEOS architecture, whose original purpose is to supplement the Earth System Modeling Framework (ESMF). 
-    MAPL fills in missing capabilities of ESMF, provides higher-level interfaces for common boiler-plate logic, 
-    and enforces various componentization conventions across ESMF gridded components within GEOS.
+    MAPL is a foundation layer of the GEOS architecture, whose
+    original purpose is to supplement the Earth System Modeling
+    Framework (ESMF).  MAPL fills in missing capabilities of ESMF,
+    provides higher-level interfaces for common boiler-plate logic,
+    and enforces various componentization conventions across ESMF
+    gridded components within GEOS.
+
     """
 
     homepage = "https://github.com/GEOS-ESM/MAPL"
