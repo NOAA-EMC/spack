@@ -55,7 +55,7 @@ class Wgrib2(CMakePackage):
     variant('shared', default=False)
 
     depends_on('ip2', when='ipolates=3')
-    depends_on('ip', when='ipoldates=1')
+    depends_on('ip', when='ipolates=1')
     depends_on('jasper', when='+jasper')
     depends_on('netcdf-c', when='netcdf4')
     depends_on('libpng', when='+png')
