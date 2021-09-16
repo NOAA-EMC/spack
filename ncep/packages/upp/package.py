@@ -38,6 +38,7 @@ class Upp(CMakePackage):
 
     git = "https://github.com/NOAA-EMC/EMC_post.git"
 
+    version('10.0.9', tag='upp_v10.0.9', submodules=True)
     version('10.0.8', tag='upp_v10.0.8', submodules=True)
     version('10.0.7', tag='upp_v10.0.7', submodules=True)
     version('10.0.6', tag='upp_v10.0.6', submodules=True)
