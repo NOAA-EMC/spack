@@ -16,12 +16,11 @@ class Parallelio(CMakePackage):
 
     maintainers = ['tkameyama']
 
-    version('2_5_4', sha256='34fa8c74bfb316e8cb626a3c02e6bc3b99eb51c0f2d5589776e4c15fdbcf7c68')
-    version('2_5_3', sha256='63ae300d7b2e8790a272d442cb2856ff053810a05a9c37d28228fc4ebde1f5f5')
-    version('2_5_2', sha256='378e6d01dbfb9e99a913be814d3a4f04f93a3bb9f860468ccaf199ed3687acac')
-    version('2_5_0', sha256='685cfe16d5d308b65e86242bcb8acafdfabd1bf4bff964789745c79caea9dca1')
+    version('2_5_4', sha256='e51dc71683da808a714deddc1a80c2650ce847110383e42f1710f3ba567e7a65')
+    version('2_5_2', sha256='935bc120ef3bf4fe09fb8bfdf788d05fb201a125d7346bf6b09e27ac3b5f345c')
 
     variant('pnetcdf', default=False, description='enable pnetcdf')
+
     depends_on('mpi')
     depends_on('netcdf-c +mpi', type='link')
     depends_on('netcdf-fortran', type='link')
