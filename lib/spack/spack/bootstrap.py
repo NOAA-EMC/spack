@@ -182,6 +182,8 @@ class _BuildcacheBootstrapper(object):
         if _try_import_from_store(module, abstract_spec_str):
             return True
 
+        tty.info("Bootstrapping {0} from pre-built binaries".format(module))
+
         # Try to install from an unsigned binary cache
         abstract_spec = spack.spec.Spec(
             abstract_spec_str + ' ^' + spec_for_current_python()
@@ -214,6 +216,10 @@ class _BuildcacheBootstrapper(object):
             # specs that wwe know by dag hash.
             spack.binary_distribution.binary_index.regenerate_spec_cache()
             index = spack.binary_distribution.update_cache_and_get_specs()
+
+            if not index:
+                raise RuntimeError("Could not populate the binary index")
+
             for item in data['verified']:
                 candidate_spec = item['spec']
                 python_spec = item['python']
@@ -271,6 +277,8 @@ class _SourceBootstrapper(object):
         if _try_import_from_store(module, abstract_spec_str):
             return True
 
+        tty.info("Bootstrapping {0} from sources".format(module))
+
         # Try to build and install from sources
         with spack_python_interpreter():
             # Add hint to use frontend operating system on Cray
@@ -283,7 +291,7 @@ class _SourceBootstrapper(object):
 
             if module == 'clingo':
                 # TODO: remove when the old concretizer is deprecated
-                concrete_spec._old_concretize()
+                concrete_spec._old_concretize(deprecation_warning=False)
             else:
                 concrete_spec.concretize()
 
@@ -291,7 +299,7 @@ class _SourceBootstrapper(object):
         tty.debug(msg.format(module, abstract_spec_str))
 
         # Install the spec that should make the module importable
-        concrete_spec.package.do_install()
+        concrete_spec.package.do_install(fail_fast=True)
 
         return _try_import_from_store(module, abstract_spec_str=abstract_spec_str)
 
@@ -374,6 +382,9 @@ def ensure_module_importable_or_raise(module, abstract_spec=None):
 
     abstract_spec = abstract_spec or module
     source_configs = spack.config.get('bootstrap:sources', [])
+
+    errors = {}
+
     for current_config in source_configs:
         if not _source_is_trusted(current_config):
             msg = ('[BOOTSTRAP MODULE {0}] Skipping source "{1}" since it is '
@@ -388,11 +399,18 @@ def ensure_module_importable_or_raise(module, abstract_spec=None):
         except Exception as e:
             msg = '[BOOTSTRAP MODULE {0}] Unexpected error "{1}"'
             tty.debug(msg.format(module, str(e)))
+            errors[current_config['name']] = e
 
     # We couldn't import in any way, so raise an import error
     msg = 'cannot bootstrap the "{0}" Python module'.format(module)
     if abstract_spec:
         msg += ' from spec "{0}"'.format(abstract_spec)
+    msg += ' due to the following failures:\n'
+    for method in errors:
+        err = errors[method]
+        msg += "    '{0}' raised {1}: {2}\n".format(
+            method, err.__class__.__name__, str(err))
+    msg += '    Please run `spack -d spec zlib` for more verbose error messages'
     raise ImportError(msg)
 
 
@@ -487,18 +505,20 @@ def _bootstrap_config_scopes():
     return config_scopes
 
 
-@contextlib.contextmanager
-def ensure_bootstrap_configuration():
-    # We may need to compile code from sources, so ensure we have compilers
-    # for the current platform before switching parts.
-    arch = spack.architecture.default_arch()
+def _add_compilers_if_missing():
+    # Do not use spack.architecture.default_arch() since it memoize the result
+    arch = spack.architecture.Arch(
+        spack.architecture.real_platform(), 'default_os', 'default_target'
+    )
     arch = spack.spec.ArchSpec(str(arch))  # The call below expects an ArchSpec object
     if not spack.compilers.compilers_for_arch(arch):
-        compiler_cmd = spack.main.SpackCommand('compiler')
-        compiler_cmd(
-            'find', output=os.devnull, error=os.devnull, fail_on_error=False
-        )
+        new_compilers = spack.compilers.find_new_compilers()
+        if new_compilers:
+            spack.compilers.add_compilers_to_config(new_compilers, init_config=False)
 
+
+@contextlib.contextmanager
+def ensure_bootstrap_configuration():
     bootstrap_store_path = store_path()
     with spack.environment.deactivate_environment():
         with spack.architecture.use_platform(spack.architecture.real_platform()):
@@ -508,6 +528,9 @@ def ensure_bootstrap_configuration():
                     # and builtin but accounting for platform specific scopes
                     config_scopes = _bootstrap_config_scopes()
                     with spack.config.use_configuration(*config_scopes):
+                        # We may need to compile code from sources, so ensure we have
+                        # compilers for the current platform before switching parts.
+                        _add_compilers_if_missing()
                         with spack.modules.disable_modules():
                             with spack_python_interpreter():
                                 yield
