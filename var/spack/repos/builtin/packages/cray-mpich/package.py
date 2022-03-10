@@ -86,12 +86,6 @@ class CrayMpich(Package):
             spec.mpicxx = spack_cxx
             spec.mpifc = spack_fc
             spec.mpif77 = spack_f77
-        else:
-            # cray-mpich 8.1.7: features MPI compiler wrappers
-            spec.mpicc  = join_path(self.prefix.bin, 'mpicc')
-            spec.mpicxx = join_path(self.prefix.bin, 'mpicxx')
-            spec.mpifc  = join_path(self.prefix.bin, 'mpif90')
-            spec.mpif77 = join_path(self.prefix.bin, 'mpif77')
 
     def install(self, spec, prefix):
         raise InstallError(
