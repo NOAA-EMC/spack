@@ -81,11 +81,10 @@ class CrayMpich(Package):
 
     def setup_dependent_package(self, module, dependent_spec):
         spec = self.spec
-        if(spec.satisfies('@:8.1.6')):
-            spec.mpicc = spack_cc
-            spec.mpicxx = spack_cxx
-            spec.mpifc = spack_fc
-            spec.mpif77 = spack_f77
+        spec.mpicc = spack_cc
+        spec.mpicxx = spack_cxx
+        spec.mpifc = spack_fc
+        spec.mpif77 = spack_f77
 
     def install(self, spec, prefix):
         raise InstallError(
