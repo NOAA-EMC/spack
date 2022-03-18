@@ -226,6 +226,55 @@ class NetcdfC(AutotoolsPackage):
     @property
     def libs(self):
         shared = '+shared' in self.spec
-        return find_libraries(
-            'libnetcdf', root=self.prefix, shared=shared, recursive=True
-        )
+        libraries = ['libnetcdf']
+        roots = [self.prefix]
+
+        # Add dependent libraries for static builds of netcdf-c
+        if not shared:
+            if self.spec.satisfies('+hdf4'):
+                libraries.append('libhdf')
+                roots.append(self.spec['hdf'].prefix)
+                libraries.append('libjpeg')
+                roots.append(self.spec['jpeg'].prefix)
+                if '+szip' in self.spec['hdf']:
+                    libraries.append('libsz')
+                    roots.append(self.spec['szip'].prefix)
+                if '+external-xdr' in self.spec['hdf'] and \
+                        self.spec['hdf']['rpc'].name != 'libc':
+                    libraries.append('librpc')
+                    roots.append(self.spec['hdf']['rpc'].prefix)
+            if self.spec.satisfies('+dap'):
+                libraries.append('libcurl')
+                roots.append(self.spec['curl'].prefix)
+            if self.spec.satisfies('+parallel-netcdf'):
+                libraries.append('libpnetcdf')
+                roots.append(self.spec['parallel-netcdf'].prefix)
+            # Not needed, because we build with MPI compiler wrappers
+            #if self.spec.satisfies('+mpi'):
+            #    libraries.append(...)
+            #    roots.append(...)
+            libraries.append('libhdf5_hl')
+            libraries.append('libhdf5')
+            roots.append(self.spec['hdf5'].prefix)
+            if '+szip' in self.spec['hdf5']:
+                libraries.append('libsz')
+                roots.append(self.spec['szip'].prefix)
+            libraries.append('libz')
+            roots.append(self.spec['zlib'].prefix)
+
+        libraries_found = []
+        for library in libraries:
+            for root in roots:
+                # Try to find shared libraries first
+                result = find_libraries(
+                    library, root, shared=True, recursive=True
+                )
+                if not result:
+                    result = find_libraries(
+                        library, root, shared=False, recursive=True
+                    )
+                if result:
+                    libraries_found += result
+                    break
+
+        return libraries_found
