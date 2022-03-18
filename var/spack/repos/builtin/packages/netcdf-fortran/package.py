@@ -79,6 +79,10 @@ class NetcdfFortran(AutotoolsPackage):
                 # The following flag forces the compiler to produce module
                 # files with lowercase names.
                 flags.append('-ef')
+        elif name == 'ldlibs':
+            # Copied from netcdf-cxx4 to avoid problems when linking
+            # to static netcdf-c library
+            flags.append(self.spec['netcdf-c'].libs.link_flags)
 
         # Note that cflags and fflags should be added by the compiler wrapper
         # and not on the command line to avoid overriding the default
@@ -115,10 +119,13 @@ class NetcdfFortran(AutotoolsPackage):
         config_args = self.enable_or_disable('shared')
         config_args.append('--enable-static')
 
+        netcdf_c_spec = self.spec['netcdf-c']
+        # When building against static netcdf-c, need additional linker flags
+        if not '+shared' in netcdf_c_spec:
+            config_args.append('LDFLAGS=%s' % netcdf_c_spec.libs.link_flags)
         # We need to build with MPI wrappers if either of the parallel I/O
         # features is enabled in netcdf-c:
         # https://www.unidata.ucar.edu/software/netcdf/docs/building_netcdf_fortran.html
-        netcdf_c_spec = self.spec['netcdf-c']
         if '+mpi' in netcdf_c_spec or '+parallel-netcdf' in netcdf_c_spec:
             config_args.append('CC=%s' % self.spec['mpi'].mpicc)
             config_args.append('FC=%s' % self.spec['mpi'].mpifc)

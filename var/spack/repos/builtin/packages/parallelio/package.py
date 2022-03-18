@@ -65,4 +65,10 @@ class Parallelio(CMakePackage):
             args.extend([
                 self.define('CMAKE_Fortran_FLAGS', ' '.join(fflags))
             ])
+        # When building against static netcdf-c, need additional linker flags
+        netcdf_c_spec = spec['netcdf-c']
+        if not '+shared' in netcdf_c_spec:
+            args.extend([
+                self.define('CMAKE_EXE_LINKER_FLAGS', netcdf_c_spec.libs.link_flags)
+            ])
         return args

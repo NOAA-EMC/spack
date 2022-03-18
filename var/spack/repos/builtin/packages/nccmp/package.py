@@ -27,4 +27,11 @@ class Nccmp(CMakePackage):
         if cflags:
             args.append(self.define('CMAKE_C_FLAGS', ' '.join(cflags)))
 
+        netcdf_c_spec = self.spec['netcdf-c']
+        # When building against static netcdf-c, need additional linker flags
+        if not '+shared' in netcdf_c_spec:
+            args.append(self.define('CMAKE_EXE_LINKER_FLAGS',
+                netcdf_c_spec.libs.search_flags + ' ' + \
+                netcdf_c_spec.libs.link_flags))
+
         return args
