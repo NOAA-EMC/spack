@@ -16,10 +16,6 @@ subcommands = [
     'create',
 ]
 
-site_path = os.path.join(spack.paths.etc_path, 'jcsda-emc', 'sites')
-
-default_env_name = 'default'
-
 
 def spack_stack_path():
     spack_stack_path = os.path.dirname(spack.paths.spack_root)
@@ -31,6 +27,7 @@ def spack_stack_path():
     return spack_stack_path
 
 
+default_env_name = 'default'
 default_env_path = os.path.join(spack_stack_path(), 'envs')
 
 
