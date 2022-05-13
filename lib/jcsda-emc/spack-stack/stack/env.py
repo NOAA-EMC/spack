@@ -122,7 +122,6 @@ class StackEnv():
             self.add_config('packages:all:compiler:[{}]'.format(self.compiler))
 
         if self.mpi:
-            print('mpi = ', self.mpi)
             self.add_config('packages:all:providers:mpi:[{}]'.format(self.mpi))
 
         env_yaml['spack']['include'] = self.includes
