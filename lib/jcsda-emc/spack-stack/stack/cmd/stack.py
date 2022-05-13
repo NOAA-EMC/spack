@@ -1,5 +1,6 @@
 import os
 import spack.cmd
+import spack
 import logging
 import shutil
 import llnl.util.tty as tty
@@ -34,37 +35,38 @@ default_env_path = os.path.join(spack_stack_path(), 'envs')
 def stack_create_setup_parser(subparser):
     subparser.add_argument(
         '--name', type=str, required=False, default=default_env_name,
-        help='Environment name, defaults to {}.'.format(default_env_name)
-        'Environment will be in <prefix>/<name>'
+        help='Environment name, defaults to {}.'.format(default_env_name) +
+        ' Environment will be in <prefix>/<name>'
     )
 
     subparser.add_argument(
         '--dir', type=str, required=False, default=default_env_path,
         help='Environment will be placed in <dir>/<name>.'
-        'Default is {}.'.format(default_env_path)
+        ' Default is {}.'.format(default_env_path)
     )
 
     subparser.add_argument(
-        '--app', type=str, required=False, dest='app', default=None,
-        help='App name in env_bundles_dict or a spack.yaml'
+        '--template', type=str, required=False, dest='template', default=None,
+        help='Either a named template (in /templates) or path to spack.yaml'
+        ' to be used as the base for further customization.'
     )
 
     subparser.add_argument(
         '--site', type=str, required=False, default=None,
         help='Pre-configured platform to build for (e.g. hera, jet, orion)'
-        'otherwise no machine-specific config files are included'
+        ' otherwise no machine-specific config files are included'
     )
 
     subparser.add_argument(
         '--envs-file', type=str, required=False, default=None,
         help='Create environments from envs.yaml file.'
-        'Other command-line options will be ignored'
+        ' Other command-line options will be ignored'
     )
 
     subparser.add_argument(
         '--overwrite', action='store_true', required=False, default=False,
         help='Overwrite existing environment, if it exists.'
-        'Warning this is dangerous.'
+        ' Warning this is dangerous.'
     )
 
 
