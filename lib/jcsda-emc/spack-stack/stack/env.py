@@ -1,3 +1,4 @@
+import spack
 import os
 import logging
 import spack.util.spack_yaml as syaml
@@ -25,6 +26,8 @@ app_specs = {
     'ufs-weather-model': ['ufs-weather-model-env', 'ufs-weather-model-debug-env'],
     'test': ['zlib'],
 }
+
+site_path = os.path.join(spack.paths.etc_path, 'jcsda-emc', 'sites')
 
 
 class StackEnv():
