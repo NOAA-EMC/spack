@@ -34,13 +34,14 @@ default_env_path = os.path.join(spack_stack_path(), 'envs')
 def stack_create_setup_parser(subparser):
     subparser.add_argument(
         '--name', type=str, required=False, default=default_env_name,
-        help='Environment name. Environment will be in <prefix>/<name>'
+        help='Environment name, defaults to {}.'.format(default_env_name)
+        'Environment will be in <prefix>/<name>'
     )
 
     subparser.add_argument(
         '--dir', type=str, required=False, default=default_env_path,
-        help='Envs will be placed in <dir>/<name>.'
-        'Default is {{SPACK_STACK_DIR}}/envs.'
+        help='Environment will be placed in <dir>/<name>.'
+        'Default is {}.'.format(default_env_path)
     )
 
     subparser.add_argument(
@@ -56,8 +57,8 @@ def stack_create_setup_parser(subparser):
 
     subparser.add_argument(
         '--envs-file', type=str, required=False, default=None,
-        help='Create environments from envs.yaml file. '
-        'Other options will be ignored'
+        help='Create environments from envs.yaml file.'
+        'Other command-line options will be ignored'
     )
 
     subparser.add_argument(
