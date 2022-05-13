@@ -27,7 +27,6 @@ app_specs = {
     'test': ['zlib'],
 }
 
-site_path = os.path.join(spack.paths.etc_path, 'jcsda-emc', 'sites')
 
 
 class StackEnv():
