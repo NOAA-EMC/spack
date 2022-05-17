@@ -44,7 +44,7 @@ def stack_create_setup_parser(subparser):
     )
 
     subparser.add_argument(
-        '--site', type=str, required=False, default=None,
+        '--site', type=str, required=False, default='default',
         help='Pre-configured platform to build for (e.g. hera, jet, orion)'
         ' otherwise no machine-specific config files are included'
     )
