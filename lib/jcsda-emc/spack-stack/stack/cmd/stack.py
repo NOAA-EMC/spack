@@ -5,7 +5,7 @@ import logging
 import shutil
 import llnl.util.tty as tty
 import spack.util.spack_yaml as syaml
-from spack.extensions.stack.env import StackEnv
+from spack.extensions.stack.env import StackEnv, stack_path
 
 logging.basicConfig(level=logging.INFO)
 
@@ -18,18 +18,10 @@ subcommands = [
 ]
 
 
-def spack_stack_path():
-    spack_stack_path = os.path.dirname(spack.paths.spack_root)
-    dirname = os.path.basename(spack_stack_path)
-
-    if dirname != 'spack-stack':
-        raise Exception('Not a submodule of spack-stack')
-
-    return spack_stack_path
-
-
 default_env_name = 'default'
-default_env_path = os.path.join(spack_stack_path(), 'envs')
+default_env_path = os.path.join(stack_path(), 'envs')
+default_packages = os.path.join(stack_path(),
+                                'configs', 'common', 'packages.yaml')
 
 
 def stack_create_setup_parser(subparser):
@@ -46,8 +38,8 @@ def stack_create_setup_parser(subparser):
     )
 
     subparser.add_argument(
-        '--template', type=str, required=False, dest='template', default=None,
-        help='Either a named template (in /templates) or path to spack.yaml'
+        '--app', type=str, required=False, dest='app', default=None,
+        help='Either a named app in (configs/apps) or path to spack.yaml'
         ' to be used as the base for further customization.'
     )
 
@@ -69,6 +61,37 @@ def stack_create_setup_parser(subparser):
         ' Warning this is dangerous.'
     )
 
+    subparser.add_argument(
+        '--base-packages', type=str, required=False, default=default_packages,
+        help='Base packages.yaml.'
+        ' Defaults to {}'.format(default_packages)
+    )
+
+    subparser.add_argument(
+        '--prefix', type=str, required=False, default=None,
+        help='Install prefix.'
+    )
+
+    subparser.add_argument(
+        '--module-prefix', type=str, required=False, default='modulefiles',
+        help='Module install prefix. Modules will be placed relative to'
+             'install prefix or absolute path if given.'
+    )
+
+    subparser.add_argument(
+        '--no-common', action='store_true',
+        help='Do not use common config files.'
+    )
+
+    subparser.add_argument(
+        '--no-includes', action='store_true', required=False, default=None,
+        help='Copy base-packges directly into spack.yaml (no includes)'
+        ' Useful in containers that cannot have includes.'
+        ' Warning this will break with packages that have "::" because'
+        ' of a bug with Spack the replaces it with a quote when used in'
+        ' a spack.yaml.'
+    )
+
 
 def stack_create(args):
     """Create pre-configured Spack environment.
@@ -84,6 +107,12 @@ def stack_create(args):
     dir = args.dir
     envs_file = args.envs_file
     overwrite = args.overwrite
+    install_prefix = args.prefix
+    module_prefix = args.module_prefix
+    no_common = args.no_common
+
+    base_packages = args.base_packages
+    no_includes = args.no_includes
 
     env_dir = os.path.join(dir, name)
     if os.path.exists(env_dir):
@@ -92,7 +121,7 @@ def stack_create(args):
             shutil.rmtree(env_dir)
 
     if envs_file:
-        logging.info('Creating envs from envs_file')
+        logging.debug('Creating envs from envs_file')
         with open(envs_file, 'r') as f:
             site_envs = syaml.load_config(stream=f)
 
@@ -101,8 +130,14 @@ def stack_create(args):
             stack_env = StackEnv(**env['env'])
             stack_env.write()
     else:
-        logging.info('Creating envs from command-line args')
-        stack_env = StackEnv(name=name, dir=dir, site=site, app=app)
+        logging.debug('Creating envs from command-line args')
+        stack_env = StackEnv(name=name, dir=dir, site=site, app=app,
+                             base_packages=base_packages,
+                             no_includes=no_includes,
+                             install_prefix=install_prefix,
+                             module_prefix=module_prefix,
+                             no_common=no_common
+                             )
         stack_env.write()
 
 
