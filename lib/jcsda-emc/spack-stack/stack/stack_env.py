@@ -166,7 +166,7 @@ class StackEnv(object):
             self.add_includes(common_includes)
 
         if not self.no_includes:
-            if self.site:
+            if self.site != 'none':
                 self._copy_site_includes()
 
             if self.base_packages:
