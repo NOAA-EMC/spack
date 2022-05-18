@@ -34,6 +34,5 @@ def setup_parser(subparser):
 
 # Main command that calls subcommands
 def stack(parser, args):
-    """Look for a function called environment_<name> and call it."""
     if args.stack_command == 'create':
         stack_create(parser, args)
