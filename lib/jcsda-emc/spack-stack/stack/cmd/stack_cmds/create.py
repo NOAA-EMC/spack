@@ -159,7 +159,11 @@ def container_create(args):
 
 def dict_from_args(args):
     dict = {}
-    dict['site'] = args.site
+    if args.site == 'none':
+        site = None
+    else:
+        site = args.site
+    dict['site'] = site
     dict['app'] = args.app
     dict['name'] = args.name
     dict['envs_file'] = args.envs_file
