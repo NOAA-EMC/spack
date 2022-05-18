@@ -13,6 +13,8 @@ class StackContainer():
     """
 
     def __init__(self, container, app, name, dir, base_packages) -> None:
+        self.app = app
+
         if os.path.isabs(container):
             self.container_path = container
         elif os.path.exists(os.path.join(container_path, container)):
@@ -28,7 +30,7 @@ class StackContainer():
             raise Exception("Invalid app")
 
         basename = os.path.basename(self.container_path)
-        self.name = name if name else '{}.{}'.format(basename, app)
+        self.name = name if name else '{}.{}'.format(app, basename)
 
         self.dir = dir
         self.env_dir = os.path.join(self.dir, self.name)
@@ -54,6 +56,8 @@ class StackContainer():
 
         container_yaml['spack']['packages'] = spack.config.merge_yaml(
             container_yaml['spack']['packages'], packages_yaml['packages'])
+
+        container_yaml['spack']['container']['labels']['app'] = self.app
 
         container_yaml = spack.config.merge_yaml(container_yaml, app_yaml)
 
