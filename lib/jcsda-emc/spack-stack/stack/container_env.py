@@ -36,7 +36,7 @@ class StackContainer():
 
     def write(self):
         """Merge base packages and app's spack.yaml into
-        output container file
+        output container file.
         """
         app_env = os.path.join(self.app_path, 'spack.yaml')
         sections = ['packages', 'specs']
