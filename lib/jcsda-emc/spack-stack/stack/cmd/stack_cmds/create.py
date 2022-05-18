@@ -78,9 +78,10 @@ def setup_env_parser(subparser):
     )
 
     subparser.add_argument(
-        '--site', type=str, required=False, default=None,
+        '--site', type=str, required=False, default='default',
         help='Pre-configured platform to build for (e.g. hera, jet, orion)'
-        ' otherwise no machine-specific config files are included'
+        ' otherwise an empty site directory is created with default values.'
+        ' Set to "none" for no site files at all.'
     )
 
     subparser.add_argument(

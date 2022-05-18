@@ -2,20 +2,12 @@ import os
 import spack.cmd
 import spack
 import logging
-import shutil
-import llnl.util.tty as tty
-import spack.util.spack_yaml as syaml
-from spack.extensions.stack.stack_env import StackEnv, stack_path
+from spack.extensions.stack.stack_env import stack_path
 from spack.extensions.stack.cmd.stack_cmds.create import setup_create_parser, stack_create
 
 description = "Create spack-stack environment"
 section = "spack-stack-env"
 level = "long"
-
-subcommands = [
-    'env',
-    'container'
-]
 
 
 default_env_name = 'default'
