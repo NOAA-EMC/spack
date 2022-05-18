@@ -8,7 +8,7 @@ container_path = os.path.join(stack_path(), 'configs', 'containers')
 
 class StackContainer():
     """Represents an abstract container. It takes in a
-    conatiner template (spack.yaml), the specs from an app, and
+    container template (spack.yaml), the specs from an app, and
     its packages.yaml versions then writes out a merged file.
     """
 
