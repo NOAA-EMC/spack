@@ -73,9 +73,6 @@ class StackEnv(object):
     The output is a pure Spack environment.
     """
 
-    def _add_provenance_info(self):
-        self.env_yaml['spack']['specs'].yaml_set_start_comment('Blarn', indent=2)
-
     def __init__(self, **kwargs):
         """
         Construct properties directly from kwargs so they can be passed in
@@ -251,14 +248,3 @@ class StackEnv(object):
             env.write()
 
         logging.info('Successfully wrote environment at {}'.format(env_file))
-
-
-# class StackContainer(StackEnv):
-#     def __init__(self, container, **kwargs):
-#         self.container = container
-#         # Containers cannot use includes
-#         kwargs['no_includes'] = True
-#         kwargs['site'] = None
-#         kwargs['no_common'] = True
-#         kwargs['']
-#         super().__init__(**kwargs)
