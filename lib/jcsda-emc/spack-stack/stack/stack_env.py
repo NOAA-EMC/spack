@@ -43,6 +43,7 @@ def stack_path():
 
 
 site_path = os.path.join(stack_path(), 'configs', 'sites')
+app_path = os.path.join(stack_path(), 'configs', 'apps')
 
 # Use SPACK_STACK_DIR for these configs because changes in these
 # files should be tracked as part of the repo.
@@ -63,18 +64,16 @@ def spack_hash():
     return get_git_revision_short_hash(spack.paths.spack_root)
 
 
-class StackEnv():
+class StackEnv(object):
     """ Represents a spack.yaml environment based on different
-    configurations of sites and specs. Construct with an envs.yaml or
+    configurations of sites and specs. Can be created through an envs.yaml or
     through the command line. Uses Spack's library
-    to maintain an internal state that represen ts the yaml and can be
+    to maintain an internal state that represents the yaml and can be
     written out with write().
-    Construct with an envs.yaml or through the command line.
-    The output is a pure Spack environment which can be used as normal.
+    The output is a pure Spack environment.
     """
 
     def _add_provenance_info(self):
-        print('blarn')
         self.env_yaml['spack']['specs'].yaml_set_start_comment('Blarn', indent=2)
 
     def __init__(self, **kwargs):
@@ -88,9 +87,9 @@ class StackEnv():
         self.dir = kwargs.get('dir')
 
         self.specs = []
-        self.app = kwargs.get('app', None)
+        self.includes = []
 
-        app_path = os.path.join(stack_path(), 'configs', 'apps', self.app)
+        self.app = kwargs.get('app', None)
 
         # Config can be either name in apps dir or an absolute path to
         # to a spack.yaml to be used as a template. If None then empty
@@ -98,11 +97,14 @@ class StackEnv():
 
         if not self.app:
             self.env_yaml = syaml.load_config(default_manifest_yaml)
+            self.app_path = None
         else:
             if os.path.isabs(self.app):
+                self.app_path = self.app
                 template = self.app
-            elif os.path.exists(app_path):
-                template = os.path.join(app_path, 'spack.yaml')
+            elif os.path.exists(os.path.join(app_path, self.app)):
+                self.app_path = os.path.join(app_path, self.app)
+                template = os.path.join(app_path, self.app, 'spack.yaml')
 
             with open(template, 'r') as f:
                 self.env_yaml = syaml.load_config(f)
@@ -118,10 +120,6 @@ class StackEnv():
         self.no_common = kwargs.get('no_common', None)
         self.mirror = kwargs.get('mirror', None)
         self.upstream = kwargs.get('upstreams', None)
-
-        self.includes = []
-        if not self.no_common:
-            self.add_includes(common_includes)
 
     def env_dir(self):
         """env_dir is <dir>/<name>"""
@@ -167,8 +165,10 @@ class StackEnv():
 
         os.makedirs(env_dir, exist_ok=True)
 
-        if not self.no_includes:
+        if not self.no_common:
+            self.add_includes(common_includes)
 
+        if not self.no_includes:
             if self.site:
                 self._copy_site_includes()
 
@@ -215,6 +215,7 @@ class StackEnv():
                         fullpath = os.path.join(self.site_configs_dir(), f)
                         spack.config.add_from_file(fullpath)
 
+        # Commonly used config settings
         if self.compiler:
             compiler = 'packages:all::compiler:[{}]'.format(self.compiler)
             spack.config.add(compiler, scope=env_scope_name)
@@ -222,6 +223,7 @@ class StackEnv():
             mpi = 'packages:all::providers:mpi:[{}]'.format(self.mpi)
             spack.config.add(mpi, scope=env_scope_name)
         if self.install_prefix:
+            # Modules can go in <prefix>/modulefiles by default
             prefix = 'config:install_tree:root:{}'.format(self.install_prefix)
             spack.config.add(prefix, scope=env_scope_name)
             if not os.path.isabs(self.module_prefix):
@@ -249,3 +251,14 @@ class StackEnv():
             env.write()
 
         logging.info('Successfully wrote environment at {}'.format(env_file))
+
+
+# class StackContainer(StackEnv):
+#     def __init__(self, container, **kwargs):
+#         self.container = container
+#         # Containers cannot use includes
+#         kwargs['no_includes'] = True
+#         kwargs['site'] = None
+#         kwargs['no_common'] = True
+#         kwargs['']
+#         super().__init__(**kwargs)
