@@ -53,7 +53,7 @@ def spec_help():
 def setup_common_parser_args(subparser):
     """Shared CLI args for container and env subcommands"""
     subparser.add_argument(
-        '--app', type=str, required=True, dest='app', default=None,
+        '--app', type=str, required=False, dest='app', default='empty',
         help=app_help()
     )
 
@@ -145,7 +145,6 @@ def dict_from_args(args):
     dict['name'] = args.name
     dict['envs_file'] = args.envs_file
     dict['install_prefix'] = args.prefix
-    dict['module_prefix'] = args.module_prefix
     dict['base_packages'] = args.packages
     dict['dir'] = args.dir
 

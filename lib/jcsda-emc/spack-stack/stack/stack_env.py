@@ -8,6 +8,7 @@ import spack.environment as ev
 import shutil
 import llnl.util.tty as tty
 import spack.config
+import copy
 
 default_manifest_yaml = """\
 # This is a Spack Environment file.
@@ -80,9 +81,9 @@ class StackEnv(object):
         for command-line usage.
         """
 
-        self.name = kwargs.get('name')
         self.dir = kwargs.get('dir')
         self.app = kwargs.get('app', None)
+        self.name = kwargs.get('name')
 
         self.specs = []
         self.includes = []
@@ -100,11 +101,15 @@ class StackEnv(object):
             elif os.path.exists(os.path.join(app_path, self.app)):
                 self.app_path = os.path.join(app_path, self.app)
                 template = os.path.join(app_path, self.app, 'spack.yaml')
+            else:
+                raise Exception('App: "{}" does not exist'.format(self.app))
 
             with open(template, 'r') as f:
                 self.env_yaml = syaml.load_config(f)
 
         self.site = kwargs.get('site', None)
+        if self.site == 'none':
+            self.site = None
         self.desc = kwargs.get('desc', None)
         self.compiler = kwargs.get('compiler', None)
         self.mpi = kwargs.get('mpi', None)
@@ -112,6 +117,10 @@ class StackEnv(object):
         self.install_prefix = kwargs.get('install_prefix', None)
         self.mirror = kwargs.get('mirror', None)
         self.upstream = kwargs.get('upstreams', None)
+
+        if not self.name:
+            site = self.site if self.site else 'default'
+            self.name = '{}.{}'.format(self.app, self.site)
 
     def env_dir(self):
         """env_dir is <dir>/<name>"""
@@ -180,8 +189,7 @@ class StackEnv(object):
         # Activate empty env and add specs/packages.
         env = ev.Environment(path=env_dir, init_file=env_file)
         ev.activate(env)
-        env_scope = env.env_file_config_scope()
-        env_scope_name = env.env_file_config_scope_name()
+        env_scope = env.env_file_config_scope_name()
 
         # Save original data in spack.yaml because it has higest precedence.
         # spack.config.add will overwrite as it goes.
@@ -189,41 +197,35 @@ class StackEnv(object):
         # then common configs, then site configs.
         original_sections = {}
         for key in spack.config.section_schemas.keys():
-            section = spack.config.get(key, scope=env_scope_name)
+            section = spack.config.get(key, scope=env_scope)
             if section:
-                original_sections[key] = section
-
-            if self.site:
-                for f in os.listdir(self.site_configs_dir()):
-                    if f in valid_configs:
-                        fullpath = os.path.join(self.site_configs_dir(), f)
-                        spack.config.add_from_file(fullpath)
+                original_sections[key] = copy.deepcopy(section)
 
         # Commonly used config settings
         if self.compiler:
             compiler = 'packages:all::compiler:[{}]'.format(self.compiler)
-            spack.config.add(compiler, scope=env_scope_name)
+            spack.config.add(compiler, scope=env_scope)
         if self.mpi:
             mpi = 'packages:all::providers:mpi:[{}]'.format(self.mpi)
-            spack.config.add(mpi, scope=env_scope_name)
+            spack.config.add(mpi, scope=env_scope)
         if self.install_prefix:
             # Modules can go in <prefix>/modulefiles by default
             prefix = 'config:install_tree:root:{}'.format(self.install_prefix)
-            spack.config.add(prefix, scope=env_scope_name)
+            spack.config.add(prefix, scope=env_scope)
             module_prefix = os.path.join(self.install_prefix, "modulefiles")
             lmod_prefix = 'config:module_roots:lmod:{}'.format(module_prefix)
             tcl_prefix = 'config:module_roots:tcl:{}'.format(module_prefix)
-            spack.config.add(lmod_prefix, scope=env_scope_name)
-            spack.config.add(tcl_prefix, scope=env_scope_name)
+            spack.config.add(lmod_prefix, scope=env_scope)
+            spack.config.add(tcl_prefix, scope=env_scope)
 
         # Merge the original spack.yaml template back in
         # so it has the higest precedence
         for section in spack.config.section_schemas.keys():
             original = original_sections.get(section, {})
-            existing = spack.config.get(section, scope=env_scope_name)
-            existing = spack.config.merge_yaml(existing, original)
+            existing = spack.config.get(section, scope=env_scope)
+            new = spack.config.merge_yaml(existing, original)
             if section in existing:
-                spack.config.set(section, existing[section], env_scope_name)
+                spack.config.set(section, new[section], env_scope)
 
         with env.write_transaction():
             specs = spack.cmd.parse_specs(self.specs)
@@ -231,5 +233,7 @@ class StackEnv(object):
                 env.add(spec)
 
             env.write()
+
+        ev.deactivate()
 
         logging.info('Successfully wrote environment at {}'.format(env_file))
