@@ -17,7 +17,7 @@ def stack_path(*paths):
     return os.path.join(stack_dir, *paths)
 
 
-test_dir = stack_path('env', 'test')
+test_dir = stack_path('envs', 'unit-tests')
 
 
 def all_apps():
