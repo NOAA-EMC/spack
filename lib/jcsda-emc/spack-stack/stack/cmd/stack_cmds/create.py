@@ -124,7 +124,7 @@ def container_create(args):
     """Create pre-configured container"""
 
     container = StackContainer(args.container, args.app, args.name,
-                               args.dir, args.base_packages)
+                               args.dir, args.packages)
 
     env_dir = container.env_dir
     if os.path.exists(env_dir):
@@ -185,6 +185,7 @@ def env_create(args):
         logging.debug('Creating envs from command-line args')
         stack_env = StackEnv(**stack_settings)
         stack_env.write()
+        tty.msg('Created env {}'.format(env_dir))
 
 
 def stack_create(parser, args):

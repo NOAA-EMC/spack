@@ -16,10 +16,11 @@ class StackContainer():
         self.app = app
         self.container = container
 
-        if os.path.isabs(container):
+        test_path = os.path.join(container_path, container + '.yaml')
+        if os.path.exists(test_path):
+            self.container_path = test_path
+        elif os.path.isabs(container):
             self.container_path = container
-        elif os.path.exists(os.path.join(container_path, container + '.yaml')):
-            self.container_path = os.path.join(container_path, container + '.yaml')
         else:
             raise Exception("Invalid container {}".format(self.container))
 
