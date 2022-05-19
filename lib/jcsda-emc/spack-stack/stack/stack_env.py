@@ -33,17 +33,17 @@ check_file = '.spackstack'
 
 # Find spack-stack directory assuming this Spack instance
 # is a submodule of spack-stack.
-def stack_path():
-    stack_path = os.path.dirname(spack.paths.spack_root)
+def stack_path(*paths):
+    stack_dir = os.path.dirname(spack.paths.spack_root)
 
-    if not os.path.exists(os.path.join(stack_path, check_file)):
+    if not os.path.exists(os.path.join(stack_dir, check_file)):
         raise Exception('Not a submodule of spack-stack')
 
-    return stack_path
+    return os.path.join(stack_dir, *paths)
 
 
-site_path = os.path.join(stack_path(), 'configs', 'sites')
-app_path = os.path.join(stack_path(), 'configs', 'apps')
+site_path = stack_path('configs', 'sites')
+app_path = stack_path('configs', 'apps')
 
 # Use SPACK_STACK_DIR for these configs because changes in these
 # files should be tracked as part of the repo.
@@ -82,16 +82,14 @@ class StackEnv(object):
 
         self.name = kwargs.get('name')
         self.dir = kwargs.get('dir')
+        self.app = kwargs.get('app', None)
 
         self.specs = []
         self.includes = []
 
-        self.app = kwargs.get('app', None)
-
         # Config can be either name in apps dir or an absolute path to
         # to a spack.yaml to be used as a template. If None then empty
         # template is used.
-
         if not self.app:
             self.env_yaml = syaml.load_config(default_manifest_yaml)
             self.app_path = None
@@ -111,10 +109,7 @@ class StackEnv(object):
         self.compiler = kwargs.get('compiler', None)
         self.mpi = kwargs.get('mpi', None)
         self.base_packages = kwargs.get('base_packages', None)
-        self.no_includes = kwargs.get('no_includes', None)
         self.install_prefix = kwargs.get('install_prefix', None)
-        self.module_prefix = kwargs.get('module_prefix', None)
-        self.no_common = kwargs.get('no_common', None)
         self.mirror = kwargs.get('mirror', None)
         self.upstream = kwargs.get('upstreams', None)
 
@@ -162,15 +157,13 @@ class StackEnv(object):
 
         os.makedirs(env_dir, exist_ok=True)
 
-        if not self.no_common:
-            self.add_includes(common_includes)
+        self.add_includes(common_includes)
 
-        if not self.no_includes:
-            if self.site != 'none':
-                self._copy_site_includes()
+        if self.site != 'none':
+            self._copy_site_includes()
 
-            if self.base_packages:
-                self._copy_package_includes()
+        if self.base_packages:
+            self._copy_package_includes()
 
         # No way to add to env includes using pure Spack.
         env_yaml['spack']['include'] = self.includes
@@ -200,12 +193,6 @@ class StackEnv(object):
             if section:
                 original_sections[key] = section
 
-        # Copy config files directly into spack.yaml
-        if self.no_includes:
-            # Add basic packages.yaml
-            if self.base_packages:
-                spack.config.add_from_file(self.base_packages, env_scope_name)
-
             if self.site:
                 for f in os.listdir(self.site_configs_dir()):
                     if f in valid_configs:
@@ -223,11 +210,9 @@ class StackEnv(object):
             # Modules can go in <prefix>/modulefiles by default
             prefix = 'config:install_tree:root:{}'.format(self.install_prefix)
             spack.config.add(prefix, scope=env_scope_name)
-            if not os.path.isabs(self.module_prefix):
-                prefix = os.path.join(self.install_prefix,
-                                      self.module_prefix)
-            lmod_prefix = 'config:module_roots:lmod:{}'.format(prefix)
-            tcl_prefix = 'config:module_roots:tcl:{}'.format(prefix)
+            module_prefix = os.path.join(self.install_prefix, "modulefiles")
+            lmod_prefix = 'config:module_roots:lmod:{}'.format(module_prefix)
+            tcl_prefix = 'config:module_roots:tcl:{}'.format(module_prefix)
             spack.config.add(lmod_prefix, scope=env_scope_name)
             spack.config.add(tcl_prefix, scope=env_scope_name)
 

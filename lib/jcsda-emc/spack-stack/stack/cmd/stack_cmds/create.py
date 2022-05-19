@@ -13,19 +13,48 @@ section = "spack-stack-env"
 level = "long"
 
 default_env_name = 'default'
-default_env_path = os.path.join(stack_path(), 'envs')
-default_packages = os.path.join(stack_path(),
-                                'configs', 'common', 'packages.yaml')
+default_env_path = stack_path('envs')
+default_packages = stack_path('configs', 'common', 'packages.yaml')
 
 
-def setup_container_parser(subparser):
-    subparser.add_argument(
-        'container', help='Container template to use in configs/containers')
+def site_help():
+    _, site_dirs, _ = next(os.walk(stack_path('configs', 'sites')))
+    help_string = 'Pre-configured platform, or "default" for an empty site.yaml.' + os.linesep
+    help_string += 'Defaults to "default" if no arg is given' + os.linesep
+    help_string += 'Available options are: ' + os.linesep
+    for site in site_dirs:
+        help_string += '\t' + site + os.linesep
+    return help_string
 
+
+def app_help():
+    _, app_dirs, _ = next(os.walk(stack_path('configs', 'apps')))
+    help_string = 'Application environment to build.' + os.linesep
+    help_string += 'Available options are: ' + os.linesep
+    for app in app_dirs:
+        help_string += '\t' + app + os.linesep
+    return help_string
+
+
+def container_config_help():
+    _, _, container_configs = next(os.walk(stack_path('configs', 'containers')))
+    help_string = 'Pre-configured container.' + os.linesep
+    help_string += 'Available options are: ' + os.linesep
+    for config in container_configs:
+        help_string += '\t' + config.rstrip('.yaml') + os.linesep
+    return help_string
+
+
+def spec_help():
+    help_string = 'Any valid spack spec, e.g. "wget" or "jedi-ufs-bundle-env".' + os.linesep
+    return help_string
+
+
+def setup_common_parser_args(subparser):
+    """Shared CLI args for container and env subcommands"""
     subparser.add_argument(
         '--app', type=str, required=True, dest='app', default=None,
-        help='Either a named app in (configs/apps) or path to spack.yaml'
-        ' to be used as the base for further customization.'
+        help=app_help()
     )
 
     subparser.add_argument(
@@ -42,64 +71,30 @@ def setup_container_parser(subparser):
 
     subparser.add_argument(
         '--overwrite', action='store_true', required=False, default=False,
-        help='Overwrite existing environment, if it exists.'
+        help='Overwrite existing environment if it exists.'
         ' Warning this is dangerous.'
     )
 
     subparser.add_argument(
-        '--base-packages', type=str, required=False, default=default_packages,
+        '--packages', type=str, required=False, default=default_packages,
         help='Base packages.yaml.'
         ' Defaults to {}'.format(default_packages)
     )
 
+
+def setup_container_parser(subparser):
     subparser.add_argument(
-        '--specs', type=str, required=False, default=default_packages,
-        help='A specs.yaml or individual spec'
-    )
+        'container', help=container_config_help())
+
+    setup_common_parser_args(subparser)
 
 
 def setup_env_parser(subparser):
-    subparser.add_argument(
-        '--name', type=str, required=False, default=default_env_name,
-        help='Environment name, defaults to {}.'.format(default_env_name) +
-        ' Environment will be in <prefix>/<name>'
-    )
-
-    subparser.add_argument(
-        '--dir', type=str, required=False, default=default_env_path,
-        help='Environment will be placed in <dir>/<name>/contents.'
-        ' Default is {}.'.format(default_env_path)
-    )
-
-    subparser.add_argument(
-        '--app', type=str, required=False, dest='app', default=None,
-        help='Either a named app in (configs/apps) or path to spack.yaml'
-        ' to be used as the base for further customization.'
-    )
-
+    """ create env specific parsing options"""
+    setup_common_parser_args(subparser)
     subparser.add_argument(
         '--site', type=str, required=False, default='default',
-        help='Pre-configured platform to build for (e.g. hera, jet, orion)'
-        ' otherwise an empty site directory is created with default values.'
-        ' Set to "none" for no site files at all.'
-    )
-
-    subparser.add_argument(
-        '--envs-file', type=str, required=False, default=None,
-        help='Create environments from envs.yaml file.'
-        ' Other command-line options will be ignored'
-    )
-
-    subparser.add_argument(
-        '--overwrite', action='store_true', required=False, default=False,
-        help='Overwrite existing environment, if it exists.'
-        ' Warning this is dangerous.'
-    )
-
-    subparser.add_argument(
-        '--base-packages', type=str, required=False, default=default_packages,
-        help='Base packages.yaml.'
-        ' Defaults to {}'.format(default_packages)
+        help=site_help()
     )
 
     subparser.add_argument(
@@ -108,23 +103,9 @@ def setup_env_parser(subparser):
     )
 
     subparser.add_argument(
-        '--module-prefix', type=str, required=False, default='modulefiles',
-        help='Module install prefix. Modules will be placed relative to'
-             'install prefix or absolute path if given.'
-    )
-
-    subparser.add_argument(
-        '--no-common', action='store_true',
-        help='Do not use common config files.'
-    )
-
-    subparser.add_argument(
-        '--no-includes', action='store_true', required=False, default=None,
-        help='Copy base-packges directly into spack.yaml (no includes)'
-        ' Useful in containers that cannot have includes.'
-        ' Warning this will break with packages that have "::" because'
-        ' of a bug with Spack the replaces it with a quote when used in'
-        ' a spack.yaml.'
+        '--envs-file', type=str, required=False, default=None,
+        help='Create environments from envs.yaml file.'
+        ' Other command-line options will be ignored'
     )
 
 
@@ -159,19 +140,13 @@ def container_create(args):
 
 def dict_from_args(args):
     dict = {}
-    if args.site == 'none':
-        site = None
-    else:
-        site = args.site
-    dict['site'] = site
+    dict['site'] = args.site
     dict['app'] = args.app
     dict['name'] = args.name
     dict['envs_file'] = args.envs_file
     dict['install_prefix'] = args.prefix
     dict['module_prefix'] = args.module_prefix
-    dict['no_common'] = args.no_common
-    dict['base_packages'] = args.base_packages
-    dict['no_incldues'] = args.no_includes
+    dict['base_packages'] = args.packages
     dict['dir'] = args.dir
 
     return dict
