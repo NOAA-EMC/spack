@@ -2,9 +2,9 @@ import os
 import spack
 import spack.util.spack_yaml as syaml
 from spack.extensions.stack.stack_env import StackEnv, stack_path, app_path
+import copy
 
 container_path = os.path.join(stack_path(), 'configs', 'containers')
-
 
 class StackContainer():
     """Represents an abstract container. It takes in a
@@ -44,13 +44,19 @@ class StackContainer():
         app_env = os.path.join(self.app_path, 'spack.yaml')
         sections = ['packages', 'specs']
         with open(app_env, 'r') as f:
-            app_yaml = syaml.load_config(f)
+            filedata = f.read()
+            filedata.replace('::', ':')
+            app_yaml = syaml.load_config(filedata)
 
         with open(self.container_path, 'r') as f:
             container_yaml = syaml.load_config(f)
+        
+        original_yaml = copy.deepcopy(container_yaml)
 
         with open(self.base_packages, 'r') as f:
-            packages_yaml = syaml.load_config(f)
+            filedata = f.read()
+            filedata.replace('::', ':')
+            packages_yaml = syaml.load_config(filedata)
 
         if 'packages' not in container_yaml['spack']:
             container_yaml['spack']['packages'] = {}
@@ -61,6 +67,8 @@ class StackContainer():
         container_yaml['spack']['container']['labels']['app'] = self.app
 
         container_yaml = spack.config.merge_yaml(container_yaml, app_yaml)
+        # Merge the original back in so it takes precedence
+        container_yaml = spack.config.merge_yaml(container_yaml, original_yaml)
 
         os.makedirs(self.env_dir, exist_ok=True)
 
