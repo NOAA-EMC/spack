@@ -6,6 +6,7 @@ import copy
 
 container_path = os.path.join(stack_path(), 'configs', 'containers')
 
+
 class StackContainer():
     """Represents an abstract container. It takes in a
     container template (spack.yaml), the specs from an app, and
@@ -42,15 +43,16 @@ class StackContainer():
         output container file.
         """
         app_env = os.path.join(self.app_path, 'spack.yaml')
-        sections = ['packages', 'specs']
         with open(app_env, 'r') as f:
+            # Spack uses :: to override settings.
+            # but it's not understood when used in a spack.yaml
             filedata = f.read()
             filedata.replace('::', ':')
             app_yaml = syaml.load_config(filedata)
 
         with open(self.container_path, 'r') as f:
             container_yaml = syaml.load_config(f)
-        
+
         original_yaml = copy.deepcopy(container_yaml)
 
         with open(self.base_packages, 'r') as f:
