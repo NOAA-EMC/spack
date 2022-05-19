@@ -36,7 +36,6 @@ def all_containers():
     return containers
 
 
-@pytest.mark.db
 @pytest.mark.extension('stack')
 @pytest.mark.parametrize('app', all_apps())
 @pytest.mark.filterwarnings('ignore::UserWarning')
@@ -45,7 +44,6 @@ def test_apps(app):
                           '--dir', test_dir, '--overwrite')
 
 
-@pytest.mark.db
 @pytest.mark.extension('stack')
 @pytest.mark.parametrize('site', all_sites())
 @pytest.mark.filterwarnings('ignore::UserWarning')
@@ -54,7 +52,6 @@ def test_sites(site):
                           '--dir', test_dir, '--overwrite')
 
 
-@pytest.mark.db
 @pytest.mark.extension('stack')
 @pytest.mark.parametrize('container', all_containers())
 @pytest.mark.filterwarnings('ignore::UserWarning')

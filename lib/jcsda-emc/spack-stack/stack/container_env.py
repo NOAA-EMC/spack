@@ -68,11 +68,12 @@ class StackContainer():
         container_yaml['spack']['packages'] = spack.config.merge_yaml(
             container_yaml['spack']['packages'], packages_yaml['packages'])
 
-        container_yaml['spack']['container']['labels']['app'] = self.app
-
         container_yaml = spack.config.merge_yaml(container_yaml, app_yaml)
         # Merge the original back in so it takes precedence
         container_yaml = spack.config.merge_yaml(container_yaml, original_yaml)
+
+        container_yaml['spack']['container']['labels']['app'] = self.app
+
 
         os.makedirs(self.env_dir, exist_ok=True)
 
