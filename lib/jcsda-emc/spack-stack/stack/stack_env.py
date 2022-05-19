@@ -1,5 +1,4 @@
 import subprocess
-from platformdirs import site_config_dir
 import spack
 import os
 import logging
