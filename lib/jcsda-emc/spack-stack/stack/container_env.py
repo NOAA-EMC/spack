@@ -48,16 +48,18 @@ class StackContainer():
             # but it's not understood when used in a spack.yaml
             filedata = f.read()
             filedata.replace('::', ':')
+            filedata = filedata.replace('::', ':')
             app_yaml = syaml.load_config(filedata)
 
         with open(self.container_path, 'r') as f:
             container_yaml = syaml.load_config(f)
 
+        # Create copy so we can modify it
         original_yaml = copy.deepcopy(container_yaml)
 
         with open(self.base_packages, 'r') as f:
             filedata = f.read()
-            filedata.replace('::', ':')
+            filedata = filedata.replace('::', ':')
             packages_yaml = syaml.load_config(filedata)
 
         if 'packages' not in container_yaml['spack']:
