@@ -132,7 +132,7 @@ class StackEnv(object):
         if not self.site:
             raise Exception('Site is not set')
 
-        site_name = 'site.{}'.format(self.site)
+        site_name = 'site'
         self.includes.append(site_name)
         env_site_dir = os.path.join(self.env_dir(), site_name)
         shutil.copytree(self.site_configs_dir(), env_site_dir)
