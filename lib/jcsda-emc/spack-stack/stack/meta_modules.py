@@ -197,7 +197,6 @@ def substitute_config_vars(config_str):
 def setup_meta_modules():
     # Find currently active spack environment, activate here
     logging.info("Configuring active spack environment ...")
-    env_dir = os.getenv('SPACK_ENV')
     env_dir = ev.active_environment().path
     if not env_dir:
         raise Exception("No active spack environment")
