@@ -8,11 +8,11 @@ import sys
 from spack import *
 
 
-class GlobalWorkflowEnv(BundlePackage):
-    """Development environment for GSI"""
+class EmcGfsWafsEnv(BundlePackage):
+    """Development environment for EMC GFS WAFS"""
 
-    homepage = "https://github.com/NOAA-EMC/GSI"
-    git      = "https://github.com/NOAA-EMC/global-workflow.git"
+    homepage = "https://github.com/NOAA-EMC/EMC_gfs_wafs"
+    git      = "https://github.com/NOAA-EMC/EMC_gfs_wafs.git"
 
     maintainers = ['kgerheiser']
 
