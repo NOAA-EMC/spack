@@ -104,6 +104,7 @@ class Met(AutotoolsPackage):
                                         shared=False, recursive=True).directories[0]
             env.set('MET_GRIB2CLIB', g2c_libdir)
             env.set('GRIB2CLIB_NAME', '-lg2c')
+            env.set('MET_GRIB2CINC', g2c.prefix.include)
 
         if '+python' in spec:
             python = spec['python']
