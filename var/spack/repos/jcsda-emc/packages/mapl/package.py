@@ -24,6 +24,12 @@ class Mapl(CMakePackage):
 
     maintainers = ['kgerheiser', 'edwardhartnett', 'Hang-Lei-NOAA']
 
+    version('2.21.0', sha256='3973a048454adda5dd9b9353756c782f59a2d96fac6c4e58b5451c5c55bcf2b9')
+    version('2.20.0', sha256='7979179cfef2a20f36d1a7c4372f92cf170a205c12ea1414dc1835d7b5269cb0')
+    version('2.19.2', sha256='32aa7f458bcdf834afdb6f5bc8f6e5660abb5e61783af627f54ef81969262255')
+    version('2.19.1', sha256='9f7b4fc0d9617065781fef915e6f428f0afdc8702faf8e2019eb170e27aadb13')
+    version('2.19.0', sha256='63c45f59708fac148110322ae6d508fefb99b2c2a169deae4603dbc9c2d812c8')
+    version('2.11.0', sha256='76351e026c17e2044b89085db639e05ba0e7439a174d14181e01874f0f93db44')
     version('2.8.1', sha256='a7657d4c52a66c3a6663e436d2c2dd4dbb81addd747e1ace68f59843665eb739')
     version('2.8.0', sha256='6da60a21ab77ecebc80575f25b756c398ef48f635ab0b9c96932a1d4ebd8b4a0')
     version('2.7.3', sha256='e8cdc0816471bb4c42673c2fa66d9d749f5a18944cd31580a2d6fd6d961ba163')
