@@ -3,8 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-
 from spack import *
+import os
 
 
 class CrtmFix(Package):
@@ -50,7 +50,7 @@ class CrtmFix(Package):
         # Remove the incorrect file, and install it as noACC, and install the correct file.
         if '+big_endian' in spec and spec.version == Version('2.4.0_emc'):
             fix_files.remove(
-                join_path(cwd, 'SpcCoeff', 'Big_Endian', 'amsua_metop-c.SpcCoeff.bin'))
+                join_path(os.getcwd(), 'SpcCoeff', 'Big_Endian', 'amsua_metop-c.SpcCoeff.bin'))
 
             # This file is incorrect, install it as a different name.
             install(join_path('SpcCoeff', 'Big_Endian', 'amsua_metop-c.SpcCoeff.bin'),
