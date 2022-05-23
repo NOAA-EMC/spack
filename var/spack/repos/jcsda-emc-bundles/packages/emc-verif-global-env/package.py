@@ -8,7 +8,7 @@ import sys
 from spack import *
 
 
-class EmcVerifGlobal(BundlePackage):
+class EmcVerifGlobalEnv(BundlePackage):
     """Development environment for emc-verif-global"""
 
     homepage = "https://github.com/NOAA-EMC/EMC_verif-global"
