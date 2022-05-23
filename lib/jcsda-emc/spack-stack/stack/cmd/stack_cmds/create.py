@@ -7,6 +7,7 @@ from spack.extensions.stack.container_env import StackContainer
 import shutil
 import llnl.util.tty as tty
 import spack.util.spack_yaml as syaml
+from sys import platform
 
 description = "Create spack-stack environment (env or container)"
 section = "spack-stack-env"
@@ -15,6 +16,13 @@ level = "long"
 default_env_name = 'default'
 default_env_path = stack_path('envs')
 default_packages = stack_path('configs', 'common', 'packages.yaml')
+
+
+def default_site():
+    if platform == "linux" or platform == "linux2":
+        return "default"
+    elif platform == "darwin":
+        return "macos.default"
 
 
 def site_help():
@@ -93,7 +101,7 @@ def setup_env_parser(subparser):
     """ create env specific parsing options"""
     setup_common_parser_args(subparser)
     subparser.add_argument(
-        '--site', type=str, required=False, default='default',
+        '--site', type=str, required=False, default=default_site(),
         help=site_help()
     )
 
