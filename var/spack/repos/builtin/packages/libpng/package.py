@@ -14,6 +14,7 @@ class Libpng(AutotoolsPackage):
     git = "https://github.com/glennrp/libpng.git"
 
     version('1.6.37', sha256='505e70834d35383537b6491e7ae8641f1a4bed1876dbfe361201fc80868d88ca')
+    version('1.6.35', sha256='23912ec8c9584917ed9b09c5023465d71709dce089be503c7867fec68a93bcd7')
     # From http://www.libpng.org/pub/png/libpng.html (2019-04-15)
     #     libpng versions 1.6.36 and earlier have a use-after-free bug in the
     #     simplified libpng API png_image_free(). It has been assigned ID
