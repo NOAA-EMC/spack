@@ -31,6 +31,7 @@ class CrtmFix(Package):
 
     def install(self, spec, prefix):
         spec = self.spec
+        mkdir(self.prefix.fix)
 
         endian_dirs = []
         if '+big_endian' in spec:
@@ -52,19 +53,15 @@ class CrtmFix(Package):
             print(fix_files)
             remove_path = join_path(os.getcwd(), 'fix', 'SpcCoeff',
                                     'Big_Endian', 'amsua_metop-c.SpcCoeff.bin')
-            print('blarn')
-            print(remove_path)
             fix_files.remove(remove_path)
 
             # This file is incorrect, install it as a different name.
-            install(join_path('SpcCoeff', 'Big_Endian', 'amsua_metop-c.SpcCoeff.bin'),
+            install(join_path('fix', 'SpcCoeff', 'Big_Endian', 'amsua_metop-c.SpcCoeff.bin'),
                         join_path(self.prefix.fix, 'amsua_metop-c.SpcCoeff.noACC.bin'))
 
             # This "Little_Endian" file is actually the correct one.
-            install(join_path('SpcCoeff', 'Little_Endian', 'amsua_metop-c_v2.SpcCoeff.bin'),
+            install(join_path('fix', 'SpcCoeff', 'Little_Endian', 'amsua_metop-c_v2.SpcCoeff.bin'),
                         join_path(self.prefix.fix, 'amsua_metop-c.SpcCoeff.bin'))
-
-        mkdir(self.prefix.fix)
 
         for f in fix_files:
             install(f, self.prefix.fix)
