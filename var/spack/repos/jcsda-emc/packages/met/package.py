@@ -93,7 +93,7 @@ class Met(AutotoolsPackage):
         libs.append('-lz')
 
         bufr = spec['bufr']
-        bufr_libdir = find_libraries('libbufr_4', root=bufr.prefix, 
+        bufr_libdir = find_libraries('libbufr_4', root=bufr.prefix,
             shared=False, recursive=True).directories[0]
         env.set('BUFRLIB_NAME', '-lbufr_4')
         env.set('MET_BUFRLIB', bufr_libdir)
@@ -147,7 +147,7 @@ class Met(AutotoolsPackage):
 
         if '+modis' in spec:
             args.append('--enable-modis')
-        
+
         if '+graphics' in spec:
             args.append('--enable-mode_graphics')
 
