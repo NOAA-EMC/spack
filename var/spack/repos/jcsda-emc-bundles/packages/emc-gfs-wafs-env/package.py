@@ -26,7 +26,7 @@ class EmcGfsWafsEnv(BundlePackage):
     # Also Python dependencies in ufswm Python
     depends_on('grib-util')
 
-    depends_on('crtm-fix')
+    #depends_on('crtm-fix')
     depends_on('sigio')
     depends_on('zlib')
     depends_on('sfcio')
