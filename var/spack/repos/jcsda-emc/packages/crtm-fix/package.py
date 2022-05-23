@@ -50,7 +50,6 @@ class CrtmFix(Package):
         # Little_Endian amsua_metop-c_v2.SpcCoeff.bin is what it's supposed to be
         # Remove the incorrect file, and install it as noACC, and install the correct file.
         if '+big_endian' in spec and spec.version == Version('2.4.0_emc'):
-            print(fix_files)
             remove_path = join_path(os.getcwd(), 'fix', 'SpcCoeff',
                                     'Big_Endian', 'amsua_metop-c.SpcCoeff.bin')
             fix_files.remove(remove_path)
