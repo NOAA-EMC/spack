@@ -56,6 +56,6 @@ class Ecflow(CMakePackage):
         # https://jira.ecmwf.int/browse/SUP-2641#comment-208943
         use_static_boost = 'ON' if '+static_boost' in self.spec else 'OFF'
         args.append('-DENABLE_STATIC_BOOST_LIBS=' + use_static_boost)
-
+        args.append('-DOPENSSL_ROOT_DIR=' + self.spec['openssl'].prefix)
         args.extend(['-DENABLE_UI=' + ecflow_ui, '-DENABLE_GUI=' + ecflow_ui])
         return args
