@@ -18,10 +18,14 @@ class GlobalWorkflowEnv(BundlePackage):
 
     version('develop', branch='develop')
 
-    # FIXME - Need to check these packages
+    # Working on a Gemapak build
     # depends_on('gempak')
+
     depends_on('ncl')
-    depends_on('prod-util')
+
+    # Need to find source of new versions of prod-util
+    #depends_on('prod-util')
+
     depends_on('nco')
     depends_on('cdo')
     # depends_on('r')

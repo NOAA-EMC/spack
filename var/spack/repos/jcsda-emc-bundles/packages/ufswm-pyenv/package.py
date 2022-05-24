@@ -17,6 +17,8 @@ class UfswmPyenv(BundlePackage):
 
     maintainers = ['kgerheiser', 'Hang-Lei-NOAA']
 
+    version('1.0.0')
+
     depends_on('py-cython')
     depends_on('py-cftime')
     depends_on('py-h5py')
