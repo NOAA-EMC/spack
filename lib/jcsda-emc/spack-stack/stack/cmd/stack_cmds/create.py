@@ -9,8 +9,8 @@ import llnl.util.tty as tty
 import spack.util.spack_yaml as syaml
 from sys import platform
 
-description = "Create spack-stack environment (env or container)"
-section = "spack-stack-env"
+description = "Create spack-stack environment (environment or container)"
+section = "spack-stack"
 level = "long"
 
 default_env_name = 'default'
@@ -65,7 +65,7 @@ def spec_help():
 
 
 def setup_common_parser_args(subparser):
-    """Shared CLI args for container and env subcommands"""
+    """Shared CLI args for container and environment subcommands"""
     subparser.add_argument(
         '--app', type=str, required=False, dest='app', default='empty',
         help=app_help()
@@ -102,6 +102,7 @@ def setup_common_parser_args(subparser):
 
 
 def setup_container_parser(subparser):
+    """ create container-specific parsing options"""
     subparser.add_argument(
         'container', help=container_config_help())
 
@@ -109,7 +110,7 @@ def setup_container_parser(subparser):
 
 
 def setup_env_parser(subparser):
-    """ create env specific parsing options"""
+    """ create environment-specific parsing options"""
     setup_common_parser_args(subparser)
     subparser.add_argument(
         '--site', type=str, required=False, default=default_site(),
@@ -185,13 +186,13 @@ def env_create(args):
     env_dir = stack_env.env_dir()
     if os.path.exists(env_dir):
         if args.overwrite:
-            tty.msg('Env {} exists. Overwriting...'.format(env_dir))
+            tty.msg('Environment {} exists. Overwriting...'.format(env_dir))
             shutil.rmtree(env_dir)
         else:
-            raise Exception('Env: {} already exists'.format(env_dir))
+            raise Exception('Environment: {} already exists'.format(env_dir))
 
     if args.envs_file:
-        logging.debug('Creating envs from envs_file')
+        logging.debug('Creating environment from envs_file')
         with open(args.envs_file, 'r') as f:
             site_envs = syaml.load_config(stream=f)
 
@@ -200,11 +201,11 @@ def env_create(args):
             stack_env = StackEnv(**env['env'])
             stack_env.write()
     else:
-        logging.debug('Creating envs from command-line args')
+        logging.debug('Creating environment from command-line args')
         stack_env = StackEnv(**stack_settings)
         stack_env.add_specs(args.specs)
         stack_env.write()
-        tty.msg('Created env {}'.format(env_dir))
+        tty.msg('Created environment {}'.format(env_dir))
 
 
 def stack_create(parser, args):
