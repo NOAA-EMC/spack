@@ -20,8 +20,10 @@ class EmcVerifGlobalEnv(BundlePackage):
 
     depends_on('netcdf-fortran')
     depends_on('nco')
-    depends_on('prod-util')
     depends_on('grib-util')
-    # depends_on('grads')
+    # FIXME - where does prod-util come from?
+    # Need to test GRADS
+    # depends_on('prod-util')
+    depends_on('grads')
     depends_on('met')
     depends_on('metplus')
