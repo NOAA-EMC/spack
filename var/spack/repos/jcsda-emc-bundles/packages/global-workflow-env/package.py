@@ -18,6 +18,15 @@ class GlobalWorkflowEnv(BundlePackage):
 
     version('develop', branch='develop')
 
+    # FIXME - Need to check these packages
+    # depends_on('nco')
+    # depends_on('gempak')
+    # depends_on('ncl')
+    # depends_on('prod-util')
+    # depends_on('cdo')
+    # depends_on('r')
+
+    depends_on('netcdf-c')
     depends_on('netcdf-fortran')
     depends_on('bacio')
     depends_on('g2')
@@ -32,3 +41,5 @@ class GlobalWorkflowEnv(BundlePackage):
     depends_on('sigio')
     depends_on('bufr')
     depends_on('wgrib2')
+    depends_on('met')
+    depends_on('metplus')
