@@ -24,10 +24,11 @@ class GlobalWorkflowEnv(BundlePackage):
     depends_on('ncl')
 
     # Need to find source of new versions of prod-util
-    #depends_on('prod-util')
+    # depends_on('prod-util')
 
     depends_on('nco')
     depends_on('cdo')
+    depends_on('nceplibs-env')
     # depends_on('r')
 
     depends_on('netcdf-c')
