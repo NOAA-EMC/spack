@@ -16,12 +16,15 @@ class UfsWeatherModelEnv(BundlePackage):
 
     maintainers = ['kgerheiser', 'climbfuji']
 
-    version('main', branch='main')
+    version('1.0.0', branch='develop')
     variant('python', default=True, description='Build Python dependencies')
 
     depends_on('base-env', type='run')
 
-    depends_on('esmf@8.3.0b09~debug', type='run')
+    depends_on('esmf~debug', type='run')
+    depends_on('esmf@8.3.0b09~debug', when='@1.0.0', type='run')
+
+    depends_on('mapl~debug', type='run')
     depends_on('fms', type='run')
 
     depends_on('bacio', type='run')
@@ -31,7 +34,6 @@ class UfsWeatherModelEnv(BundlePackage):
     depends_on('ip', type='run')
     depends_on('sp', type='run')
     depends_on('w3nco', type='run')
-    depends_on('w3emc')
+    depends_on('w3emc', type='run')
 
-    depends_on('mapl~debug', type='run')
     depends_on('ufswm-pyenv', when='+python')

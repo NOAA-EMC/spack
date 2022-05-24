@@ -16,7 +16,9 @@ class UfsWeatherModelDebugEnv(BundlePackage):
 
     maintainers = ['kgerheiser', 'climbfuji']
 
-    version('main', branch='main')
+    version('1.0.0')
 
-    depends_on('esmf@8.3.0b09+debug', type='run')
+    depends_on('esmf', type='run')
     depends_on('mapl+debug', type='run')
+
+    depends_on('esmf@8.3.0b09+debug', when='@1.0.0', type='run')
