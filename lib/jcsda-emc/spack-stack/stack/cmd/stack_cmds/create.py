@@ -37,7 +37,8 @@ def site_help():
 
 def app_help():
     _, app_dirs, _ = next(os.walk(stack_path('configs', 'apps')))
-    help_string = 'Application environment to build.' + os.linesep
+    help_string = 'Environment to build.' + os.linesep
+    help_string += 'Default to an empty spack.yaml template.'
     help_string += 'Available options are: ' + os.linesep
     for app in app_dirs:
         help_string += '\t' + app + os.linesep
