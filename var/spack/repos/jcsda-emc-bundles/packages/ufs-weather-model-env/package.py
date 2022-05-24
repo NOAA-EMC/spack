@@ -21,7 +21,7 @@ class UfsWeatherModelEnv(BundlePackage):
 
     depends_on('base-env', type='run')
 
-    depends_on('esmf~debug', type='run')
+    depends_on('esmf@8.3.0b09~debug', type='run')
     depends_on('fms', type='run')
 
     depends_on('bacio', type='run')
@@ -31,6 +31,7 @@ class UfsWeatherModelEnv(BundlePackage):
     depends_on('ip', type='run')
     depends_on('sp', type='run')
     depends_on('w3nco', type='run')
+    depends_on('w3emc')
 
     depends_on('mapl~debug', type='run')
     depends_on('ufswm-pyenv', when='+python')

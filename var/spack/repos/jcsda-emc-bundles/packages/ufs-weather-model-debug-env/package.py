@@ -18,5 +18,5 @@ class UfsWeatherModelDebugEnv(BundlePackage):
 
     version('main', branch='main')
 
-    depends_on('esmf+debug', type='run')
+    depends_on('esmf@8.3.0b09+debug', type='run')
     depends_on('mapl+debug', type='run')
