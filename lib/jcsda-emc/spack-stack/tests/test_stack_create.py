@@ -40,7 +40,7 @@ def all_containers():
 @pytest.mark.parametrize('app', all_apps())
 @pytest.mark.filterwarnings('ignore::UserWarning')
 def test_apps(app):
-    output = stack_create('create', 'env', '--app', app,
+    output = stack_create('create', 'environment', '--app', app,
                           '--dir', test_dir, '--overwrite')
 
 
@@ -48,7 +48,7 @@ def test_apps(app):
 @pytest.mark.parametrize('site', all_sites())
 @pytest.mark.filterwarnings('ignore::UserWarning')
 def test_sites(site):
-    output = stack_create('create', 'env', '--site', site,
+    output = stack_create('create', 'environment', '--site', site,
                           '--dir', test_dir, '--overwrite')
 
 
