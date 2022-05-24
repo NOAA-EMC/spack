@@ -54,15 +54,12 @@ def container_config_help():
 
 
 def spec_help():
-    _, _, container_configs = next(os.walk(stack_path('configs', 'containers')))
-    help_string = 'Pre-configured container.' + os.linesep
-    help_string += 'Available options are: ' + os.linesep
-    for config in container_configs:
-        help_string += '\t' + config.rstrip('.yaml') + os.linesep
-    return help_string
-
-def spec_help():
+    bundles_dir = os.path.join(spack.paths.var_path, 'repos', 'jcsda-emc-bundles', 'packages')
+    _, bundle_envs, _ = next(os.walk(bundles_dir))
     help_string = 'Any valid spack spec, e.g. "wget" or "jedi-ufs-bundle-env".' + os.linesep
+    help_string += 'Some env specs are: ' + os.linesep
+    for bundle in bundle_envs:
+        help_string += '\t' + bundle + os.linesep
     return help_string
 
 
@@ -75,7 +72,7 @@ def setup_common_parser_args(subparser):
 
     subparser.add_argument(
         '--specs', nargs='+', required=False, dest='specs', default=[],
-        help='Specs to build.'
+        help=spec_help()
     )
 
     subparser.add_argument(
