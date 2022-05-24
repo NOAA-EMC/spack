@@ -31,5 +31,6 @@ class UfsUtilsEnv(BundlePackage):
     depends_on('sfcio')
     depends_on('sigio')
     depends_on('nccmp')
+    depends_on('wgrib2')
 
     # There is no need for install() since there is no code.
