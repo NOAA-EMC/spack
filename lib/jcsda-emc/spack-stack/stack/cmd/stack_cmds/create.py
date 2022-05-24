@@ -54,6 +54,14 @@ def container_config_help():
 
 
 def spec_help():
+    _, _, container_configs = next(os.walk(stack_path('configs', 'containers')))
+    help_string = 'Pre-configured container.' + os.linesep
+    help_string += 'Available options are: ' + os.linesep
+    for config in container_configs:
+        help_string += '\t' + config.rstrip('.yaml') + os.linesep
+    return help_string
+
+def spec_help():
     help_string = 'Any valid spack spec, e.g. "wget" or "jedi-ufs-bundle-env".' + os.linesep
     return help_string
 
@@ -63,6 +71,11 @@ def setup_common_parser_args(subparser):
     subparser.add_argument(
         '--app', type=str, required=False, dest='app', default='empty',
         help=app_help()
+    )
+
+    subparser.add_argument(
+        '--specs', nargs='+', required=False, dest='specs', default=[],
+        help='Specs to build.'
     )
 
     subparser.add_argument(
@@ -120,7 +133,7 @@ def setup_env_parser(subparser):
 def setup_create_parser(subparser):
     sp = subparser.add_subparsers(metavar='SUBCOMMAND', dest='env_type')
 
-    env_parser = sp.add_parser('env', help='Create local Spack environment')
+    env_parser = sp.add_parser('environment', help='Create local Spack environment')
     container_parser = sp.add_parser('container', help='Create container.')
 
     setup_env_parser(env_parser)
@@ -191,12 +204,13 @@ def env_create(args):
     else:
         logging.debug('Creating envs from command-line args')
         stack_env = StackEnv(**stack_settings)
+        stack_env.add_specs(args.specs)
         stack_env.write()
         tty.msg('Created env {}'.format(env_dir))
 
 
 def stack_create(parser, args):
-    if args.env_type == 'env':
+    if args.env_type == 'environment':
         env_create(args)
     elif args.env_type == 'container':
         container_create(args)

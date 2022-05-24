@@ -20,7 +20,7 @@ container_path = os.path.join(stack_path(), 'configs' 'containers')
 def setup_parser(subparser):
     sp = subparser.add_subparsers(metavar='SUBCOMMAND', dest='stack_command')
     create_parser = sp.add_parser('create',
-                                  help='Create spack-stack env or container.')
+                                  help='Create spack-stack "environment" or "container".')
     setup_create_parser(create_parser)
 
 
