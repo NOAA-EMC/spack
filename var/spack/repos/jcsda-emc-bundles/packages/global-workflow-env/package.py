@@ -9,9 +9,9 @@ from spack import *
 
 
 class GlobalWorkflowEnv(BundlePackage):
-    """Development environment for GSI"""
+    """Development environment for NOAA's Global Workflow"""
 
-    homepage = "https://github.com/NOAA-EMC/GSI"
+    homepage = "https://github.com/NOAA-EMC/global-workflow"
     git      = "https://github.com/NOAA-EMC/global-workflow.git"
 
     maintainers = ['kgerheiser']
@@ -19,11 +19,11 @@ class GlobalWorkflowEnv(BundlePackage):
     version('develop', branch='develop')
 
     # FIXME - Need to check these packages
-    # depends_on('nco')
     # depends_on('gempak')
-    # depends_on('ncl')
-    # depends_on('prod-util')
-    # depends_on('cdo')
+    depends_on('ncl')
+    depends_on('prod-util')
+    depends_on('nco')
+    depends_on('cdo')
     # depends_on('r')
 
     depends_on('netcdf-c')

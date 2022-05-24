@@ -6,12 +6,12 @@
 from spack import *
 
 
-class GwPyenv(BundlePackage):
+class UfswmPyenv(BundlePackage):
     """
     Python development environment for the UFS weather model.
     """
 
-    homepage = "https://github.com/NOAA-EMC/global-workflow"
+    homepage = "https://github.com/NOAA-EMC/GSI"
     git = "https://github.com/NOAA-EMC/global-workflow.git"
     # There is no URL since there is no code to download.
 
