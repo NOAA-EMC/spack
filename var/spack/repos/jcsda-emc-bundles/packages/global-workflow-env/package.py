@@ -43,3 +43,4 @@ class GlobalWorkflowEnv(BundlePackage):
     depends_on('wgrib2')
     depends_on('met')
     depends_on('metplus')
+    depends_on('gw-pyenv')

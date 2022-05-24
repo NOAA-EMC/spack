@@ -32,3 +32,4 @@ class UfsWeatherModelEnv(BundlePackage):
     depends_on('w3nco', type='run')
 
     depends_on('mapl~debug', type='run')
+    depends_on('ufswm-pyenv')
