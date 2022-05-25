@@ -13,13 +13,13 @@ import spack
 import spack.extensions.stack.stack_paths
 
 # Get basic directory information
-logging.info("Configuring basic directory information ...")
+# logging.info("Configuring basic directory information ...")
 this_script_dir=os.path.realpath(os.path.split(__file__)[0])
 base_dir=os.path.realpath(os.path.join(this_script_dir, '..'))
 spack_dir = spack.paths.spack_root
-logging.info("  ... script directory: {}".format(this_script_dir))
-logging.info("  ... base directory: {}".format(base_dir))
-logging.info("  ... spack directory: {}".format(spack_dir))
+# logging.info("  ... script directory: {}".format(this_script_dir))
+# logging.info("  ... base directory: {}".format(base_dir))
+# logging.info("  ... spack directory: {}".format(spack_dir))
 
 # Templates for creating compiler modules
 COMPILER_TEMPLATES = {

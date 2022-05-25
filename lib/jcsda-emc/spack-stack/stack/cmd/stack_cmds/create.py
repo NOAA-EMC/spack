@@ -2,7 +2,8 @@ import spack.cmd.common.arguments
 import spack.cmd.modules
 import os
 import logging
-from spack.extensions.stack.stack_env import StackEnv, stack_path
+from spack.extensions.stack.stack_env import StackEnv
+from spack.extensions.stack.stack_paths import stack_path
 from spack.extensions.stack.container_env import StackContainer
 import shutil
 import llnl.util.tty as tty
@@ -193,7 +194,7 @@ def env_create(args):
             raise Exception('Environment: {} already exists'.format(env_dir))
 
     if args.envs_file:
-        logging.debug('Creating environment from envs_file')
+        #logging.debug('Creating environment from envs_file')
         with open(args.envs_file, 'r') as f:
             site_envs = syaml.load_config(stream=f)
 
@@ -202,7 +203,7 @@ def env_create(args):
             stack_env = StackEnv(**env['env'])
             stack_env.write()
     else:
-        logging.debug('Creating environment from command-line args')
+        #logging.debug('Creating environment from command-line args')
         stack_env = StackEnv(**stack_settings)
         stack_env.add_specs(args.specs)
         stack_env.write()

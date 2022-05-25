@@ -235,4 +235,4 @@ class StackEnv(object):
 
         ev.deactivate()
 
-        logging.info('Successfully wrote environment at {}'.format(env_file))
+        #logging.info('Successfully wrote environment at {}'.format(env_file))
