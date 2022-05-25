@@ -2,7 +2,7 @@ import spack.cmd.common.arguments
 import spack.cmd.modules
 import os
 import logging
-from spack.extensions.stack.stack_env import StackEnv, stack_path, app_path
+from spack.extensions.stack.stack_env import StackEnv, stack_path
 from spack.extensions.stack.container_env import StackContainer
 import shutil
 import llnl.util.tty as tty
@@ -35,13 +35,13 @@ def site_help():
     return help_string
 
 
-def app_help():
-    _, app_dirs, _ = next(os.walk(stack_path('configs', 'apps')))
-    help_string = 'Environment to build.' + os.linesep
-    help_string += 'Default to an empty spack.yaml template.'
+def template_help():
+    _, template_dirs, _ = next(os.walk(stack_path('configs', 'templates')))
+    help_string = 'Environment template' + os.linesep
+    help_string += 'Default to an empty spack.yaml'
     help_string += 'Available options are: ' + os.linesep
-    for app in app_dirs:
-        help_string += '\t' + app + os.linesep
+    for template in template_dirs:
+        help_string += '\t' + template + os.linesep
     return help_string
 
 
@@ -67,8 +67,8 @@ def spec_help():
 def setup_common_parser_args(subparser):
     """Shared CLI args for container and environment subcommands"""
     subparser.add_argument(
-        '--app', type=str, required=False, dest='app', default='empty',
-        help=app_help()
+        '--template', type=str, required=False, dest='template', default='empty',
+        help=template_help()
     )
 
     subparser.add_argument(
@@ -143,7 +143,7 @@ def setup_create_parser(subparser):
 def container_create(args):
     """Create pre-configured container"""
 
-    container = StackContainer(args.container, args.app, args.name,
+    container = StackContainer(args.container, args.template, args.name,
                                args.dir, args.packages)
 
     env_dir = container.env_dir
@@ -161,7 +161,7 @@ def container_create(args):
 def dict_from_args(args):
     dict = {}
     dict['site'] = args.site
-    dict['app'] = args.app
+    dict['template'] = args.template
     dict['name'] = args.name
     dict['envs_file'] = args.envs_file
     dict['install_prefix'] = args.prefix

@@ -26,8 +26,8 @@ def test_setup_meta_modules():
     os.makedirs(test_dir, exist_ok=True)
 
     env_dir = os.path.join(test_dir)
-    create_output = stack_create('create', 'env', '--dir', env_dir,
-                                 '--app', 'empty', '--site', 'default', '--overwrite')
+    create_output = stack_create('create', 'environment', '--dir', env_dir,
+                                 '--site', 'default', '--overwrite')
 
     # Create empty env
     env_dir = os.path.join(env_dir, 'empty.default')

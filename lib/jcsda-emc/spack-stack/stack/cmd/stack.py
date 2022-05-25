@@ -23,7 +23,6 @@ def setup_parser(subparser):
     create_parser = sp.add_parser('create',
                                   help='Create spack-stack environment or container.')
     meta_modules_parser = sp.add_parser('setup-meta-modules', help='Create lmod/lua or tcl/tk meta-modules')
->>>>>>> de7b2234ce1b020b3887fccbdb8c87d3a0837b3d
     setup_create_parser(create_parser)
     setup_meta_modules_parser(meta_modules_parser)
 
