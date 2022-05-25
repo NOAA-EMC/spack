@@ -484,6 +484,7 @@ with '-Wl,-commons,use_dylibs' and without
             match = re.search(r'\bC compiler absolute: (\S+)', output)
             if match:
                 print('match = ', match)
+                print(match.group(1))
                 compiler_spec = get_spack_compiler_spec(
                     os.path.dirname(match.group(1)))
                 print('compiler_spec = ', compiler_spec)
