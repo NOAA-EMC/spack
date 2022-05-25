@@ -483,8 +483,10 @@ with '-Wl,-commons,use_dylibs' and without
             # Get the appropriate compiler
             match = re.search(r'\bC compiler absolute: (\S+)', output)
             if match:
+                print('match = ', match)
                 compiler_spec = get_spack_compiler_spec(
                     os.path.dirname(match.group(1)))
+                print('compiler_spec = ', compiler_spec)
                 if compiler_spec:
                     variants.append("%" + str(compiler_spec))
             results.append(' '.join(variants))
@@ -1087,11 +1089,14 @@ with '-Wl,-commons,use_dylibs' and without
 def get_spack_compiler_spec(path):
     spack_compilers = spack.compilers.find_compilers([path])
     actual_compiler = None
+    print('get_spack_compiler')
+    print('path = ', path)
     # check if the compiler actually matches the one we want
     for spack_compiler in spack_compilers:
         if (spack_compiler.cc and
                 os.path.dirname(spack_compiler.cc) == path):
             actual_compiler = spack_compiler
+            print('actual_compiler = ', actual_compiler)
             break
     return actual_compiler.spec if actual_compiler else None
 
