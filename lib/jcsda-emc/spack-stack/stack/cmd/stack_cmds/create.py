@@ -58,6 +58,7 @@ def spec_help():
     bundles_dir = os.path.join(spack.paths.var_path, 'repos', 'jcsda-emc-bundles', 'packages')
     _, bundle_envs, _ = next(os.walk(bundles_dir))
     help_string = 'Any valid spack spec, e.g. "wget" or "jedi-ufs-bundle-env".' + os.linesep
+    help_string = 'Can be empty. Specs are added in addition to any given template.'
     help_string += 'Some env specs are: ' + os.linesep
     for bundle in bundle_envs:
         help_string += '\t' + bundle + os.linesep
@@ -72,7 +73,7 @@ def setup_common_parser_args(subparser):
     )
 
     subparser.add_argument(
-        '--specs', nargs='+', required=False, dest='specs', default=[],
+        '--specs', nargs='*', required=False, dest='specs', default=[],
         help=spec_help()
     )
 
