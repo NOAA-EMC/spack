@@ -30,7 +30,7 @@ class Ww3Env(BundlePackage):
 
     depends_on('netcdf-fortran', when='+netcdf')
 
-    depends_on('metis', when='+metis')
+    depends_on('metis', when='+parmetis')
     depends_on('parmetis', when='+parmetis')
     depends_on('esmf', when='+esmf')
 
