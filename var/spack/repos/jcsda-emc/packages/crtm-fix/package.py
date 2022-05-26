@@ -3,8 +3,9 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-from spack import *
 import os
+
+from spack import *
 
 
 class CrtmFix(Package):
@@ -49,19 +50,22 @@ class CrtmFix(Package):
             fix_files = fix_files + find('.', '*/{}/*'.format(d))
 
         # Big_Endian amsua_metop-c.SpcCoeff.bin is incorrect
-        # Little_Endian amsua_metop-c_v2.SpcCoeff.bin is what it's supposed to be
-        # Remove the incorrect file, and install it as noACC, and install the correct file.
+        # Little_Endian amsua_metop-c_v2.SpcCoeff.bin is what it's supposed to be.
+        # Remove the incorrect file, and install it as noACC,, then install
+        # correct file under new name.
         if '+big_endian' in spec and spec.version == Version('2.4.0_emc'):
             remove_path = join_path(os.getcwd(), 'fix', 'SpcCoeff',
                                     'Big_Endian', 'amsua_metop-c.SpcCoeff.bin')
             fix_files.remove(remove_path)
 
             # This file is incorrect, install it as a different name.
-            install(join_path('fix', 'SpcCoeff', 'Big_Endian', 'amsua_metop-c.SpcCoeff.bin'),
+            install(join_path('fix', 'SpcCoeff', 'Big_Endian',
+                              'amsua_metop-c.SpcCoeff.bin'),
                     join_path(self.prefix.fix, 'amsua_metop-c.SpcCoeff.noACC.bin'))
 
             # This "Little_Endian" file is actually the correct one.
-            install(join_path('fix', 'SpcCoeff', 'Little_Endian', 'amsua_metop-c_v2.SpcCoeff.bin'),
+            install(join_path('fix', 'SpcCoeff', 'Little_Endian',
+                              'amsua_metop-c_v2.SpcCoeff.bin'),
                     join_path(self.prefix.fix, 'amsua_metop-c.SpcCoeff.bin'))
 
         for f in fix_files:
