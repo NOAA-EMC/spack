@@ -262,15 +262,16 @@ class Esmf(MakefilePackage):
             # and NetCDF formats through ParallelIO (PIO), a third-party IO
             # software library that is integrated in the ESMF library.
 
-            # PIO-dependent features will be enabled and will use the
-            # PIO library that is included and built with ESMF.
-            if spec.satisfies('@:8.3.0'):
-                os.environ['ESMF_PIO'] = 'internal'
-            else:
+            if spec.satisfies('@8.3.0:'):
                 # ESMF 8.3.0 introduced external PIO
                 os.environ['ESMF_PIO'] = 'external'
                 os.environ['ESMF_PIO_INCLUDE'] = spec['parallelio'].prefix.include
                 os.environ['ESMF_PIO_LIBPATH'] = spec['parallelio'].prefix.lib
+            else:
+                # PIO-dependent features will be enabled and will use the
+                # PIO library that is included and built with ESMF.
+                os.environ['ESMF_PIO'] = 'internal'
+
         else:
             # Disables PIO-dependent code.
             os.environ['ESMF_PIO'] = 'OFF'
