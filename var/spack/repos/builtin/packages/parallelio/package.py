@@ -38,6 +38,10 @@ class Parallelio(CMakePackage):
              git='https://github.com/PARALLELIO/genf90.git',
              tag='genf90_200608')
 
+    def url_for_version(self, version):
+        url = 'https://github.com/NCAR/ParallelIO/archive/refs/tags/pio{}.tar.gz'
+        return url.format(version.underscored, version)
+
     def cmake_args(self):
         define = self.define
         define_from_variant = self.define_from_variant
