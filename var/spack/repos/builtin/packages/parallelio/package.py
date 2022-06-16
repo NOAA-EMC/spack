@@ -40,7 +40,7 @@ class Parallelio(CMakePackage):
 
     def url_for_version(self, version):
         url = 'https://github.com/NCAR/ParallelIO/archive/refs/tags/pio{}.tar.gz'
-        return url.format(version.underscored, version)
+        return url.format(version.underscored)
 
     def cmake_args(self):
         define = self.define
