@@ -48,7 +48,7 @@ class Mapl(CMakePackage):
     variant('esma_gfe_namespace', default=True)
     variant('shared', default=True)
     variant('debug', default=False, description='Make a debuggable version of the library')
-    variant('extdata2g', default=True, description='Use ExtData2G')
+    variant('extdata2g', default=False, description='Use ExtData2G')
 
     depends_on('mpi')
     depends_on('hdf5')
