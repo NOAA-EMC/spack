@@ -17,28 +17,17 @@ class GlobalWorkflowEnv(BundlePackage):
     maintainers = ['kgerheiser']
 
     version('1.0.0')
+    variant('python', default=True, description='Build Python dependencies')
 
+    depends_on('ufs-pyenv', when='+python')
     depends_on('prod-util')
     depends_on('nco')
     depends_on('cdo')
     depends_on('netcdf-c')
     depends_on('netcdf-fortran')
     depends_on('esmf')
-    depends_on('bacio')
-    depends_on('g2')
-    depends_on('w3nco')
-    depends_on('w3emc')
-    depends_on('sp')
-    depends_on('ip')
-    depends_on('nemsio')
-    depends_on('nemsiogfs')
-    depends_on('ncio')
-    depends_on('landsfcutil')
-    depends_on('sigio')
-    depends_on('bufr')
-    depends_on('wgrib2')
+    depends_on('nceplibs-env')
     depends_on('met')
     depends_on('metplus')
-    depends_on('gw-pyenv')
 
     # There is no need for install() since there is no code.
