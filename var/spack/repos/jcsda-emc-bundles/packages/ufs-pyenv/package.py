@@ -12,7 +12,6 @@ class UfsPyenv(BundlePackage):
     """
 
     homepage = ""
-    git = ""
     # There is no URL since there is no code to download.
 
     maintainers = ['kgerheiser', 'Hang-Lei-NOAA']
