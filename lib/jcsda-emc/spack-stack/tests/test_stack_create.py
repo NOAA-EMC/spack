@@ -1,6 +1,8 @@
-import pytest
-import spack.main
 import os
+
+import pytest
+
+import spack.main
 import spack
 
 stack_create = spack.main.SpackCommand('stack')
@@ -52,8 +54,8 @@ def all_containers():
 def test_apps(template):
     if not template:
         return
-    output = stack_create('create', 'env', '--template', template,
-                          '--dir', test_dir, '--overwrite')
+    stack_create('create', 'env', '--template', template,
+                 '--dir', test_dir, '--overwrite')
 
 
 @pytest.mark.extension('stack')
@@ -62,8 +64,8 @@ def test_apps(template):
 def test_sites(site):
     if not site:
         return
-    output = stack_create('create', 'env', '--site', site,
-                          '--dir', test_dir, '--overwrite')
+    stack_create('create', 'env', '--site', site,
+                 '--dir', test_dir, '--overwrite')
 
 
 @pytest.mark.extension('stack')
@@ -73,5 +75,5 @@ def test_containers(container):
     if not container:
         return
     container_wo_ext = os.path.splitext(container)[0]
-    output = stack_create('create', 'ctr', container_wo_ext,
-                          '--dir', test_dir, '--overwrite')
+    stack_create('create', 'ctr', container_wo_ext,
+                 '--dir', test_dir, '--overwrite')
