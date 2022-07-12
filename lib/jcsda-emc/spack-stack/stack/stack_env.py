@@ -1,14 +1,22 @@
-import subprocess
-import spack
-import os
-import logging
-import spack.util.spack_yaml as syaml
-import spack.environment as ev
-import shutil
-import llnl.util.tty as tty
-import spack.config
 import copy
-from spack.extensions.stack.stack_paths import stack_path, container_path, template_path, common_path, site_path
+import logging
+import os
+import shutil
+import subprocess
+
+import llnl.util.tty as tty
+
+import spack
+import spack.config
+import spack.environment as ev
+import spack.util.spack_yaml as syaml
+from spack.extensions.stack.stack_paths import (
+    common_path,
+    container_path,
+    site_path,
+    stack_path,
+    template_path,
+)
 
 default_manifest_yaml = """\
 # This is a Spack Environment file.

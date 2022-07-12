@@ -2,9 +2,9 @@ import os
 
 import pytest
 
-import spack.main
 import spack
 import spack.environment as ev
+import spack.main
 
 stack_create = spack.main.SpackCommand('stack')
 

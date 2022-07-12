@@ -1,13 +1,15 @@
+import logging
+import os
+import shutil
+from sys import platform
+
+import llnl.util.tty as tty
+
 import spack.cmd.common.arguments
 import spack.cmd.modules
-import os
-import logging
-from spack.extensions.stack.stack_env import StackEnv, stack_path
-from spack.extensions.stack.container_env import StackContainer
-import shutil
-import llnl.util.tty as tty
 import spack.util.spack_yaml as syaml
-from sys import platform
+from spack.extensions.stack.container_env import StackContainer
+from spack.extensions.stack.stack_env import StackEnv, stack_path
 
 description = "Create spack-stack environment (environment or container)"
 section = "spack-stack"

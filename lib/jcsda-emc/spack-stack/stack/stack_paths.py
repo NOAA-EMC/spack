@@ -1,5 +1,6 @@
-import spack
 import os
+
+import spack
 
 # Hidden file in top-level spack-stack dir so this module can
 # find relative config files. Assuming Spack is a submodule of

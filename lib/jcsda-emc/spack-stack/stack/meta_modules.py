@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
-import spack.environment as ev
 import copy
 import logging
+
+import spack.environment as ev
+
 #logging.basicConfig(level=logging.INFO)
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 import os
+import re
 import shutil
 import sys
-import re
+
 import spack
 import spack.extensions.stack.stack_paths
 
