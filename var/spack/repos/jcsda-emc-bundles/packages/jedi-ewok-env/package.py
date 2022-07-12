@@ -36,6 +36,6 @@ class JediEwokEnv(BundlePackage):
     depends_on('ewok', when='+ewok', type='run')
 
     conflicts('%gcc platform=darwin', msg='jedi-ewok-env does ' +
-            'not build with gcc (11?) on macOS (12), use apple-clang')
+              'not build with gcc (11?) on macOS (12), use apple-clang')
 
     # There is no need for install() since there is no code.
