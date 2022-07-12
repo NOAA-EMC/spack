@@ -3,8 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
 from spack import *
+
 
 class Fckit(CMakePackage):
     """A Fortran toolkit for interoperating Fortran with C/C++."""
@@ -37,13 +37,14 @@ class Fckit(CMakePackage):
 
     def cmake_args(self):
         res = [
-                self.define_from_variant('ENABLE_ECKIT', 'eckit'),
-                '-DCMAKE_C_COMPILER=%s' % self.spec['mpi'].mpicc,
-                '-DCMAKE_CXX_COMPILER=%s' % self.spec['mpi'].mpicxx,
-                '-DCMAKE_Fortran_COMPILER=%s' % self.spec['mpi'].mpifc,
-                "-DPYTHON_EXECUTABLE:FILEPATH=" + self.spec['python'].command.path,
-                '-DFYPP_NO_LINE_NUMBERING=ON'
-                ]
+            self.define_from_variant('ENABLE_ECKIT', 'eckit'),
+            '-DCMAKE_C_COMPILER=%s' % self.spec['mpi'].mpicc,
+            '-DCMAKE_CXX_COMPILER=%s' % self.spec['mpi'].mpicxx,
+            '-DCMAKE_Fortran_COMPILER=%s' % self.spec['mpi'].mpifc,
+            "-DPYTHON_EXECUTABLE:FILEPATH=" + self.spec['python'].command.path,
+            '-DFYPP_NO_LINE_NUMBERING=ON'
+        ]
+
         if '~shared' in self.spec:
             res.append('-DBUILD_SHARED_LIBS=OFF')
 

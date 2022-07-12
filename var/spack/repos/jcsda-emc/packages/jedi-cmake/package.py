@@ -3,8 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
 from spack import *
+
 
 class JediCmake(CMakePackage):
     """CMake/ecbuild toolchains to facilitate portability on different systems."""
