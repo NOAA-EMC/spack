@@ -35,7 +35,7 @@ class Fms(CMakePackage):
     # back into the official repository.
     # Commit corresponds to branch='release-stable' in the JCSDA public fork
     version('release-jcsda', commit="1f739141ef8b000a0bd75ae8bebfadea340299ba", no_cache=True)
-    #version('dev-jcsda', branch='dev/jcsda', no_cache=True)
+    # version('dev-jcsda', branch='dev/jcsda', no_cache=True)
 
     with when('@release-jcsda'):
         git      = "https://github.com/JCSDA/fms.git"

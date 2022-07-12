@@ -133,7 +133,7 @@ class ParallelNetcdf(AutotoolsPackage):
 
     def configure_args(self):
         if self.spec['mpi'].satisfies('intel-oneapi-mpi'):
-            prefix = os.path.join(self.spec['mpi'].prefix, 
+            prefix = os.path.join(self.spec['mpi'].prefix,
                                   'mpi', str(self.spec['mpi'].version))
         else:
             prefix = self.spec['mpi'].prefix

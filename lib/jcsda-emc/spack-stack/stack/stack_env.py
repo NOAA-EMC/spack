@@ -99,7 +99,7 @@ class StackEnv(object):
         self.upstream = kwargs.get('upstreams', None)
 
         if not self.name:
-            site = self.site if self.site else 'default'
+            # site = self.site if self.site else 'default'
             self.name = '{}.{}'.format(self.template, self.site)
 
     def env_dir(self):

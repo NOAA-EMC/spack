@@ -43,7 +43,7 @@ class Wgrib2(MakefilePackage):
     variant('netcdf4', default=False,
             description='Link in netcdf4 library to write netcdf3/4 files')
     variant('ipolates', default='3',
-            description='Link ip library to interpolate to new grids (0=OFF, 1=ip, 3=ip2)',
+            description='Use to interpolate to new grids (0 = OFF, 1 = ip, 3 = ip2)',
             values=('0', '1', '3'))
     variant('spectral', default=False,
             description='Spectral interpolation in -new_grid')
@@ -111,7 +111,7 @@ class Wgrib2(MakefilePackage):
                     output = Executable(self.compiler.fc)('-###', output=str, error=str)
                     libdir = re.search('--libdir=(.+?) ', output).group(1)
                     flags.append('-L{}'.format(libdir))
-    
+
         return (flags, None, None)
 
     flag_handler = inject_flags
@@ -167,7 +167,7 @@ class Wgrib2(MakefilePackage):
                 makefile.filter(r'^%s=.*' % makefile_option,
                                 '{}={}'.format(makefile_option, value))
 
-            # Enable MAKE_FTN_API to build library and USE_REGEX (there is a bug when off)
+            # Need USE_REGEX in addition to MAKE_FTN_API to build lib
             makefile.filter(r'^MAKE_FTN_API=.*', 'MAKE_FTN_API=1')
             makefile.filter(r'^USE_REGEX=.*', 'USE_REGEX=1')
             make('lib')

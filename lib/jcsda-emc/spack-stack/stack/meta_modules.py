@@ -2,23 +2,20 @@
 
 import copy
 import logging
-
-import spack.environment as ev
-
-#logging.basicConfig(level=logging.INFO)
-logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 import os
 import re
-import shutil
 import sys
 
 import spack
-import spack.extensions.stack.stack_paths
+import spack.environment as ev
+
+# logging.basicConfig(level=logging.INFO)
+logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
 # Get basic directory information
 logging.info("Configuring basic directory information ...")
-this_script_dir=os.path.realpath(os.path.split(__file__)[0])
-base_dir=os.path.realpath(os.path.join(this_script_dir, '..'))
+this_script_dir = os.path.realpath(os.path.split(__file__)[0])
+base_dir = os.path.realpath(os.path.join(this_script_dir, '..'))
 spack_dir = spack.paths.spack_root
 logging.info("  ... script directory: {}".format(this_script_dir))
 logging.info("  ... base directory: {}".format(base_dir))
@@ -28,50 +25,52 @@ logging.info("  ... spack directory: {}".format(spack_dir))
 COMPILER_TEMPLATES = {
     'lmod': os.path.join(this_script_dir, 'templates/compiler.lua'),
     'tcl': os.path.join(this_script_dir, 'templates/compiler'),
-    }
+}
 MPI_TEMPLATES = {
     'lmod': os.path.join(this_script_dir, 'templates/mpi.lua'),
     'tcl': os.path.join(this_script_dir, 'templates/mpi'),
-    }
+}
 PYTHON_TEMPLATES = {
     'lmod': os.path.join(this_script_dir, 'templates/python.lua'),
     'tcl': os.path.join(this_script_dir, 'templates/python')
-    }
+}
 MODULE_FILE_EXTENSION = {
     'lmod': '.lua',
     'tcl': '',
-    }
+}
 
 SUBSTITUTES_TEMPLATE = {
-    'MODULELOADS'   : '',
-    'MODULEPREREQS' : '',
-    'MODULEPATH'    : '',
-    'CC'            : '',
-    'CXX'           : '',
-    'F77'           : '',
-    'FC'            : '',
-    'COMPFLAGS'     : '',
-    'ENVVARS'       : '',
-    'MPICC'         : '',
-    'MPICXX'        : '',
-    'MPIF77'        : '',
-    'MPIFC'         : '',
-    'MPIROOT'       : '',
-    'PYTHONROOT'    : '',
-    }
+    'MODULELOADS': '',
+    'MODULEPREREQS': '',
+    'MODULEPATH': '',
+    'CC': '',
+    'CXX': '',
+    'F77': '',
+    'FC': '',
+    'COMPFLAGS': '',
+    'ENVVARS': '',
+    'MPICC': '',
+    'MPICXX': '',
+    'MPIF77': '',
+    'MPIFC': '',
+    'MPIROOT': '',
+    'PYTHONROOT': '',
+}
 
-########################################################################
 
 def versiontuple(v):
     """Version comparison without relying on packaging module"""
     return tuple(map(int, (v.split("."))))
 
+
 def get_name_and_version_from_spec(spec):
     """Extract the name and the version from a spec"""
-    (spec_name, spec_version) = spec.split('@',1)
+    (spec_name, spec_version) = spec.split('@', 1)
     # Strip off any compiler/provider specification or variants from the spec version
-    spec_version = spec_version.split('+')[0].split('~')[0].split('-')[0].split('%')[0].split('^')[0].strip()
+    spec_version = spec_version.split('+')[0].split('~')[0].split('-')[0] \
+                                .split('%')[0].split('^')[0].strip()
     return (spec_name, spec_version)
+
 
 def get_matched_dict(root_dir, candidate_list, sub_candidate_list = None):
     """Return a dictionary of package (compiler, mpi) versions that contains
@@ -79,7 +78,9 @@ def get_matched_dict(root_dir, candidate_list, sub_candidate_list = None):
     This versions are identified by parsing the spack modulefile tree and
     matching the candidate names/versions (partially if incomplete) to the
     directory names. For packages with dependencies (e.g. mpi depends on compiler),
-    a recursive search for compiler versions based on sub_candidate_list is performed."""
+    a recursive search is performed for compiler versions 
+    based on sub_candidate_list."""
+
     matched_dict = {}
     dirs = [ xdir for xdir in os.listdir(root_dir) if os.path.isdir(os.path.join(root_dir, xdir)) ]
     for candidate in candidate_list:

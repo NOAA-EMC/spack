@@ -7,8 +7,8 @@ from spack import *
 
 
 class Met(AutotoolsPackage):
-    """Statistical tool that matches up grids with either 
-    gridded analyses or point observations and applies 
+    """Statistical tool that matches up grids with either
+    gridded analyses or point observations and applies
     configurable methods to compute statistics and diagnostics"""
 
     homepage = "https://dtcenter.org/community-code/model-evaluation-tools-met"

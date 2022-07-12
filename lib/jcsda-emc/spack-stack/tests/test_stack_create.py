@@ -39,6 +39,7 @@ def all_sites():
     else:
         return None
 
+
 def all_containers():
     container_path = stack_path('configs', 'containers')
     if container_path:

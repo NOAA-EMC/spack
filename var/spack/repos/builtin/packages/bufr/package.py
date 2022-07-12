@@ -95,6 +95,6 @@ class Bufr(CMakePackage):
     def install_python_interface(self):
         prefix = self.prefix
         if self.spec.satisfies('+python'):
-            with working_dir(os.path.join(self.build_directory,'python')):
+            with working_dir(os.path.join(self.build_directory, 'python')):
                 args = std_pip_args + ['--prefix=' + prefix, '.']
                 pip(*args)
