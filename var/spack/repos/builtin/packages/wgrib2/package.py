@@ -20,9 +20,7 @@
 # See the Spack documentation for more information on packaging.
 # ----------------------------------------------------------------------------
 
-import os
 import re
-import sys
 
 from spack import *
 
@@ -45,7 +43,7 @@ class Wgrib2(MakefilePackage):
     variant('netcdf4', default=False,
             description='Link in netcdf4 library to write netcdf3/4 files')
     variant('ipolates', default='3',
-            description='Link in IPOLATES library to interpolate to new grids (0=OFF, 1=ip, 3=ip2)',
+            description='Link ip library to interpolate to new grids (0=OFF, 1=ip, 3=ip2)',
             values=('0', '1', '3'))
     variant('spectral', default=False,
             description='Spectral interpolation in -new_grid')
@@ -60,15 +58,15 @@ class Wgrib2(MakefilePackage):
     variant('tigge', default=True,
             description='Ability for TIGGE-like variable names')
     variant('proj4', default=False,
-            description='The proj4 library is used to confirm that the gctpc code is working correctly')
+            description='The proj4 library is used to verify gctpc.')
     variant('aec', default=True,
-            description='Enable use of the libaec library for packing with GRIB2 template')
+            description='Use the libaec library for packing with GRIB2 template')
     variant('g2c', default=False,
-            description='include NCEP g2clib (mainly for testing purposes)')
+            description='Include NCEP g2clib (mainly for testing purposes)')
     variant('disable_timezone', default=False,
             description='Some machines do not support timezones')
     variant('disable_alarm', default=False,
-            description='Some machines do not support alarm(..) (not POSIX-1, IEEE Std 1003.1) use the alarm to terminate wgrib2 after N seconds')
+            description='Some machines do not support the alarm to terminate wgrib2')
     variant('png', default=True, description='PNG encoding')
     variant('jasper', default=True, description='JPEG compression using Jasper')
     variant('openmp', default=True, description='OpenMP parallelization')

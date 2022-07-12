@@ -46,9 +46,6 @@ class Grads(AutotoolsPackage):
     # Grads does not supply #include <stdint.h> which Intel complains about
     patch('stdint.patch')
 
-    def setup_build_environment(self, env):
-        env.set('SUPPLIBS', '/')
-
     def setup_run_environment(self, env):
         env.set('GADDIR', self.prefix.data)
 
@@ -62,6 +59,8 @@ class Grads(AutotoolsPackage):
         spec = self.spec
         libs = []
         cppflags = []
+
+        env.set('SUPPLIBS', '/')
 
         if '+grib2' in spec:
             cppflags.append('-I' + spec['g2c'].prefix.include)

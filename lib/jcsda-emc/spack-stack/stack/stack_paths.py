@@ -18,6 +18,7 @@ def stack_path(*paths):
 
     return os.path.join(stack_dir, *paths)
 
+
 common_path = stack_path('configs', 'common')
 site_path = stack_path('configs', 'sites')
 container_path = stack_path('configs', 'containers')

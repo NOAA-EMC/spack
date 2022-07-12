@@ -8,7 +8,7 @@ from spack import *
 
 class Metplus(Package):
     """
-    METplus is a verification framework that spans a wide range of temporal 
+    METplus is a verification framework that spans a wide range of temporal
     (warn-on-forecast to climate) and spatial (storm to global) scales.
     """
 

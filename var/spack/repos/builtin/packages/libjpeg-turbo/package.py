@@ -79,7 +79,7 @@ class LibjpegTurbo(Package):
     def install(self, spec, prefix):
         cmake_args = [
             '-GUnix Makefiles',
-            ]
+        ]
         if self.spec.satisfies('+shared'):
             cmake_args.append('-DENABLE_SHARED=ON')
         else:

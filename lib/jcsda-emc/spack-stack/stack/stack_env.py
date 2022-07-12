@@ -4,15 +4,12 @@ import os
 import shutil
 import subprocess
 
-import llnl.util.tty as tty
-
 import spack
 import spack.config
 import spack.environment as ev
 import spack.util.spack_yaml as syaml
 from spack.extensions.stack.stack_paths import (
     common_path,
-    container_path,
     site_path,
     stack_path,
     template_path,
@@ -35,6 +32,7 @@ spack:
 # find relative config files. Assuming Spack is a submodule of
 # spack-stack.
 check_file = '.spackstack'
+
 
 def get_git_revision_short_hash(path) -> str:
     return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],

@@ -3,8 +3,6 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
-
 from spack import *
 
 
@@ -77,7 +75,8 @@ class Mapl(CMakePackage):
         fflags = []
         if self.compiler.name in ['gcc', 'clang', 'apple-clang']:
             fflags.append('-ffree-line-length-none')
-            gfortran_major_version = int(spack.compiler.get_compiler_version_output(self.compiler.fc, '-dumpversion').split('.')[0])
+            gfortran_major_version = int(spack.compiler.get_compiler_version_output(
+                                         self.compiler.fc, '-dumpversion').split('.')[0])
             if gfortran_major_version >= 10:
                 fflags.append('-fallow-invalid-boz')
                 fflags.append('-fallow-argument-mismatch')

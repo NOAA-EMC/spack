@@ -38,14 +38,12 @@ class Bufr(CMakePackage):
     depends_on('py-numpy', type='build', when='+python')
     depends_on('py-pip', type='build', when='+python')
 
-
     def cmake_args(self):
         args = [
             self.define_from_variant('ENABLE_PYTHON', 'python')
         ]
 
         return args
-
 
     def flag_handler(self, name, flags):
         """
