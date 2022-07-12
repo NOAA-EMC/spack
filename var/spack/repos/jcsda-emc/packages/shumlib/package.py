@@ -7,7 +7,6 @@ import os
 
 from spack import *
 
-
 class Shumlib(MakefilePackage):
     """A set of libraries which are used by the UK Met Office's Unified Model, 
     that may be of use to external tools or applications where 
