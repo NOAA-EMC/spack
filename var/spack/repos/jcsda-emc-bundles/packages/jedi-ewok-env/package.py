@@ -35,7 +35,7 @@ class JediEwokEnv(BundlePackage):
     depends_on('r2d2', when='+r2d2', type='run')
     depends_on('ewok', when='+ewok', type='run')
 
-    conflicts('%gcc platform=darwin', msg='jedi-ewok-env does ' + \
-        'not build with gcc (11?) on macOS (12), use apple-clang')
+    conflicts('%gcc platform=darwin', msg='jedi-ewok-env does ' +
+            'not build with gcc (11?) on macOS (12), use apple-clang')
 
     # There is no need for install() since there is no code.
