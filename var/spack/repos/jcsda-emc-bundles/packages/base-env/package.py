@@ -3,10 +3,10 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
 import sys
 
 from spack import *
+
 
 class BaseEnv(BundlePackage):
     """Basic development environment used by other environments"""

@@ -3,10 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
-import sys
-
 from spack import *
+
 
 class JediMpasEnv(BundlePackage):
     """Development environment for mpas-bundle"""
