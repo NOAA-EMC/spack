@@ -1300,6 +1300,8 @@ class Repo(object):
         class_name = nm.mod_to_class(pkg_name)
 
         fullname = "{0}.{1}".format(self.full_namespace, pkg_name)
+        print('fullname = ', fullname)
+        print('pkg-name = ', pkg_name)
         try:
             module = importlib.import_module(fullname)
         except ImportError:
