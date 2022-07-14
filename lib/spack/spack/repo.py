@@ -1302,7 +1302,10 @@ class Repo(object):
         fullname = "{0}.{1}".format(self.full_namespace, pkg_name)
         print('fullname = ', fullname)
         print('pkg-name = ', pkg_name)
+        print('class_name = ', class_name)
+        print('namespace = ', namespace)
         try:
+            print('importing = ', fullname)
             module = importlib.import_module(fullname)
         except ImportError:
             raise UnknownPackageError(pkg_name)
