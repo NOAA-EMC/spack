@@ -145,7 +145,6 @@ jobs:
       run: |
           . share/spack/setup-env.sh
           spack -d bootstrap untrust spack-install
-          ls var/spack/repos/builtin/packages/py-pyhdf
           spack -d -v solve zlib
     - name: Run unit tests (full suite with coverage)
       if: ${{ needs.changes.outputs.with_coverage == 'true' }}
