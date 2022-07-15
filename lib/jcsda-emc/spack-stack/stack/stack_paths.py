@@ -8,9 +8,10 @@ import spack
 check_file = '.spackstack'
 stack_dir = os.path.dirname(spack.paths.spack_root)
 
-# Find spack-stack directory assuming this Spack instance
-# is a submodule of spack-stack.
+
 def stack_path(*paths):
+    """Find spack-stack directory assuming this Spack instance
+    is a submodule of spack-stack."""
     stack_dir = os.path.dirname(spack.paths.spack_root)
 
     if not os.path.exists(os.path.join(stack_dir, check_file)):
