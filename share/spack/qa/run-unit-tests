@@ -60,3 +60,4 @@ bash "$QA_DIR/test-env-cfg.sh"
 if [[ "$COVERAGE" == "true" ]]; then
   rm lib/spack/docs/_spack_root
 fi
+
