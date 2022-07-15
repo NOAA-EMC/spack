@@ -121,6 +121,10 @@ jobs:
           sudo apt-get -y install \
               coreutils cvs gfortran graphviz gnupg2 mercurial ninja-build \
               patchelf cmake bison libbison-dev kcov
+    - name: remove-extension
+      run: |
+          source share/spack/setup-env.sh
+          spack config --scope=defaults rm "config:extensions"
     - name: Install Python packages
       run: |
           pip install --upgrade pip six setuptools pytest codecov "coverage[toml]<=6.2"
@@ -153,8 +157,6 @@ jobs:
           COVERAGE: true
           SPACK_TEST_SOLVER: ${{ matrix.concretizer }}
       run: |
-          source share/spack/setup-env.sh
-          spack config --scope=defaults rm "config:extensions"
           share/spack/qa/run-unit-tests
           coverage combine
           coverage xml
@@ -165,8 +167,6 @@ jobs:
           ONLY_PACKAGES: true
           SPACK_TEST_SOLVER: ${{ matrix.concretizer }}
       run: |
-          source share/spack/setup-env.sh
-          spack config --scope=defaults rm "config:extensions"
           share/spack/qa/run-unit-tests
     - uses: codecov/codecov-action@81cd2dc8148241f03f5839d295e000b8f761e378 # @v2.1.0
       if: ${{ needs.changes.outputs.with_coverage == 'true' }}
@@ -196,6 +196,10 @@ jobs:
           # Need this for the git tests to succeed.
           git --version
           . .github/workflows/setup_git.sh
+    - name: remove-extension
+      run: |
+          source share/spack/setup-env.sh
+          spack config --scope=defaults rm "config:extensions"
     - name: Run shell tests (without coverage)
       if: ${{ needs.changes.outputs.with_coverage == 'false' }}
       run: |
@@ -232,6 +236,10 @@ jobs:
           . .github/workflows/setup_git.sh
           useradd spack-test
           chown -R spack-test .
+    - name: remove-extension
+      run: |
+          source share/spack/setup-env.sh
+          spack config --scope=defaults rm "config:extensions"
     - name: Run unit tests
       shell: runuser -u spack-test -- bash {0}
       run: |
@@ -264,14 +272,16 @@ jobs:
           # Need this for the git tests to succeed.
           git --version
           . .github/workflows/setup_git.sh
+    - name: remove-extension
+      run: |
+          source share/spack/setup-env.sh
+          spack config --scope=defaults rm "config:extensions"
     - name: Run unit tests (full suite with coverage)
       if: ${{ needs.changes.outputs.with_coverage == 'true' }}
       env:
           COVERAGE: true
           SPACK_TEST_SOLVER: clingo
       run: |
-          source share/spack/setup-env.sh
-          spack config --scope=defaults rm "config:extensions"
           share/spack/qa/run-unit-tests
           coverage combine
           coverage xml
@@ -281,8 +291,6 @@ jobs:
           ONLY_PACKAGES: true
           SPACK_TEST_SOLVER: clingo
       run: |
-          source share/spack/setup-env.sh
-          spack config --scope=defaults rm "config:extensions"
           share/spack/qa/run-unit-tests
     - uses: codecov/codecov-action@81cd2dc8148241f03f5839d295e000b8f761e378 # @v2.1.0
       if: ${{ needs.changes.outputs.with_coverage == 'true' }}
@@ -309,6 +317,10 @@ jobs:
     - name: Setup Homebrew packages
       run: |
         brew install dash fish gcc gnupg2 kcov
+    - name: remove-extension
+      run: |
+          source share/spack/setup-env.sh
+          spack config --scope=defaults rm "config:extensions"
     - name: Run unit tests
       env:
         SPACK_TEST_SOLVER: clingo
