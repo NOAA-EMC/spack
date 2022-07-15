@@ -267,6 +267,7 @@ jobs:
           SPACK_TEST_SOLVER: clingo
       run: |
           source share/spack/setup-env.sh
+          spack config --scope=defaults rm "config:extensions"
           share/spack/qa/run-unit-tests
           coverage combine
           coverage xml
@@ -277,6 +278,7 @@ jobs:
           SPACK_TEST_SOLVER: clingo
       run: |
           source share/spack/setup-env.sh
+          spack config --scope=defaults rm "config:extensions"
           share/spack/qa/run-unit-tests
     - uses: codecov/codecov-action@81cd2dc8148241f03f5839d295e000b8f761e378 # @v2.1.0
       if: ${{ needs.changes.outputs.with_coverage == 'true' }}
