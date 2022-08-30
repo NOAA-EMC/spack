@@ -7,9 +7,10 @@ from spack import *
 
 
 class Ectrans(CMakePackage):
-    """Ectrans is the global spherical Harmonics transforms library, extracted from the IFS.
-    It is using a hybrid of MPI and OpenMP parallelisation strategies. The package contains
-    both single- and double precision Fortran libraries (trans_sp, trans_dp), as well as a
+    """Ectrans is the global spherical Harmonics transforms library,
+    extracted from the IFS. It is using a hybrid of MPI and OpenMP
+    parallelisation strategies. The package contains both single- and double precision
+    Fortran libraries (trans_sp, trans_dp), as well as a
     C interface to the double-precision version (transi_dp)."""
 
     homepage = "https://github.com/ecmwf-ifs/ectrans"
@@ -21,6 +22,10 @@ class Ectrans(CMakePackage):
     version('main', branch='main', no_cache=True)
     # Defined for spack use only
     version('1.0.0', commit='ee1d307f1e47e1dd0b5ea91663a41df8a94cafb3', preferred=True)
+
+    variant('build_type', default='RelWithDebInfo',
+            description='CMake build type',
+            values=('Debug', 'Release', 'RelWithDebInfo'))
 
     variant('mpi', default=True, description='Use MPI?')
     variant('openmp', default=True, description='Use OpenMP?')

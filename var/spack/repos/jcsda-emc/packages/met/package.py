@@ -7,9 +7,9 @@ from spack import *
 
 
 class Met(AutotoolsPackage):
-    """
-    Statistical tool that matches up grids with either gridded analyses or point observations and applies configurable methods to compute statistics and diagnostics
-    """
+    """Statistical tool that matches up grids with either
+    gridded analyses or point observations and applies
+    configurable methods to compute statistics and diagnostics"""
 
     homepage = "https://dtcenter.org/community-code/model-evaluation-tools-met"
     url      = "https://github.com/dtcenter/MET/releases/download/v10.1.0/met-10.1.0.20220314.tar.gz"
@@ -92,15 +92,17 @@ class Met(AutotoolsPackage):
         libs.append('-lz')
 
         bufr = spec['bufr']
+        shared_bufr = True if '+shared' in bufr else False
         bufr_libdir = find_libraries('libbufr_4', root=bufr.prefix,
-                                     shared=False, recursive=True).directories[0]
+                                     shared=shared_bufr, recursive=True).directories[0]
         env.set('BUFRLIB_NAME', '-lbufr_4')
         env.set('MET_BUFRLIB', bufr_libdir)
 
         if '+grib2' in spec:
             g2c = spec['g2c']
-            g2c_libdir = find_libraries('libg2c', root=g2c.prefix,
-                                        shared=False, recursive=True).directories[0]
+            shared_g2c = True if '+shared' in g2c else False
+            g2c_libdir = find_libraries('libg2c', root=g2c.prefix, shared=shared_g2c,
+                                        recursive=True).directories[0]
             env.set('MET_GRIB2CLIB', g2c_libdir)
             env.set('MET_GRIB2CINC', g2c.prefix.include)
             env.set('GRIB2CLIB_NAME', '-lg2c')

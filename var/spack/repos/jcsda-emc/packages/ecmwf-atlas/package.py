@@ -1,10 +1,10 @@
-# Copyright 2013-2020 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
 from spack import *
+
 
 class EcmwfAtlas(CMakePackage):
     """A library for numerical weather prediction and climate modelling."""
@@ -38,12 +38,16 @@ class EcmwfAtlas(CMakePackage):
     patch('clang_include_array.patch', when='%apple-clang')
     patch('clang_include_array.patch', when='%clang')
 
+    variant('build_type', default='RelWithDebInfo',
+            description='CMake build type',
+            values=('Debug', 'Release', 'RelWithDebInfo'))
+
     variant('shared', default=True)
 
     variant('trans', default=False)
     depends_on('ectrans', when='+trans')
-    #variant('cgal', default=False)
-    #depends_on('cgal', when='+cgal')
+    # variant('cgal', default=False)
+    # depends_on('cgal', when='+cgal')
     variant('eigen', default=True)
     depends_on('eigen', when='+eigen')
     variant('fftw', default=True)
@@ -51,12 +55,12 @@ class EcmwfAtlas(CMakePackage):
 
     def cmake_args(self):
         res = [
-                self.define_from_variant('ENABLE_FCKIT', 'fckit'),
-                self.define_from_variant('ENABLE_TRANS', 'trans'),
-                self.define_from_variant('ENABLE_EIGEN', 'eigen'),
-                self.define_from_variant('ENABLE_FFTW',  'fftw'),
-                "-DPYTHON_EXECUTABLE:FILEPATH=" + self.spec['python'].command.path,
-                ] 
+            self.define_from_variant('ENABLE_FCKIT', 'fckit'),
+            self.define_from_variant('ENABLE_TRANS', 'trans'),
+            self.define_from_variant('ENABLE_EIGEN', 'eigen'),
+            self.define_from_variant('ENABLE_FFTW',  'fftw'),
+            "-DPYTHON_EXECUTABLE:FILEPATH=" + self.spec['python'].command.path,
+        ]
         if '~shared' in self.spec:
             res.append('-DBUILD_SHARED_LIBS=OFF')
         return res

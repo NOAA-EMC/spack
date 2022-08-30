@@ -3,28 +3,12 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install gsl-lite
-#
-# You can edit this file again by typing:
-#
-#     spack edit gsl-lite
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack import *
 
 
 class GslLite(CMakePackage):
-    """gsl-lite – A single-file header-only version of ISO C++ Guidelines Support Library (GSL) for C++98, C++11, and later"""
+    """A single-file header-only version of ISO C++ Guidelines Support Library
+    (GSL) for C++98, C++11, and later"""
 
     homepage = "https://github.com/gsl-lite/gsl-lite"
     git = "https://github.com/gsl-lite/gsl-lite.git"
