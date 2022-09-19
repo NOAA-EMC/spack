@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 
-from spack import *
+from spack.package import *
 
 
 class Flap(CMakePackage):
     """Fortran command Line Arguments Parser for poor people"""
 
     homepage = "https://github.com/mathomp4/FLAP"
-    url      = "https://github.com/mathomp4/FLAP/archive/refs/tags/geos/v1.10.0.tar.gz"
-    git      = "https://github.com/mathomp4/FLAP.git"
+    url = "https://github.com/mathomp4/FLAP/archive/refs/tags/geos/v1.10.0.tar.gz"
+    git = "https://github.com/mathomp4/FLAP.git"
 
-    maintainers = ['mathomp4']
+    maintainers = ["mathomp4"]
 
-    version('geos', branch='geos', submodules=True)
+    version("geos", branch="geos", submodules=True)
