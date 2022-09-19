@@ -35,6 +35,8 @@ class Yafyaml(CMakePackage):
     version('1.0-beta6', sha256='9d90ffd78ae70e477ed58afa474e214822a3c1a0a86c067ba3e245550108a028')
     version('1.0-beta5', sha256='509487c544f199503b3724c170a6d6cd35c237e8ee23a34e94ee3c056b9e39ee')
     version('1.0-beta4', sha256='42bf9c8517d7867614cc24cc4267c70bbe6f8d62474e22d3552d9cc5aa4fc195')
+    version('0.5.1', sha256='7019460314e388b2d556db75d5eb734237a18494f79b921613addb96b7b7ce2f')
+    version('0.5.0', sha256='8ac5d41b1020e9311ac87f50dbd61b9f3e3188f3599ce463ad59650208fdb8ad')
 
     depends_on('gftl-shared', type='build')
     depends_on('gftl', type='build')
