@@ -18,8 +18,8 @@ class Mapl(CMakePackage):
     """
 
     homepage = "https://github.com/GEOS-ESM/MAPL"
-    url      = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.17.1.tar.gz"
-    git      = "https://github.com/GEOS-ESM/MAPL.git"
+    url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.17.1.tar.gz"
+    git = "https://github.com/GEOS-ESM/MAPL.git"
 
     maintainers = ["mathomp4", "kgerheiser", "climbfuji", "edwardhartnett", "Hang-Lei-NOAA"]
 
@@ -76,7 +76,7 @@ class Mapl(CMakePackage):
         "build_type",
         default="Release",
         description="The build type to build",
-        values=("Debug", "Release", "Aggressive")
+        values=("Debug", "Release", "Aggressive"),
     )
 
     depends_on("cmake@3.17:")
@@ -88,7 +88,7 @@ class Mapl(CMakePackage):
     depends_on("esmf", when="@:2.12.99")
     depends_on("esmf~debug", when="~debug")
     depends_on("esmf+debug", when="+debug")
-    
+
     depends_on("gftl@1.5.5:")
     depends_on("gftl-shared@1.3.1:")
 
@@ -100,12 +100,11 @@ class Mapl(CMakePackage):
     # pFlogger depends on yaFyaml in the same way. MAPL 2.22 and below uses old
     # yaFyaml so we need to use old pFlogger, but MAPL 2.23+ uses new yaFyaml
     depends_on("pflogger@:1.6", when="@:2.22+pflogger")
-    depends_on("pflogger@1.9.1:", when="@2.23:+pflogger")        
+    depends_on("pflogger@1.9.1:", when="@2.23:+pflogger")
 
     depends_on("pfunit@4.2:", when="+pfunit")
     depends_on("flap", when="+flap")
 
-    
     depends_on("ecbuild")
 
     def cmake_args(self):

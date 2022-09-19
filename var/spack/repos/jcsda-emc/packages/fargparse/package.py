@@ -28,7 +28,7 @@ class Fargparse(CMakePackage):
     depends_on("gftl", type="build")
 
     variant(
-        "build_type", 
+        "build_type",
         default="Release",
         description="The build type to build",
         values=("Debug", "Release"),
