@@ -68,7 +68,7 @@ class Pfunit(CMakePackage):
     depends_on("mpi", when="+mpi")
     depends_on("esmf", when="+esmf")
     depends_on("m4", when="@4.1.5:", type="build")
-    depends_on("fargparse", type="build")
+    depends_on("fargparse")
 
     conflicts(
         "%gcc@:8.3.9",

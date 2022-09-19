@@ -35,17 +35,17 @@ class Pflogger(CMakePackage):
     variant("mpi", default=False, description="Enable MPI")
 
     # pFlogger needs careful versioning to build
-    depends_on("gftl@:1.5", type="build", when="@:1.6")
-    depends_on("gftl-shared@:1.3", type="build", when="@:1.6")
-    depends_on("yafyaml@1.0-beta5", type="build", when="@:1.6")
+    depends_on("gftl@:1.5", when="@:1.6")
+    depends_on("gftl-shared@:1.3", when="@:1.6")
+    depends_on("yafyaml@1.0-beta5", when="@:1.6")
 
-    depends_on("gftl@1.6:", type="build", when="@1.8:")
-    depends_on("gftl-shared@1.4:", type="build", when="@1.8:")
-    depends_on("yafyaml@1.0-beta8:", type="build", when="@1.8:")
+    depends_on("gftl@1.6:", when="@1.8:")
+    depends_on("gftl-shared@1.4:", when="@1.8:")
+    depends_on("yafyaml@1.0-beta8:", when="@1.8:")
 
-    depends_on("gftl@1.8.1:", type="build", when="@1.9:")
-    depends_on("gftl-shared@1.5:", type="build", when="@1.9:")
-    depends_on("yafyaml@1.0.4:", type="build", when="@1.9:")
+    depends_on("gftl@1.8.1:", when="@1.9:")
+    depends_on("gftl-shared@1.5:", when="@1.9:")
+    depends_on("yafyaml@1.0.4:", when="@1.9:")
 
     depends_on("mpi", when="+mpi")
 

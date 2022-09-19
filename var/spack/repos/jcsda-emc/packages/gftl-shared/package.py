@@ -35,7 +35,7 @@ class GftlShared(CMakePackage):
 
     depends_on("m4", type=("build", "run"))
     depends_on("cmake", type="build")
-    depends_on("gftl", type="build")
+    depends_on("gftl")
 
     variant(
         "build_type",
