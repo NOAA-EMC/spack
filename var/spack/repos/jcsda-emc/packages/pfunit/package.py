@@ -73,8 +73,7 @@ class Pfunit(CMakePackage):
     conflicts(
         "%gcc@:8.3.9",
         when="@4.0.0:",
-        msg="Older versions of GCC do not support Fortran 2008"
-        "features required by pFUnit 4+",
+        msg="pFUnit requires GCC 8.4.0 or newer",
     )
 
     # See https://github.com/Goddard-Fortran-Ecosystem/pFUnit/pull/179
