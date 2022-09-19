@@ -54,14 +54,14 @@ class Pfunit(CMakePackage):
         "max_array_rank",
         values=int,
         default=5,
-        description="Max number of Fortran dimensions of array asserts"
+        description="Max number of Fortran dimensions of array asserts",
     )
 
     variant(
         "build_type",
         default="Release",
         description="The build type to build",
-        values=("Debug", "Release")
+        values=("Debug", "Release"),
     )
 
     depends_on("python@2.7:", type=("build", "run"))  # python3 too!
@@ -73,7 +73,7 @@ class Pfunit(CMakePackage):
     conflicts(
         "%gcc@:8.3.9",
         when="@4.0.0:",
-        msg="Older versions of GCC do not support the Fortran 2008 features required by new pFUnit."
+        msg="Older versions of GCC do not support the Fortran 2008 features required by new pFUnit.",
     )
 
     # See https://github.com/Goddard-Fortran-Ecosystem/pFUnit/pull/179
@@ -107,7 +107,8 @@ class Pfunit(CMakePackage):
             self.define_from_variant("BUILD_SHARED", "shared"),
             "-DCMAKE_Fortran_MODULE_DIRECTORY=%s" % spec.prefix.include,
             self.define_from_variant("BUILD_DOCS", "docs"),
-            "-DMAX_ASSERT_RANK=%s" % spec.variants["max_array_rank"].value]
+            "-DMAX_ASSERT_RANK=%s" % spec.variants["max_array_rank"].value,
+        ]
 
         if self.spec.satisfies("%gcc@10:"):
             args.append("-DCMAKE_Fortran_FLAGS_DEBUG=-g -O2 -fallow-argument-mismatch")
@@ -147,7 +148,7 @@ class Pfunit(CMakePackage):
             "%intel": "Intel",
             "%pgi": "PGI",
             "%nag": "NAG",
-            "%cce": "Cray"
+            "%cce": "Cray",
         }
         for key, value in vendors.items():
             if self.spec.satisfies(key):

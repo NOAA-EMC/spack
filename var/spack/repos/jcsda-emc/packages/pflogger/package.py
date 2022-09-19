@@ -29,14 +29,10 @@ class Pflogger(CMakePackage):
         "build_type",
         default="Release",
         description="The build type to build",
-        values=("Debug", "Release")
+        values=("Debug", "Release"),
     )
 
-    variant(
-        "mpi",
-        default=False,
-        description="Enable MPI"
-    )
+    variant("mpi", default=False, description="Enable MPI")
 
     # pFlogger needs careful versioning to build
     depends_on("gftl@:1.5", type="build", when="@:1.6")

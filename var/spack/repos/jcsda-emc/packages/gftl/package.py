@@ -22,9 +22,9 @@ class Gftl(CMakePackage):
 
     Currently, the following three types of containers are provided.
 
-    * Vector (list) 
-    * Set 
-    * Map (associated array) 
+    * Vector (list)
+    * Set
+    * Map (associated array)
 
     Contributions of additional containers are very much welcomed.
     """
@@ -52,8 +52,8 @@ class Gftl(CMakePackage):
     depends_on("m4", type="build")
 
     variant(
-        "build_type", 
+        "build_type",
         default="Release",
         description="The build type to build",
-        values=("Debug", "Release")
+        values=("Debug", "Release"),
     )

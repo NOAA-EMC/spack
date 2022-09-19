@@ -31,4 +31,5 @@ class Fargparse(CMakePackage):
         "build_type", 
         default="Release",
         description="The build type to build",
-        values=("Debug", "Release"))
+        values=("Debug", "Release"),
+    )

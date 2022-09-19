@@ -13,7 +13,9 @@ class GftlShared(CMakePackage):
     """
 
     homepage = "https://github.com/Goddard-Fortran-Ecosystem/gFTL-shared"
-    url = "https://github.com/Goddard-Fortran-Ecosystem/gFTL-shared/archive/refs/tags/v1.5.0.tar.gz"
+    url = (
+        "https://github.com/Goddard-Fortran-Ecosystem/gFTL-shared/archive/refs/tags/v1.5.0.tar.gz"
+    )
     git = "https://github.com/Goddard-Fortran-Ecosystem/gFTL-shared.git"
 
     maintainers = ["mathomp4", "tclune"]
@@ -36,8 +38,8 @@ class GftlShared(CMakePackage):
     depends_on("gftl", type="build")
 
     variant(
-        "build_type", 
+        "build_type",
         default="Release",
         description="The build type to build",
-        values=("Debug", "Release")
+        values=("Debug", "Release"),
     )
