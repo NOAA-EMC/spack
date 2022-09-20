@@ -145,7 +145,7 @@ class PyScipy(PythonPackage):
         if self.spec.satisfies("%intel") or \
                 self.spec.satisfies("%intel-oneapi-compilers"):
             env.set("SCIPY_USE_PYTHRAN", "0")
-            env.set("LD", "ifort")
+            #env.set("LD", "ifort")
             #env.append_flags("LDFLAGS", "-Bstatic -limf -lsvml -lifcore -Bdynamic")
 
         # Kluge to get the gfortran linker to work correctly on Big
@@ -158,6 +158,9 @@ class PyScipy(PythonPackage):
         args = []
         if spec.satisfies("%fj"):
             args.extend(["config_fc", "--fcompiler=fujitsu"])
+        elif spec.satisfies("%intel") or \
+                self.spec.satisfies("%intel-oneapi-compilers"):
+            args.extend(["config_fc", "--fcompiler=intel"])
         return args
 
     @run_after("install")
