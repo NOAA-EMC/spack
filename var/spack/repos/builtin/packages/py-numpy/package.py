@@ -400,6 +400,21 @@ class PyNumpy(PythonPackage):
 
         env.set("NPY_LAPACK_ORDER", lapack)
 
+        env.set("F90", spack_fc)
+
+        if self.spec.satisfies("%intel") or \
+                self.spec.satisfies("%intel-oneapi-compilers"):
+            env.set("LDSHARED", "icc -shared")
+
+    def install_options(self, spec, prefix):
+        args = []
+        if spec.satisfies("%fj"):
+            args.extend(["config_fc", "--fcompiler=fujitsu"])
+        elif spec.satisfies("%intel") or \
+                self.spec.satisfies("%intel-oneapi-compilers"):
+            args.extend(["config_fc", "--fcompiler=intelem"])
+        return args
+
     @run_after("install")
     @on_package_attributes(run_tests=True)
     def install_test(self):

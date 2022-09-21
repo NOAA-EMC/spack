@@ -145,8 +145,7 @@ class PyScipy(PythonPackage):
         if self.spec.satisfies("%intel") or \
                 self.spec.satisfies("%intel-oneapi-compilers"):
             env.set("SCIPY_USE_PYTHRAN", "0")
-            #env.set("LD", "ifort")
-            #env.append_flags("LDFLAGS", "-Bstatic -limf -lsvml -lifcore -Bdynamic")
+            env.set("LDSHARED", "icc -shared")
 
         # Kluge to get the gfortran linker to work correctly on Big
         # Sur, at least until a gcc release > 10.2 is out with a fix.
@@ -160,7 +159,7 @@ class PyScipy(PythonPackage):
             args.extend(["config_fc", "--fcompiler=fujitsu"])
         elif spec.satisfies("%intel") or \
                 self.spec.satisfies("%intel-oneapi-compilers"):
-            args.extend(["config_fc", "--fcompiler=intel"])
+            args.extend(["config_fc", "--fcompiler=intelem"])
         return args
 
     @run_after("install")
