@@ -401,7 +401,7 @@ class PyNumpy(PythonPackage):
 
         env.set("F90", spack_fc)
 
-        raise Exception("self.compiler.linker_arg = '{}'".format(self.compiler.linker_arg))
+        raise Exception("self.compiler.implicit_rpaths = '{}'".format(self.compiler.implicit_rpaths))
 
     def global_options(self, spec, prefix):
         args = []

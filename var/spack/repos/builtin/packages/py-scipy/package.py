@@ -142,10 +142,8 @@ class PyScipy(PythonPackage):
         # https://github.com/scipy/scipy/issues/14935
         # Disable pythran backend with latest Intel compilers
         # Turns out it also doesn't work with previous versions
-        if self.spec.satisfies("%intel") or \
-                self.spec.satisfies("%intel-oneapi-compilers"):
+        if self.spec.satisfies("%intel") or self.spec.satisfies("%intel-oneapi-compilers"):
             env.set("SCIPY_USE_PYTHRAN", "0")
-            env.set("LDSHARED", "icc -shared")
 
         # Kluge to get the gfortran linker to work correctly on Big
         # Sur, at least until a gcc release > 10.2 is out with a fix.
@@ -153,12 +151,11 @@ class PyScipy(PythonPackage):
         if platform.mac_ver()[0][0:2] == "11":
             env.set("MACOSX_DEPLOYMENT_TARGET", "10.15")
 
-    def install_options(self, spec, prefix):
+    def global_options(self, spec, prefix):
         args = []
         if spec.satisfies("%fj"):
             args.extend(["config_fc", "--fcompiler=fujitsu"])
-        elif spec.satisfies("%intel") or \
-                self.spec.satisfies("%intel-oneapi-compilers"):
+        elif spec.satisfies("%intel") or self.spec.satisfies("%intel-oneapi-compilers"):
             args.extend(["config_fc", "--fcompiler=intelem"])
         return args
 
