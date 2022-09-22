@@ -145,7 +145,7 @@ class PyScipy(PythonPackage):
         if self.spec.satisfies("%intel") or self.spec.satisfies("%intel-oneapi-compilers"):
             env.set("SCIPY_USE_PYTHRAN", "0")
             #
-            link_paths = [ "-L{}".format(x) for x in self.compiler.implicit_rpaths() ]
+            link_paths = ["-L{}".format(x) for x in self.compiler.implicit_rpaths()]
             env.append_flags("LDFLAGS", " ".join(link_paths))
             env.append_flags("LDFLAGS", "-lsvml -limf -lifcore")
 

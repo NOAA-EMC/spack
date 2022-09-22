@@ -402,7 +402,7 @@ class PyNumpy(PythonPackage):
         env.set("F90", spack_fc)
 
         if self.spec.satisfies("%intel") or self.spec.satisfies("%intel-oneapi-compilers"):
-            link_paths = [ "-L{}".format(x) for x in self.compiler.implicit_rpaths() ]
+            link_paths = ["-L{}".format(x) for x in self.compiler.implicit_rpaths()]
             env.append_flags("LDFLAGS", " ".join(link_paths))
             env.append_flags("LDFLAGS", "-lsvml -limf -lifcore")
 
