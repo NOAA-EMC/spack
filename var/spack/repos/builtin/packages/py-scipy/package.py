@@ -144,6 +144,10 @@ class PyScipy(PythonPackage):
         # Turns out it also doesn't work with previous versions
         if self.spec.satisfies("%intel") or self.spec.satisfies("%intel-oneapi-compilers"):
             env.set("SCIPY_USE_PYTHRAN", "0")
+            #
+            link_paths = [ "-L{}".format(x) for x in self.compiler.implicit_rpaths() ]
+            env.append_flags("LDFLAGS", " ".join(link_paths))
+            env.append_flags("LDFLAGS", "-lsvml -limf -lifcore")
 
         # Kluge to get the gfortran linker to work correctly on Big
         # Sur, at least until a gcc release > 10.2 is out with a fix.
