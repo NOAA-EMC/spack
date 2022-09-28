@@ -107,6 +107,9 @@ class Mapl(CMakePackage):
 
     depends_on("ecbuild")
 
+    depends_on("python@3:")
+    depends_on("perl")
+
     def cmake_args(self):
         args = [
             self.define_from_variant("BUILD_WITH_FLAP", "flap"),
