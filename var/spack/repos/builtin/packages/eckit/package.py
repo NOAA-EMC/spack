@@ -31,6 +31,7 @@ class Eckit(CMakePackage):
     variant("shared", default=True, description="Build shared libraries")
     variant("tools", default=True, description="Build the command line tools")
     variant("mpi", default=True, description="Enable MPI support")
+    variant("openmp", default=True, description="Enable OpenMP support")
     variant("admin", default=True, description="Build utilities for administration tools")
     variant("sql", default=True, description="Build SQL engine")
     variant(
@@ -59,6 +60,7 @@ class Eckit(CMakePackage):
     depends_on("ecbuild@3.5:", type="build")
 
     depends_on("mpi", when="+mpi")
+    depends_on("llvm-openmp", when="+openmp %apple-clang", type=("build", "run"))
 
     depends_on("yacc", type="build", when="+admin")
     depends_on("flex", type="build", when="+admin")
@@ -110,6 +112,7 @@ class Eckit(CMakePackage):
             # currently prefer to avoid since ecBuild does the job in all known
             # cases.
             self.define_from_variant("ENABLE_MPI", "mpi"),
+            self.define_from_variant("ENABLE_OMP", "openmp"),
             self.define_from_variant("ENABLE_ECKIT_CMD", "admin"),
             self.define_from_variant("ENABLE_ECKIT_SQL", "sql"),
             self.define("ENABLE_EIGEN", "linalg=eigen" in self.spec),
@@ -149,10 +152,27 @@ class Eckit(CMakePackage):
         # system have SHARED hardcoded (in several CMakeLists.txt files).
         if "~shared" in self.spec:
             # args.append("-DBUILD_SHARED_LIBS=OFF")
-            raise InstrallError("eckit static build not supported")
+            raise InstallError("eckit static build not supported")
 
             # ENABLE_LAPACK is ignored if MKL backend is enabled
             # (the LAPACK backend is still built though):
             args.append(self.define("ENABLE_LAPACK", "linalg=lapack" in self.spec))
 
+        if "+admin" in self.spec and "+termlib" in self.spec["ncurses"]:
+            # Make sure that libeckit_cmd is linked to a library that resolves 'setupterm',
+            # 'tputs', etc. That is either libncurses (when 'ncurses~termlib') or libtinfo (when
+            # 'ncurses+termlib'). CMake considers the latter only if CURSES_NEED_NCURSES is set to
+            # TRUE. Note that the installation of eckit does not fail without this but the building
+            # of a dependent package (e.g. fdb) might fail due to the undefined references.
+            args.append(self.define("CURSES_NEED_NCURSES", True))
+
         return args
+
+    def setup_build_environment(self, env):
+        # Bug fix for macOS - cmake's find_package doesn't add "libtinfo.dylib" to the
+        # ncurses libraries, but the ncurses pkgconfig explicitly sets it. We need to
+        # add the correct spec['ncurses'].libs.ld_flags to LDFLAGS to compile eckit
+        # when the admin variant is enabled.
+        if self.spec.satisfies("platform=darwin") and self.spec.satisfies("+admin"):
+            env.append_flags("LDFLAGS", self.spec["ncurses"].libs.ld_flags)
+

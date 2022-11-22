@@ -16,7 +16,14 @@ class Crtm(CMakePackage):
     git = "https://github.com/JCSDA/crtm.git"
     url = "https://github.com/JCSDA/crtm/archive/refs/tags/v2.3.0.tar.gz"
 
-    maintainers = ["BenjaminTJohnson", "edwardhartnett", "Hang-Lei-NOAA", "climbfuji"]
+    maintainers = [
+        "BenjaminTJohnson",
+        "t-brown",
+        "edwardhartnett",
+        "AlexanderRichert-NOAA",
+        "Hang-Lei-NOAA",
+        "climbfuji",
+    ]
 
     variant(
         "fix",
@@ -24,6 +31,7 @@ class Crtm(CMakePackage):
         description='Download CRTM coeffecient or "fix" files (several GBs).',
     )
 
+    depends_on("cmake@3.15:")
     depends_on("git-lfs")
     depends_on("netcdf-fortran", when="@2.4.0:")
     depends_on("netcdf-fortran", when="@v2.3-jedi.4")

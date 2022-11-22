@@ -9,8 +9,6 @@ import shlex
 import subprocess
 import sys
 
-from six import string_types, text_type
-
 import llnl.util.tty as tty
 
 import spack.error
@@ -167,7 +165,7 @@ class Executable(object):
             raise ValueError("Cannot use `str` as input stream.")
 
         def streamify(arg, mode):
-            if isinstance(arg, string_types):
+            if isinstance(arg, str):
                 return open(arg, mode), True
             elif arg in (str, str.split):
                 return subprocess.PIPE, False
@@ -212,17 +210,17 @@ class Executable(object):
                 result = ""
                 if output in (str, str.split):
                     if sys.platform == "win32":
-                        outstr = text_type(out.decode("ISO-8859-1"))
+                        outstr = str(out.decode("ISO-8859-1"))
                     else:
-                        outstr = text_type(out.decode("utf-8"))
+                        outstr = str(out.decode("utf-8"))
                     result += outstr
                     if output is str.split:
                         sys.stdout.write(outstr)
                 if error in (str, str.split):
                     if sys.platform == "win32":
-                        errstr = text_type(err.decode("ISO-8859-1"))
+                        errstr = str(err.decode("ISO-8859-1"))
                     else:
-                        errstr = text_type(err.decode("utf-8"))
+                        errstr = str(err.decode("utf-8"))
                     result += errstr
                     if error is str.split:
                         sys.stderr.write(errstr)
@@ -282,7 +280,7 @@ def which_string(*args, **kwargs):
     path = kwargs.get("path", os.environ.get("PATH", ""))
     required = kwargs.get("required", False)
 
-    if isinstance(path, string_types):
+    if isinstance(path, str):
         path = path.split(os.pathsep)
 
     for name in args:
@@ -290,6 +288,13 @@ def which_string(*args, **kwargs):
         if sys.platform == "win32" and (not name.endswith(".exe") and not name.endswith(".bat")):
             win_candidates = [name + ext for ext in [".exe", ".bat"]]
         candidate_names = [name] if not win_candidates else win_candidates
+
+        if sys.platform == "win32":
+            new_path = path[:]
+            for p in path:
+                if os.path.basename(p) == "bin":
+                    new_path.append(os.path.dirname(p))
+            path = new_path
 
         for candidate_name in candidate_names:
             if os.path.sep in candidate_name:
@@ -326,7 +331,7 @@ def which(*args, **kwargs):
         Executable: The first executable that is found in the path
     """
     exe = which_string(*args, **kwargs)
-    return Executable(exe) if exe else None
+    return Executable(shlex.quote(exe)) if exe else None
 
 
 class ProcessError(spack.error.SpackError):

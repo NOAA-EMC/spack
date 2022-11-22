@@ -24,7 +24,7 @@ writer_cls = spack.modules.lmod.LmodModulefileWriter
 pytestmark = pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
 
 
-@pytest.fixture(params=["clang@3.3", "gcc@4.5.0"])
+@pytest.fixture(params=["clang@12.0.0", "gcc@10.2.1"])
 def compiler(request):
     return request.param
 
@@ -67,11 +67,13 @@ class TestLmod(object):
         else:
             assert compiler.replace("@", "/") in layout.available_path_parts
 
-        # Check that the provider part instead has always an hash even if
-        # hash has been disallowed in the configuration file
+        # Check that the provider part has a hash that matches the
+        # hash_length in the configuration file
+        hash_length = spack.modules.lmod.get_hash_length()
         path_parts = layout.available_path_parts
         service_part = spec_string.replace("@", "/")
-        service_part = "-".join([service_part, layout.spec.dag_hash(length=7)])
+        if hash_length > 0:
+            service_part = "-".join([service_part, layout.spec.dag_hash(length=hash_length)])
         assert service_part in path_parts
 
         # Check that multi-providers have repetitions in path parts
@@ -80,6 +82,15 @@ class TestLmod(object):
             assert repetitions == 2
         else:
             assert repetitions == 1
+
+    def test_compilers_provided_different_name(self, factory, module_configuration):
+        module_configuration("complex_hierarchy")
+        module, spec = factory("intel-oneapi-compilers%clang@3.3")
+
+        provides = module.conf.provides
+
+        assert "compiler" in provides
+        assert provides["compiler"] == spack.spec.CompilerSpec("oneapi@3.0")
 
     def test_simple_case(self, modulefile_content, module_configuration):
         """Tests the generation of a simple TCL module file."""
@@ -158,9 +169,7 @@ class TestLmod(object):
         path = module.layout.filename
         mpi_spec = spec["mpi"]
 
-        mpi_element = "{0}/{1}-{2}/".format(
-            mpi_spec.name, mpi_spec.version, mpi_spec.dag_hash(length=7)
-        )
+        mpi_element = "{0}/{1}/".format(mpi_spec.name, mpi_spec.version)
 
         assert mpi_element in path
 
@@ -298,7 +307,7 @@ class TestLmod(object):
     ):
         with ev.Environment(str(tmpdir), with_view=True) as e:
             module_configuration("with_view")
-            install("cmake")
+            install("--add", "cmake")
 
             spec = spack.spec.Spec("cmake").concretized()
 

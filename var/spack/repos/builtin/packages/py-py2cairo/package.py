@@ -16,15 +16,13 @@ class PyPy2cairo(WafPackage):
 
     extends("python")
 
-    depends_on("python", type=("build", "run"))
+    depends_on("python@2", type=("build", "run"))
     depends_on("cairo@1.10.0:")
     depends_on("pixman")
     depends_on("pkgconfig", type="build")
 
     depends_on("py-pytest", type="test")
 
-    @run_after("install")
-    @on_package_attributes(run_tests=True)
     def install_test(self):
         with working_dir("test"):
             pytest = which("py.test")
