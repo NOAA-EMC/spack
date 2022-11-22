@@ -16,7 +16,7 @@ class Esmf(MakefilePackage):
     and utilities for developing individual models."""
 
     homepage = "https://www.earthsystemcog.org/projects/esmf/"
-    url = "https://github.com/esmf-org/esmf/archive/refs/tags/v8.3.1.tar.gz"
+    url = "https://github.com/esmf-org/esmf/archive/refs/tags/v8.4.0.tar.gz"
     list_url = url
     git = "https://github.com/esmf-org/esmf.git"
 
@@ -25,6 +25,10 @@ class Esmf(MakefilePackage):
     # Develop is a special name for spack and is always considered the newest version
     version("develop", branch="develop")
     # generate chksum with spack checksum esmf@x.y.z
+    version(
+        "8.4.0",
+        sha256="28531810bf1ae78646cda6494a53d455d194400f19dccd13d6361871de42ed0f",
+    )
     version(
         "8.3.1",
         sha256="6c39261e55dcdf9781cdfa344417b9606f7f961889d5ec626150f992f04f146d",
