@@ -17,6 +17,7 @@ class Geosgcm(CMakePackage):
     maintainers = ["mathomp4", "tclune"]
 
     version("main", branch="main")
+    version("10.23.1", tag="v10.23.1")
     version("10.23.0", tag="v10.23.0")
 
     variant("f2py", default=False, description="Build with f2py support")
