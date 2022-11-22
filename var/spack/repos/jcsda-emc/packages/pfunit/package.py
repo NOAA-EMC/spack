@@ -15,11 +15,14 @@ class Pfunit(CMakePackage):
     """
 
     homepage = "https://github.com/Goddard-Fortran-Ecosystem/pFUnit"
-    url = "https://github.com/Goddard-Fortran-Ecosystem/pFUnit/releases/download/v4.3.0/pFUnit-v4.3.0.tar"
+    url = "https://github.com/Goddard-Fortran-Ecosystem/pFUnit/releases/download/v4.6.1/pFUnit-v4.6.1.tar"
     git = "https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git"
 
     maintainers = ["citibeth", "mathomp4", "tclune"]
 
+    version("4.6.1", sha256="19de22ff0542ca900aaf2957407f24d7dadaccd993ea210beaf22032d3095add")
+    version("4.6.0", sha256="7c768ea3a2d16d8ef6229b25bd7756721c24a18db779c7422afde0e3e2248d72")
+    version("4.5.0", sha256="ae0ed4541f2f4ec7b1d06eed532a49cb4c666394ab92b233911f92ce50f76743")
     version("4.4.1", sha256="6b5d5e19201f56e1ebc984f1cb30dffa0e9e1f14810aab601bd43e85fd3f18ab")
     version("4.4.0", sha256="e51e09b272e0f2598eb94cd1367158049deed1ac3a8779a7b30931e36f8c9752")
     version("4.3.0", sha256="a63d3ccda4a5e44b2afecbf3cc01275f80047602bd8587343a19f17db3e64b1d")
