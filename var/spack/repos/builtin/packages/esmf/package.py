@@ -16,7 +16,8 @@ class Esmf(MakefilePackage):
     and utilities for developing individual models."""
 
     homepage = "https://www.earthsystemcog.org/projects/esmf/"
-    url = "https://github.com/esmf-org/esmf/archive/ESMF_8_0_1.tar.gz"
+    url = "https://github.com/esmf-org/esmf/archive/refs/tags/v8.3.1.tar.gz"
+    list_url = url
     git = "https://github.com/esmf-org/esmf.git"
 
     maintainers = ["climbfuji", "jedwards4b"]
@@ -73,7 +74,7 @@ class Esmf(MakefilePackage):
         "parallelio",
         default=False,
         description="Build with external parallelio library",
-        when="@8.3.b09",
+        when="@8.3.0b09",
     )
     variant(
         "pio",
