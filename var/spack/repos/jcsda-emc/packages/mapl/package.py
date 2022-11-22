@@ -18,7 +18,7 @@ class Mapl(CMakePackage):
     """
 
     homepage = "https://github.com/GEOS-ESM/MAPL"
-    url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.17.1.tar.gz"
+    url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.30.3.tar.gz"
     git = "https://github.com/GEOS-ESM/MAPL.git"
 
     maintainers = ["mathomp4", "kgerheiser", "climbfuji", "edwardhartnett", "Hang-Lei-NOAA"]
@@ -26,6 +26,14 @@ class Mapl(CMakePackage):
     version("develop", branch="develop")
     version("main", branch="main")
 
+    version("2.30.3", sha256="52bf65fcd5530079dab32ad1127fbaed940e218a99a89ac5bc8f8330b2094962")
+    version("2.30.2", sha256="508b6d0e42593dbedbbb2524bafe7340be7306f80479fde2e4d55868a29753e7")
+    version("2.30.1", sha256="df691ac12422184f05f37cb926541d18577ce129e0d6f10e91c90c3922bff572")
+    version("2.30.0", sha256="71c469d4618ae97813f784208a102a38c4a30d5ff6301c08cb4fdbd1b1931202")
+    version("2.29.0", sha256="aeca5258bc88526895715e3fd3604d43916b5143e948866fea4c1a608120598d")
+    version("2.28.0", sha256="3a1f0c9b8b5a1932b2f036deb5463ddbef58a472ee4759c6cc3a4a871b8fe613")
+    version("2.27.1", sha256="1aeca20b49729d0212bca764510cb069839d1f2b702c46c8b29a6b2535b2052c")
+    version("2.27.0", sha256="a322257522f7fb2768668c02272ae8246ba4be81aa41d8015ce947ba871ce3fb")
     version("2.26.0", sha256="4ef9a1eeffc0521bd6fb4ea5ab261e07d3b5a46f0a6c43673ee169bf0d624bb8")
     version("2.25.0", sha256="f3ce71004f4274cedee28852cc105e0bf51a86cafc4d5f5af9de6492c4be9402")
     version("2.24.0", sha256="cd15ffd6897c18e64267e5fa86523402eb48cbf638ad5f3b4b5b0ff8939d1936")
