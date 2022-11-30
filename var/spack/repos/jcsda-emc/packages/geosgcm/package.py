@@ -45,18 +45,20 @@ class Geosgcm(CMakePackage):
     depends_on("hdf5")
     depends_on("netcdf-c")
     depends_on("netcdf-fortran")
-    depends_on("esmf@8.3.0")
+    depends_on("esmf@8.3.0:")
     depends_on("gftl@1.5.5:")
     depends_on("gftl-shared@1.3.1:")
     depends_on("yafyaml@1.0.4:", when="+extdata2g")
     depends_on("pflogger@1.9.1:")
+    depends_on("fargparse@1.4.1:")
     depends_on("flap@geos")
 
     # MAPL as library would be like:
-    #depends_on("mapl@2.26:+flap+pflogger+extdata2g")
+    #  depends_on("mapl@2.31:+flap+pflogger+extdata2g+fargparse")
+    # but we don't want to do this in general due to the speed of MAPL development
 
-    # If we move to FMS as library, we'll need to add this:
-    #depends_on("fms@2022.02:~gfs_phys+fpic~quad_precision+32bit+64bit constants=GEOS")
+    # When we move to FMS as library, we'll need to add this:
+    #depends_on("fms@2022.04:~gfs_phys+fpic~quad_precision+32bit+64bit constants=GEOS")
 
     # Before we run cmake, we need to run 'mepo clone' to get the full source
     @run_before("cmake")
