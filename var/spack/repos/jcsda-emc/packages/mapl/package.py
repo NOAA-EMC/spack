@@ -21,11 +21,12 @@ class Mapl(CMakePackage):
     url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.30.3.tar.gz"
     git = "https://github.com/GEOS-ESM/MAPL.git"
 
-    maintainers = ["mathomp4", "kgerheiser", "climbfuji", "edwardhartnett", "Hang-Lei-NOAA"]
+    maintainers = ["mathomp4", "tclune", "climbfuji", "edwardhartnett", "Hang-Lei-NOAA"]
 
     version("develop", branch="develop")
     version("main", branch="main")
 
+    version("2.31.0", sha256="dcee4f0d02cc56c29437ab0dfc2f1ae78acce3af84630a55136f8e3626ce36c9")
     version("2.30.3", sha256="52bf65fcd5530079dab32ad1127fbaed940e218a99a89ac5bc8f8330b2094962")
     version("2.30.2", sha256="508b6d0e42593dbedbbb2524bafe7340be7306f80479fde2e4d55868a29753e7")
     version("2.30.1", sha256="df691ac12422184f05f37cb926541d18577ce129e0d6f10e91c90c3922bff572")
@@ -53,6 +54,12 @@ class Mapl(CMakePackage):
     resource(
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
+        tag="v3.21.0",
+        when="@2.31.0:",
+    )
+    resource(
+        name="esma_cmake",
+        git="https://github.com/GEOS-ESM/ESMA_cmake.git",
         tag="v3.17.0",
         when="@2.22.0:",
     )
@@ -75,6 +82,7 @@ class Mapl(CMakePackage):
 
     variant("flap", default=False, description="Build with FLAP support")
     variant("pflogger", default=False, description="Build with pFlogger support")
+    variant("fargparse", default=False, description="Build with fArgParse support")
     variant("shared", default=True, description="Build as shared library")
     variant("debug", default=False, description="Make a debuggable version of the library")
     variant("extdata2g", default=False, description="Use ExtData2G")
@@ -110,6 +118,9 @@ class Mapl(CMakePackage):
     depends_on("pflogger@:1.6", when="@:2.22+pflogger")
     depends_on("pflogger@1.9.1:", when="@2.23:+pflogger")
 
+    # fArgParse v1.4.1 is the first usable version with MAPL
+    depends_on("fargparse@1.4.1:", when="+fargparse")
+
     depends_on("pfunit@4.2:", when="+pfunit")
     depends_on("flap", when="+flap")
 
@@ -122,6 +133,7 @@ class Mapl(CMakePackage):
         args = [
             self.define_from_variant("BUILD_WITH_FLAP", "flap"),
             self.define_from_variant("BUILD_WITH_PFLOGGER", "pflogger"),
+            self.define_from_variant("BUILD_WITH_FARGPARSE", "fargparse"),
             self.define_from_variant("BUILD_SHARED_MAPL", "shared"),
             self.define_from_variant("USE_EXTDATA2G", "extdata2g"),
             "-DCMAKE_C_COMPILER=%s" % self.spec["mpi"].mpicc,
