@@ -18,7 +18,7 @@ class Mapl(CMakePackage):
     """
 
     homepage = "https://github.com/GEOS-ESM/MAPL"
-    url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.30.3.tar.gz"
+    url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.33.0.tar.gz"
     git = "https://github.com/GEOS-ESM/MAPL.git"
 
     maintainers = ["mathomp4", "tclune", "climbfuji", "edwardhartnett", "Hang-Lei-NOAA"]
@@ -26,6 +26,9 @@ class Mapl(CMakePackage):
     version("develop", branch="develop")
     version("main", branch="main")
 
+    # Retrieved by spack checksum mapl@x.y.z
+    version("2.33.0", sha256="a36680d3186cd0399240e9739f5497310bac3f9563f55f77775acf53fa5491bb")
+    version("2.32.0", sha256="f0eaec4b6d2514516a77cf426b656655d66f2e0801e639175dddfbd0648997f3")
     version("2.31.0", sha256="dcee4f0d02cc56c29437ab0dfc2f1ae78acce3af84630a55136f8e3626ce36c9")
     version("2.30.3", sha256="52bf65fcd5530079dab32ad1127fbaed940e218a99a89ac5bc8f8330b2094962")
     version("2.30.2", sha256="508b6d0e42593dbedbbb2524bafe7340be7306f80479fde2e4d55868a29753e7")
