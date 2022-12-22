@@ -314,7 +314,7 @@ def modify_macho_object(cur_path, rpaths, deps, idpath, paths_to_paths):
         new_rpath = paths_to_paths.get(orig_rpath)
         if new_rpath and not orig_rpath == new_rpath:
             args_to_add = ["-rpath", orig_rpath, new_rpath]
-            if not args_to_add in args and not new_rpath in new_rpaths:
+            if args_to_add not in args and new_rpath not in new_rpaths:
                 args += [args_to_add]
                 new_rpaths.append(new_rpath)
 
