@@ -1278,6 +1278,17 @@ def _build_tarball(
     # create info for later relocation and create tar
     write_buildinfo_file(spec, workdir, relative)
 
+    # remove all __pycache__ directories and compiled Python files (*.pyc)
+    # to avoid problems like ValueError:bad marshal data
+    cmd = "rm -fr `find {} -type d -name __pycache__`"
+    status = os.system(cmd)
+    if status:
+        raise Exception("Failed to execute '{}'".format(cmd))
+    cmd = "rm -fr `find {} -type f -name *.pyc`"
+    status = os.system(cmd)
+    if status:
+        raise Exception("Failed to execute '{}'".format(cmd))
+
     # optionally make the paths in the binaries relative to each other
     # in the spack install tree before creating tarball
     if relative:
@@ -1976,7 +1987,7 @@ def extract_tarball(spec, download_result, allow_root=False, unsigned=False, for
     os.remove(specfile_path)
 
     try:
-        relocate_package(spec, allow_root)
+        relocate_package(spec)
     except Exception as e:
         shutil.rmtree(spec.prefix)
         raise e
