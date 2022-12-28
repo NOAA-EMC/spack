@@ -1200,7 +1200,6 @@ def _build_tarball(
     relative=False,
     unsigned=False,
     allow_root=False,
-    skip_on_error=False,
     key=None,
     regenerate_index=False,
 ):
@@ -1295,26 +1294,18 @@ def _build_tarball(
         try:
             make_package_relative(workdir, spec, allow_root)
         except Exception as e:
-            if skip_on_error:
-                tty.warn(e)
-                tty.warn("Skipping package since skip_on_error flag is set")
-            else:
-                shutil.rmtree(workdir)
-                shutil.rmtree(tarfile_dir)
-                shutil.rmtree(tmpdir)
-                tty.die(e)
+            shutil.rmtree(workdir)
+            shutil.rmtree(tarfile_dir)
+            shutil.rmtree(tmpdir)
+            tty.die(e)
     else:
         try:
             check_package_relocatable(workdir, spec, allow_root)
         except Exception as e:
-            if skip_on_error:
-                tty.warn(e)
-                tty.warn("Skipping package since skip_on_error flag is set")
-            else:
-                shutil.rmtree(workdir)
-                shutil.rmtree(tarfile_dir)
-                shutil.rmtree(tmpdir)
-                tty.die(e)
+            shutil.rmtree(workdir)
+            shutil.rmtree(tarfile_dir)
+            shutil.rmtree(tmpdir)
+            tty.die(e)
 
     # create gzip compressed tarball of the install prefix
     # On AMD Ryzen 3700X and an SSD disk, we have the following on compression speed:
