@@ -187,7 +187,7 @@ class StackEnv(object):
         # Commonly used config settings
         if self.compiler:
             compiler = 'packages:all::compiler:[{}]'.format(self.compiler)
-            compiler_one_of = 'packages:all:require:one_of:[\'{}\']'.format(self.compiler)
+            compiler_one_of = 'packages:all:require:one_of:[\'%{}\']'.format(self.compiler)
             spack.config.add(compiler, scope=env_scope)
             spack.config.add(compiler_one_of, scope=env_scope)
         if self.mpi:
