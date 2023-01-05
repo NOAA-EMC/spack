@@ -16,6 +16,8 @@ class Mepo(Package):
 
     maintainers = ['mathomp4']
 
+    # retrieved with spack checksum mepo@x.y.z
+    version("1.48.0", sha256="df873e2b9c6f63bd7c3e31a6656980660af22cbe48db39c80c1b54feb0c98043")
     version("1.47.0", sha256="5e9484f4cd5d2c7c6a84954e949ce78cf94b0a709779f586ecbd17d50920f2ff")
     version("1.46.0", sha256="bf4dc62807b82f0ddc110a9e188141a70eb3e5207121b26519dcef39938d6c52")
     version('1.45.0', sha256='276ca8eb12f7bd9e5117a7f7a2596147456b7db05dbe93f5cd778da0b2ed80de')
