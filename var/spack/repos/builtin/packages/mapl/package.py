@@ -29,6 +29,7 @@ class Mapl(CMakePackage):
     version("main", branch="main")
 
     # Retrieved by spack checksum mapl@x.y.z
+    version("2.34.0", sha256="4188df84654beed5c7fc3a96a3fb19289ebfc4020c4e14d52088d2ead2745f73")
     version("2.33.0", sha256="a36680d3186cd0399240e9739f5497310bac3f9563f55f77775acf53fa5491bb")
     version("2.32.0", sha256="f0eaec4b6d2514516a77cf426b656655d66f2e0801e639175dddfbd0648997f3")
     version("2.31.0", sha256="dcee4f0d02cc56c29437ab0dfc2f1ae78acce3af84630a55136f8e3626ce36c9")
@@ -56,6 +57,12 @@ class Mapl(CMakePackage):
 
     # Versions later than 3.14 remove FindESMF.cmake
     # from ESMA_CMake. This works with mapl@2.22.0:
+    resource(
+        name="esma_cmake",
+        git="https://github.com/GEOS-ESM/ESMA_cmake.git",
+        tag="v3.24.0",
+        when="@2.34.0:",
+    )
     resource(
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
@@ -107,6 +114,7 @@ class Mapl(CMakePackage):
     depends_on("netcdf-c")
     depends_on("netcdf-fortran")
     depends_on("parallel-netcdf", when="+pnetcdf")
+    depends_on("esmf@8.4:", when="@2.34:")
     depends_on("esmf@8.3:", when="@2.22:")
     depends_on("esmf", when="@:2.12.99")
     depends_on("esmf~debug", when="~debug")
