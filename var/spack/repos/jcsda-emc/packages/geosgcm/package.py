@@ -17,6 +17,7 @@ class Geosgcm(CMakePackage):
     maintainers = ["mathomp4", "tclune"]
 
     version("main", branch="main")
+    version("10.23.2", tag="v10.23.2")
     version("10.23.1", tag="v10.23.1")
     version("10.23.0", tag="v10.23.0")
 
@@ -43,9 +44,9 @@ class Geosgcm(CMakePackage):
 
     # These are similarly the dependencies of MAPL. Not sure if we'll ever use MAPL as library
     depends_on("hdf5")
-    depends_on("netcdf-c")
-    depends_on("netcdf-fortran")
-    depends_on("esmf@8.3.0:")
+    depends_on("netcdf-c@4.9.0:")
+    depends_on("netcdf-fortran@4.6.0:")
+    depends_on("esmf@8.4.0:")
     depends_on("gftl@1.5.5:")
     depends_on("gftl-shared@1.3.1:")
     depends_on("yafyaml@1.0.4:", when="+extdata2g")
@@ -54,7 +55,7 @@ class Geosgcm(CMakePackage):
     depends_on("flap@geos")
 
     # MAPL as library would be like:
-    #  depends_on("mapl@2.31:+flap+pflogger+extdata2g+fargparse")
+    #  depends_on("mapl@2.34:+flap+pflogger+extdata2g+fargparse")
     # but we don't want to do this in general due to the speed of MAPL development
 
     # When we move to FMS as library, we'll need to add this:
@@ -78,6 +79,5 @@ class Geosgcm(CMakePackage):
             "-DCMAKE_CXX_COMPILER=%s" % self.spec["mpi"].mpicxx,
             "-DCMAKE_Fortran_COMPILER=%s" % self.spec["mpi"].mpifc,
         ]
-
 
         return args
