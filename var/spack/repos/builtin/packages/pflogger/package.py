@@ -22,7 +22,6 @@ class Pflogger(CMakePackage):
     version("1.9.1", sha256="918965f5a748a3a62e54751578f5935a820407b988b8455f7f25c266b5b7fe3c")
     version("1.9.0", sha256="aacd9b7e188bee3a54a4e681adde32e3bd95bb556cbbbd2c725c81aca5008003")
     version("1.8.0", sha256="28ce9ac8af374253b6dfd8f53f8fd271c787d432645ec9bc6a5a01601dc56e19")
-    # version("1.7.0", sha256="dfba8470988226c170c0194329ef814a1fe270f204bbb01de198a02974b783cf") # Cannot figure out how to build
     version("1.6.1", sha256="114a15daa7994ab7d4eea463c3a9b8fe7df3da7d07a0004b5c40cf155e374916")
 
     variant(

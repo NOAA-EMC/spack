@@ -26,6 +26,7 @@ class Esmf(MakefilePackage):
     # Develop is a special name for spack and is always considered the newest version
     version("develop", branch="develop")
     # generate chksum with spack checksum esmf@x.y.z
+    version("8.4.0", sha256="28531810bf1ae78646cda6494a53d455d194400f19dccd13d6361871de42ed0f")
     version(
         "8.4.0",
         sha256="28531810bf1ae78646cda6494a53d455d194400f19dccd13d6361871de42ed0f",
@@ -252,7 +253,8 @@ class Esmf(MakefilePackage):
         #######
 
         # ESMF_OS must be set for Cray systems
-        if "platform=cray" in self.spec:
+        cray_identifiers = [ "platform=cray", "^cray-mpich", "^cray-mvapich2" ]
+        if any(cray_id in self.spec for cray_id in cray_identifiers):
             os.environ["ESMF_OS"] = "Unicos"
 
         #######
@@ -338,7 +340,7 @@ class Esmf(MakefilePackage):
         ##############
         # ParallelIO #
         ##############
-        if "+parallelio" in spec and "+mpi" in spec:
+        if "+parallelio" in spec:
             os.environ["ESMF_PIO"] = "external"
             os.environ["ESMF_PIO_LIBPATH"] = spec["parallelio"].prefix.lib
             os.environ["ESMF_PIO_INCLUDE"] = spec["parallelio"].prefix.include
@@ -368,6 +370,7 @@ class Esmf(MakefilePackage):
             # ESMF_XERCES_INCLUDE
             # ESMF_XERCES_LIBPATH
 
+        # Static-only option:
         if "~shared" in spec:
             os.environ["ESMF_SHARED_LIB_BUILD"] = "OFF"
 
