@@ -59,7 +59,7 @@ class Geosgcm(CMakePackage):
     # but we don't want to do this in general due to the speed of MAPL development
 
     # When we move to FMS as library, we'll need to add this:
-    #depends_on("fms@2022.04:~gfs_phys+fpic~quad_precision+32bit+64bit constants=GEOS")
+    #depends_on("fms@2022.04:~gfs_phys+fpic~quad_precision+32bit+64bit+yaml constants=GEOS")
 
     # Before we run cmake, we need to run 'mepo clone' to get the full source
     @run_before("cmake")
