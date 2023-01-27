@@ -102,8 +102,6 @@ class UfsWeatherModel(CMakePackage):
 
     variant("app", default="ATM", description="UFS application", when="@develop")
 
-    depends_on("gcc@9:", when="@2.0.0 %gcc")
-
     depends_on("bacio")
     depends_on("mpi", when="+mpi")
     depends_on("netcdf-c")
