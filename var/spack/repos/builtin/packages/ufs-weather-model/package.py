@@ -103,12 +103,12 @@ class UfsWeatherModel(CMakePackage):
     variant("app", default="ATM", description="UFS application", when="@develop")
 
     depends_on("bacio")
+    depends_on("mpi", when="+mpi")
     depends_on("netcdf-c")
     depends_on("netcdf-fortran")
     depends_on("sp")
     depends_on("w3emc")
     depends_on("esmf@:8.0.0", when="@:2.0.0")
-    depends_on("mpi", when="+mpi")
     depends_on("nemsio", when="@:2.0.0")
     depends_on("w3nco", when="@:2.0.0")
     depends_on("crtm", when="@develop")
