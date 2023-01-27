@@ -96,27 +96,31 @@ class UfsWeatherModel(CMakePackage):
         description="Enable quad precision for certain grid metric terms in dycore",
         when="@:2.0.0",
     )
+    variant("mom6solo", default=False, description="Build MOM6 solo executable", when="@develop")
+
+    variant("cmake_platform", default="auto", description="Override value for CMAKE_Platform env variable ('linux.intel', 'hera.gnu', 'acorn', etc.)")
 
     variant("app", default="ATM", description="UFS application", when="@develop")
 
     depends_on("bacio")
-    depends_on("esmf@:8.0.0", when="@:2.0.0")
-    depends_on("mpi", when="+mpi")
-    depends_on("nemsio", when="@:2.0.0")
     depends_on("netcdf-c")
     depends_on("netcdf-fortran")
     depends_on("sp")
     depends_on("w3emc")
+    depends_on("esmf@:8.0.0", when="@:2.0.0")
+    depends_on("mpi", when="+mpi")
+    depends_on("nemsio", when="@:2.0.0")
     depends_on("w3nco", when="@:2.0.0")
-    depends_on("netcdf-c~parallel-netcdf+mpi", when="@develop")
-    depends_on("hdf5+hl+mpi", when="@develop")
-    depends_on("parallelio+fortran~pnetcdf~shared", when="@develop")
+    depends_on("crtm", when="@develop")
+    depends_on("esmf", when="@develop")
     depends_on("fms", when="@develop")
     depends_on("fms constants=GFS", when="@develop ^fms@2022.02:")
-    depends_on("crtm", when="@develop")
     depends_on("g2", when="@develop")
     depends_on("g2tmpl", when="@develop")
-    depends_on("esmf", when="@develop")
+    depends_on("hdf5+hl+mpi", when="@develop")
+    depends_on("ip", when="@develop")
+    depends_on("netcdf-c~parallel-netcdf+mpi", when="@develop")
+    depends_on("parallelio+fortran~pnetcdf~shared", when="@develop")
     with when("@develop app=S2SA"):
         depends_on("mapl")
         depends_on("gftl-shared")
@@ -132,11 +136,12 @@ class UfsWeatherModel(CMakePackage):
         env.set("CC", spec["mpi"].mpicc)
         env.set("CXX", spec["mpi"].mpicxx)
         env.set("FC", spec["mpi"].mpifc)
-        env.set("ESMFMKFILE", join_path(spec["esmf"].prefix.lib, "esmf.mk"))
 
         env.set("CCPP_SUITES", ",".join([x for x in spec.variants["ccpp_suites"].value if x]))
 
-        if spec.platform == "linux" and spec.satisfies("%intel"):
+        if spec.variants["cmake_platform"].value != "auto":
+            env.set("CMAKE_Platform", spec.variants["cmake_platform"].value)
+        elif spec.platform == "linux" and spec.satisfies("%intel"):
             env.set("CMAKE_Platform", "linux.intel")
         elif spec.platform == "linux" and spec.satisfies("%gcc"):
             env.set("CMAKE_Platform", "linux.gnu")
@@ -176,11 +181,11 @@ class UfsWeatherModel(CMakePackage):
     def patch(self):
         # Modify hardcoded version numbers in CMakeLists.txt:
         pkgs = {
-            "netcdf-c": "NetCDF",
+            "bacio": "bacio",
             "esmf": "ESMF",
             "fms": "FMS",
+            "netcdf-c": "NetCDF",
             "parallelio": "PIO",
-            "bacio": "bacio",
             "sp": "sp",
             "w3emc": "w3emc",
         }
