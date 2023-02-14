@@ -80,7 +80,7 @@ class NetcdfC(AutotoolsPackage):
     variant("zstd", default=True, description="Enable ZStandard compression", when="@4.9.0:")
     variant("optimize", default=True, description="Enable -O2 for a more optimized lib")
     variant("nczarr", default=True, description="Enable zarr storage support", when="@4.8.0:")
-    variant("byterange", default=False, description="Allow byte-range I/O")
+    variant("byterange", default=False, description="Allow byte-range I/O", when="@4.7.0:")
     variant(
         "fismahigh",
         default=False,
