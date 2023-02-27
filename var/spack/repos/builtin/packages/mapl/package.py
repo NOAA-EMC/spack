@@ -56,7 +56,8 @@ class Mapl(CMakePackage):
     version("2.7.1", sha256="8239fdbebd2caa47a232c24927f7a91196704e35c8b7909e1bbbefccf0647ea6")
 
     # Versions later than 3.14 remove FindESMF.cmake
-    # from ESMA_CMake. This works with mapl@2.22.0:
+    # from ESMA_CMake. This works with mapl@2.22.0
+    # and latest Apple M1 and M2 processors.
     resource(
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
@@ -67,12 +68,6 @@ class Mapl(CMakePackage):
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
         tag="v3.21.0",
-        when="@2.31.0:",
-    )
-    resource(
-        name="esma_cmake",
-        git="https://github.com/GEOS-ESM/ESMA_cmake.git",
-        tag="v3.17.0",
         when="@2.22.0:",
     )
     resource(
@@ -183,3 +178,12 @@ class Mapl(CMakePackage):
               subprocess.check_output(nc_pc_cmd, encoding="utf8").strip()
             filter_file("(target_link_libraries[^)]+PUBLIC )", \
               r'\1 %s '%nc_flags, "pfio/CMakeLists.txt")
+
+    def setup_build_environment(self, env):
+        # esma_cmake, an internal dependency of mapl, is
+        # looking for the cmake argument -DBASEDIR, and
+        # if it doesn't find it, it's looking for an
+        # environment variable with the same name. This
+        # name is common and used all over the place,
+        # and if it is set it breaks the mapl build.
+        env.unset("BASEDIR")
