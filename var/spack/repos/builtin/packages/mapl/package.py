@@ -29,6 +29,9 @@ class Mapl(CMakePackage):
     version("main", branch="main")
 
     # Retrieved by spack checksum mapl@x.y.z
+    version("2.34.3", sha256="8b750754cf5823771f2149d50f9aef585bcf194ca4635e1807c302d4020077e9")
+    version("2.34.2", sha256="e46a763084027fe0f326d515e0648b814a82720948062405e03046531f7bb948")
+    version("2.34.1", sha256="d2a504f08a4b416c3993d59630f226925bdaeb71488a1706decc49893dc8bcd0")
     version("2.34.0", sha256="4188df84654beed5c7fc3a96a3fb19289ebfc4020c4e14d52088d2ead2745f73")
     version("2.33.0", sha256="a36680d3186cd0399240e9739f5497310bac3f9563f55f77775acf53fa5491bb")
     version("2.32.0", sha256="f0eaec4b6d2514516a77cf426b656655d66f2e0801e639175dddfbd0648997f3")
