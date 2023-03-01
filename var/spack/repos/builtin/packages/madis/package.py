@@ -3,9 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
-
 from spack.package import *
+
 
 class Madis(MakefilePackage):
     """MADIS: The Meteorological Assimilation Data Ingest System (MADIS) is
