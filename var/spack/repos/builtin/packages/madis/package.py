@@ -7,13 +7,11 @@ from spack.package import *
 
 
 class Madis(MakefilePackage):
-    """MADIS: The Meteorological Assimilation Data Ingest System (MADIS) is
-    dedicated toward making value-added data available from the National
-    Oceanic and Atmospheric Administration's (NOAA) Earth System Research
-    Laboratory (ESRL) Global Systems Division (GSD) (formerly the Forecast
-    Systems Laboratory (FSL)) for the purpose of improving weather
-    forecasting, by providing support for data assimilation, numerical
-    weather prediction, and other hydrometeorological applications.
+    """
+    Meteorological Assimilation Data Ingest System (MADIS) is an observational
+    database and delivery system which integrates real-time observations from a
+    wide variety of observing infrastructures to make them useable for
+    numerical weather prediction models and nowcasting.
     """
 
     homepage = "https://madis-data.ncep.noaa.gov/"
