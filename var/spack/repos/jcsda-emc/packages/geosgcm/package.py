@@ -24,6 +24,8 @@ class Geosgcm(CMakePackage):
         return url.format(version)
 
     version("main", branch="main")
+
+    version("10.25.1", sha256="f541dc38163c554177c21746999e8cd9fb2daa127de1a4171ef82ac1a536fa2f")
     version("10.25.0", sha256="08887ca652387d51d92e62fd16c0944e6c2a53513abb081cc1150a28d128c4c3")
     version("10.24.0", sha256="59e35b446f258a36ba41f753c5724eb08c7cd0ccbafca1cfb329419cac045e24")
     version("10.23.3", sha256="131585394b2ece57af7585247e73d7bff6e27c42daa40cd05b47f90a471d06cf")
