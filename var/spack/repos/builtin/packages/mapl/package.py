@@ -21,6 +21,7 @@ class Mapl(CMakePackage):
 
     homepage = "https://github.com/GEOS-ESM/MAPL"
     url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.33.0.tar.gz"
+    list_url = "https://github.com/GEOS-ESM/MAPL/tags"
     git = "https://github.com/GEOS-ESM/MAPL.git"
 
     maintainers = ["mathomp4", "tclune", "climbfuji", "edwardhartnett", "Hang-Lei-NOAA"]
