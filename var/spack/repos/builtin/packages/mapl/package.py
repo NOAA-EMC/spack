@@ -29,6 +29,7 @@ class Mapl(CMakePackage):
     version("main", branch="main")
 
     # Retrieved by spack checksum mapl@x.y.z
+    version("2.35.2", sha256="12d2c3fa264b702253e4792d858f67002fa04ce1c60db341803bc000abb3b7a2")
     version("2.34.3", sha256="8b750754cf5823771f2149d50f9aef585bcf194ca4635e1807c302d4020077e9")
     version("2.34.2", sha256="e46a763084027fe0f326d515e0648b814a82720948062405e03046531f7bb948")
     version("2.34.1", sha256="d2a504f08a4b416c3993d59630f226925bdaeb71488a1706decc49893dc8bcd0")
@@ -98,6 +99,7 @@ class Mapl(CMakePackage):
     variant("extdata2g", default=False, description="Use ExtData2G")
     variant("pnetcdf", default=True, description="Use parallel netCDF")
     variant("pfunit", default=False, description="Build with pFUnit support")
+    variant("f2py", default=False, description="Build with f2py support")
 
     variant(
         "build_type",
@@ -134,12 +136,13 @@ class Mapl(CMakePackage):
     # fArgParse v1.4.1 is the first usable version with MAPL
     depends_on("fargparse@1.4.1:", when="+fargparse")
 
-    depends_on("pfunit@4.2:", when="+pfunit")
+    depends_on("pfunit@4.2: +mpi +fhamcrest", when="+pfunit")
     depends_on("flap", when="+flap")
 
     depends_on("ecbuild")
 
     depends_on("python@3:")
+    depends_on("py-numpy", when="+f2py")
     depends_on("perl")
 
     def cmake_args(self):
@@ -149,6 +152,7 @@ class Mapl(CMakePackage):
             self.define_from_variant("BUILD_WITH_FARGPARSE", "fargparse"),
             self.define_from_variant("BUILD_SHARED_MAPL", "shared"),
             self.define_from_variant("USE_EXTDATA2G", "extdata2g"),
+            self.define_from_variant("USE_F2PY", "f2py"),
             "-DCMAKE_C_COMPILER=%s" % self.spec["mpi"].mpicc,
             "-DCMAKE_CXX_COMPILER=%s" % self.spec["mpi"].mpicxx,
             "-DCMAKE_Fortran_COMPILER=%s" % self.spec["mpi"].mpifc,
