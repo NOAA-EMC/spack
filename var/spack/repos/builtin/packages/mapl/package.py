@@ -1,4 +1,4 @@
-# Copyright 2013-2021 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -20,10 +20,37 @@ class Mapl(CMakePackage):
     """
 
     homepage = "https://github.com/GEOS-ESM/MAPL"
-    url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.8.1.tar.gz"
+    url = "https://github.com/GEOS-ESM/MAPL/archive/refs/tags/v2.33.0.tar.gz"
+    list_url = "https://github.com/GEOS-ESM/MAPL/tags"
+    git = "https://github.com/GEOS-ESM/MAPL.git"
 
-    maintainers = ["mathomp4", "kgerheiser", "climbfuji", "edwardhartnett", "Hang-Lei-NOAA"]
+    maintainers = ["mathomp4", "tclune", "climbfuji", "edwardhartnett", "Hang-Lei-NOAA"]
 
+    version("develop", branch="develop")
+    version("main", branch="main")
+
+    # Retrieved by spack checksum mapl@x.y.z
+    version("2.35.2", sha256="12d2c3fa264b702253e4792d858f67002fa04ce1c60db341803bc000abb3b7a2")
+    version("2.34.3", sha256="8b750754cf5823771f2149d50f9aef585bcf194ca4635e1807c302d4020077e9")
+    version("2.34.2", sha256="e46a763084027fe0f326d515e0648b814a82720948062405e03046531f7bb948")
+    version("2.34.1", sha256="d2a504f08a4b416c3993d59630f226925bdaeb71488a1706decc49893dc8bcd0")
+    version("2.34.0", sha256="4188df84654beed5c7fc3a96a3fb19289ebfc4020c4e14d52088d2ead2745f73")
+    version("2.33.0", sha256="a36680d3186cd0399240e9739f5497310bac3f9563f55f77775acf53fa5491bb")
+    version("2.32.0", sha256="f0eaec4b6d2514516a77cf426b656655d66f2e0801e639175dddfbd0648997f3")
+    version("2.31.0", sha256="dcee4f0d02cc56c29437ab0dfc2f1ae78acce3af84630a55136f8e3626ce36c9")
+    version("2.30.3", sha256="52bf65fcd5530079dab32ad1127fbaed940e218a99a89ac5bc8f8330b2094962")
+    version("2.30.2", sha256="508b6d0e42593dbedbbb2524bafe7340be7306f80479fde2e4d55868a29753e7")
+    version("2.30.1", sha256="df691ac12422184f05f37cb926541d18577ce129e0d6f10e91c90c3922bff572")
+    version("2.30.0", sha256="71c469d4618ae97813f784208a102a38c4a30d5ff6301c08cb4fdbd1b1931202")
+    version("2.29.0", sha256="aeca5258bc88526895715e3fd3604d43916b5143e948866fea4c1a608120598d")
+    version("2.28.0", sha256="3a1f0c9b8b5a1932b2f036deb5463ddbef58a472ee4759c6cc3a4a871b8fe613")
+    version("2.27.1", sha256="1aeca20b49729d0212bca764510cb069839d1f2b702c46c8b29a6b2535b2052c")
+    version("2.27.0", sha256="a322257522f7fb2768668c02272ae8246ba4be81aa41d8015ce947ba871ce3fb")
+    version("2.26.0", sha256="4ef9a1eeffc0521bd6fb4ea5ab261e07d3b5a46f0a6c43673ee169bf0d624bb8")
+    version("2.25.0", sha256="f3ce71004f4274cedee28852cc105e0bf51a86cafc4d5f5af9de6492c4be9402")
+    version("2.24.0", sha256="cd15ffd6897c18e64267e5fa86523402eb48cbf638ad5f3b4b5b0ff8939d1936")
+    version("2.23.1", sha256="563f3e9f33adae298835e7de7a4a29452a2a584d191248c59494c49d3ee80d24")
+    version("2.23.0", sha256="ae25ec63d0f288599c668f35fdbccc76abadbfc6d48f95b6eb4e7a2c0c69f241")
     version("2.22.0", sha256="3356b8d29813431d272c5464e265f3fe3ce1ac7f49ae6d41da34fe4b82aa691a")
     version("2.12.3", sha256="e849eff291939509e74830f393cb2670c2cc96f6160d8060dbeb1742639c7d41")
     version("2.11.0", sha256="76351e026c17e2044b89085db639e05ba0e7439a174d14181e01874f0f93db44")
@@ -36,6 +63,12 @@ class Mapl(CMakePackage):
     # Versions later than 3.14 remove FindESMF.cmake
     # from ESMA_CMake. This works with mapl@2.22.0
     # and latest Apple M1 and M2 processors.
+    resource(
+        name="esma_cmake",
+        git="https://github.com/GEOS-ESM/ESMA_cmake.git",
+        tag="v3.24.0",
+        when="@2.34.0:",
+    )
     resource(
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
@@ -59,13 +92,22 @@ class Mapl(CMakePackage):
     # Patch to add missing MPI Fortran target to top-level CMakeLists.txt
     patch("mapl-2.12.3-mpi-fortran.patch", when="@:2.12.3")
 
-    variant("flap", default=False)
-    variant("pflogger", default=False)
-    variant("esma_gfe_namespace", default=True)
-    variant("shared", default=True)
+    variant("flap", default=False, description="Build with FLAP support")
+    variant("pflogger", default=False, description="Build with pFlogger support")
+    variant("fargparse", default=False, description="Build with fArgParse support")
+    variant("shared", default=True, description="Build as shared library")
     variant("debug", default=False, description="Make a debuggable version of the library")
     variant("extdata2g", default=False, description="Use ExtData2G")
     variant("pnetcdf", default=True, description="Use parallel netCDF")
+    variant("pfunit", default=False, description="Build with pFUnit support")
+    variant("f2py", default=False, description="Build with f2py support")
+
+    variant(
+        "build_type",
+        default="Release",
+        description="The build type to build",
+        values=("Debug", "Release", "Aggressive"),
+    )
 
     depends_on("cmake@3.17:")
     depends_on("mpi")
@@ -73,21 +115,45 @@ class Mapl(CMakePackage):
     depends_on("netcdf-c")
     depends_on("netcdf-fortran")
     depends_on("parallel-netcdf", when="+pnetcdf")
+    depends_on("esmf@8.4:", when="@2.34:")
     depends_on("esmf@8.3:", when="@2.22:")
     depends_on("esmf", when="@:2.12.99")
     depends_on("esmf~debug", when="~debug")
     depends_on("esmf+debug", when="+debug")
-    depends_on("yafyaml@:0.5.1")
+
+    depends_on("gftl@1.5.5:")
     depends_on("gftl-shared@1.3.1:")
+
+    # There was an interface change in yaFyaml, so we need to control versions
+    # MAPL 2.22 and older uses older version, MAPL 2.23+ and higher uses newer
+    depends_on("yafyaml@1.0-beta5", when="@:2.22+extdata2g")
+    depends_on("yafyaml@1.0.4:", when="@2.23:+extdata2g")
+
+    # pFlogger depends on yaFyaml in the same way. MAPL 2.22 and below uses old
+    # yaFyaml so we need to use old pFlogger, but MAPL 2.23+ uses new yaFyaml
+    depends_on("pflogger@:1.6", when="@:2.22+pflogger")
+    depends_on("pflogger@1.9.1:", when="@2.23:+pflogger")
+
+    # fArgParse v1.4.1 is the first usable version with MAPL
+    depends_on("fargparse@1.4.1:", when="+fargparse")
+
+    depends_on("pfunit@4.2: +mpi +fhamcrest", when="+pfunit")
+    depends_on("flap", when="+flap")
+
     depends_on("ecbuild")
+
+    depends_on("python@3:")
+    depends_on("py-numpy", when="+f2py")
+    depends_on("perl")
 
     def cmake_args(self):
         args = [
             self.define_from_variant("BUILD_WITH_FLAP", "flap"),
             self.define_from_variant("BUILD_WITH_PFLOGGER", "pflogger"),
-            self.define_from_variant("ESMA_USE_GFE_NAMESPACE", "esma_gfe_namespace"),
+            self.define_from_variant("BUILD_WITH_FARGPARSE", "fargparse"),
             self.define_from_variant("BUILD_SHARED_MAPL", "shared"),
             self.define_from_variant("USE_EXTDATA2G", "extdata2g"),
+            self.define_from_variant("USE_F2PY", "f2py"),
             "-DCMAKE_C_COMPILER=%s" % self.spec["mpi"].mpicc,
             "-DCMAKE_CXX_COMPILER=%s" % self.spec["mpi"].mpicxx,
             "-DCMAKE_Fortran_COMPILER=%s" % self.spec["mpi"].mpifc,
