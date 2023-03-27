@@ -30,6 +30,8 @@ class Mapl(CMakePackage):
     version("main", branch="main")
 
     # Retrieved by spack checksum mapl@x.y.z
+    version("2.36.0", sha256="0dc6c0e4240ae0db31cc0d58ed0f08f568b073710e5722b292bbe0e8ce9b6786")
+    version("2.35.3", sha256="079b97a58f3728e5c9fa2a5dffb872496551a79c1cc544f215f2b0a63c708606")
     version("2.35.2", sha256="12d2c3fa264b702253e4792d858f67002fa04ce1c60db341803bc000abb3b7a2")
     version("2.34.3", sha256="8b750754cf5823771f2149d50f9aef585bcf194ca4635e1807c302d4020077e9")
     version("2.34.2", sha256="e46a763084027fe0f326d515e0648b814a82720948062405e03046531f7bb948")
@@ -62,6 +64,12 @@ class Mapl(CMakePackage):
 
     # Versions later than 3.14 remove FindESMF.cmake
     # from ESMA_CMake.
+    resource(
+        name="esma_cmake",
+        git="https://github.com/GEOS-ESM/ESMA_cmake.git",
+        tag="v3.28.0",
+        when="@2.36.0:",
+    )
     resource(
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
