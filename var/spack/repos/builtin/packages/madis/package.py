@@ -3,6 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+import os
+
 from spack.package import *
 
 
@@ -40,7 +42,7 @@ class Madis(MakefilePackage):
             ldflags.append(pnetcdf.libs.ld_flags)
             libs.append(pnetcdf.libs.link_flags)
 
-        nfconfig = which("nf-config")
+        nfconfig = which(os.path.join(self.spec["netcdf-fortran"].prefix.lib, "nf-config"))
         ldflags.append(nfconfig("--flibs", output=str).strip())
         netcdf_f = self.spec["netcdf-fortran"]
         env.set("NETCDF_INC", netcdf_f.prefix.include)
