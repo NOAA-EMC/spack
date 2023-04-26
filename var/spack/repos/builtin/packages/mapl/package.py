@@ -30,6 +30,10 @@ class Mapl(CMakePackage):
     version("main", branch="main")
 
     # Retrieved by spack checksum mapl@x.y.z
+    version("2.37.3", sha256="48f8972605d7a6f4c75b4fe2b0d597c2269210ee6ca65513629891bea5f8e9a4")
+    version("2.37.2", sha256="c156383a75b3b8cb57309e03683ae5ad8da7cd2701ee2a1d63226903d75b81bb")
+    version("2.37.1", sha256="d68374d1cb8a8a0cc9c1fb018e8d1d81c9efa29c6ccaccc438023ec3461f83f2")
+    version("2.37.0", sha256="ae53d58436d74fa40e3a5a743af9bcd6588a4590c0ef0a57c8317f4c7366b62b")
     version("2.36.0", sha256="0dc6c0e4240ae0db31cc0d58ed0f08f568b073710e5722b292bbe0e8ce9b6786")
     version("2.35.3", sha256="079b97a58f3728e5c9fa2a5dffb872496551a79c1cc544f215f2b0a63c708606")
     version("2.35.2", sha256="12d2c3fa264b702253e4792d858f67002fa04ce1c60db341803bc000abb3b7a2")
@@ -74,19 +78,13 @@ class Mapl(CMakePackage):
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
         tag="v3.24.0",
-        when="@2.34.0:",
-    )
-    resource(
-        name="esma_cmake",
-        git="https://github.com/GEOS-ESM/ESMA_cmake.git",
-        tag="v3.24.0",
-        when="@2.34.0:",
+        when="@2.34.0:@2.35",
     )
     resource(
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
         tag="v3.21.0",
-        when="@2.22.0:",
+        when="@2.22.0:@2.33",
     )
     resource(
         name="esma_cmake",
