@@ -78,13 +78,13 @@ class Mapl(CMakePackage):
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
         tag="v3.24.0",
-        when="@2.34.0:@2.35",
+        when="@2.34.0:2.35",
     )
     resource(
         name="esma_cmake",
         git="https://github.com/GEOS-ESM/ESMA_cmake.git",
         tag="v3.21.0",
-        when="@2.22.0:@2.33",
+        when="@2.22.0:2.33",
     )
     resource(
         name="esma_cmake",
