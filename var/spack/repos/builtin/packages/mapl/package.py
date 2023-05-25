@@ -154,7 +154,7 @@ class Mapl(CMakePackage):
     depends_on("pfunit@4.2: +mpi +fhamcrest", when="+pfunit")
     depends_on("flap", when="+flap")
 
-    depends_on("ecbuild")
+    depends_on("ecbuild", type="build")
 
     depends_on("python@3:")
     depends_on("py-numpy", when="+f2py")
