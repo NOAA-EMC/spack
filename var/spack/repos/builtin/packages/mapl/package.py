@@ -91,7 +91,7 @@ class Mapl(CMakePackage):
     # fArgParse not yet available
     conflicts("+fargparse")
 
-    depends_on("ecbuild")
+    depends_on("ecbuild", type="build")
 
     def cmake_args(self):
         args = [
