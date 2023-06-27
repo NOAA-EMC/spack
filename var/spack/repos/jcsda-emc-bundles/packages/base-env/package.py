@@ -21,6 +21,7 @@ class BaseEnv(BundlePackage):
     # Basic utilities
     if sys.platform == "darwin":
         depends_on("libbacktrace", type="run")
+    depends_on("bison@3.4:", type="run")
     depends_on("cmake", type="run")
     depends_on("git", type="run")
     depends_on("wget", type="run")
