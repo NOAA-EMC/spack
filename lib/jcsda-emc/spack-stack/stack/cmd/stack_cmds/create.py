@@ -84,6 +84,11 @@ def setup_common_parser_args(subparser):
         help='Base packages.yaml, use to override common packages.yaml.'
     )
 
+    subparser.add_argument(
+        '--upstream', nargs="*", action="append",
+        help='Include upstream environment (/path/to/spack-stack-x.y.z/envs/unified-env)'
+    )
+
 
 def setup_ctr_parser(subparser):
     """ create container-specific parsing options"""
@@ -145,6 +150,7 @@ def dict_from_args(args):
     dict['install_prefix'] = args.prefix
     dict['base_packages'] = args.packages
     dict['dir'] = args.dir
+    dict['upstreams'] = args.upstream
 
     return dict
 
