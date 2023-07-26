@@ -34,7 +34,7 @@ class Crtm(CMakePackage):
         values=("Debug", "Release", "RelWithDebInfo", "MinSizeRel"),
     )
 
-    depends_on("cmake@3.15:")
+    depends_on("cmake@3.15:", type="build")
     depends_on("git-lfs")
     depends_on("netcdf-fortran", when="@2.4.0:")
     depends_on("netcdf-fortran", when="@v2.3-jedi.4")
@@ -51,8 +51,6 @@ class Crtm(CMakePackage):
     depends_on("ecbuild", type=("build"), when="@v2.4-jedi.2")
     depends_on("ecbuild", type=("build"), when="@v2.4.1-jedi")
     depends_on("ecbuild", type=("build"), when="@v3.0.0-rc.1")
-
-    version("v3.0.0-rc.1", sha256="b7f8c251168bcc3c29586ee281ed456e3115735d65167adcbcf4f69be76b933c")
 
     version("v2.4.1-jedi", sha256="fd8bf4db4f2a3b420b4186de84483ba2a36660519dffcb1e0ff14bfe8c6f6a14")
     # REL-2.4.0_emc (v2.4.0 ecbuild does not work)
