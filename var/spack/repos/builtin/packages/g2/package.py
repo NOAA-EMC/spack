@@ -39,6 +39,8 @@ class G2(CMakePackage):
     depends_on("libpng")
     depends_on("bacio", when="@3.4.6:")
     depends_on("w3emc", when="@3.4.6:")
+    depends_on("w3emc precision=4", when="precision=4")
+    depends_on("w3emc precision=d", when="precision=d")
 
     def cmake_args(self):
         args = [
