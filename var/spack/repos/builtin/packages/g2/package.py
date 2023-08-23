@@ -44,8 +44,8 @@ class G2(CMakePackage):
         args = [
             self.define_from_variant("CMAKE_POSITION_INDEPENDENT_CODE", "pic"),
             self.define_from_variant("BUILD_WITH_W3EMC", "w3emc"),
-            self.define_from_variant("BUILD_4", self.spec.satisfies("precision=4")),
-            self.define_from_variant("BUILD_D", self.spec.satisfies("precision=d")),
+            self.define("BUILD_4", self.spec.satisfies("precision=4")),
+            self.define("BUILD_D", self.spec.satisfies("precision=d")),
         ]
 
         return args
