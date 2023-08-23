@@ -25,6 +25,14 @@ class G2(CMakePackage):
     version("3.4.3", sha256="679ea99b225f08b168cbf10f4b29f529b5b011232f298a5442ce037ea84de17c")
 
     variant("pic", default=True, description="Build with position-independent-code")
+    variant(
+        "precision",
+        default=["4", "d"],
+        values=["4", "d"],
+        multi=True,
+        description="Set precision (_4/_d library versions)",
+        when="@3.4.6:",
+    )
     variant("w3emc", default=True, description="Enable GRIB1 through w3emc", when="@3.4.6:")
 
     depends_on("jasper@:2.0.32")
@@ -36,6 +44,8 @@ class G2(CMakePackage):
         args = [
             self.define_from_variant("CMAKE_POSITION_INDEPENDENT_CODE", "pic"),
             self.define_from_variant("BUILD_WITH_W3EMC", "w3emc"),
+            self.define_from_variant("BUILD_4", self.spec.satisfies("precision=4")),
+            self.define_from_variant("BUILD_D", self.spec.satisfies("precision=d")),
         ]
 
         return args
