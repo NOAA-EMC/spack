@@ -31,7 +31,7 @@ class G2(CMakePackage):
         values=["4", "d"],
         multi=True,
         description="Set precision (_4/_d library versions)",
-        when="@3.4.6:",
+        when="@develop",
     )
     variant("w3emc", default=True, description="Enable GRIB1 through w3emc", when="@3.4.6:")
 
