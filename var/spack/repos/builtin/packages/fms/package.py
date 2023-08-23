@@ -16,8 +16,9 @@ class Fms(CMakePackage):
     url = "https://github.com/NOAA-GFDL/FMS/archive/refs/tags/2022.04.tar.gz"
     git = "https://github.com/NOAA-GFDL/FMS.git"
 
-    maintainers("AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett", "rem1776")
+    maintainers("AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett", "rem1776", "climbfuji")
 
+    version("2023.02", sha256="dc029ffadfd82c334f104268bedd8635c77976485f202f0966ae4cf06d2374be")
     version("2023.01", sha256="6079ea885e9365513b453c77aadfc7c305bf413b840656bb333db1eabba0f18e")
     version("2022.04", sha256="f741479128afc2b93ca8291a4c5bcdb024a8cbeda1a26bf77a236c0f629e1b03")
     version("2022.03", sha256="42d2ac53d3c889a8177a6d7a132583364c0f6e5d5cbde0d980443b6797ad4838")
@@ -85,6 +86,9 @@ class Fms(CMakePackage):
     variant(
         "pic", default=False, description="Build with position independent code", when="@2022.02:"
     )
+    variant(
+        "use_fmsio", default=False, description="Enable deprecated fms_io API", when="@2023.02:"
+    )
 
     depends_on("netcdf-c")
     depends_on("netcdf-fortran")
@@ -104,10 +108,12 @@ class Fms(CMakePackage):
             self.define_from_variant("ENABLE_QUAD_PRECISION", "quad_precision"),
             self.define_from_variant("WITH_YAML", "yaml"),
             self.define_from_variant("CONSTANTS"),
-            self.define_from_variant("FPIC", "pic"),
             self.define("32BIT", "precision=32" in self.spec),
             self.define("64BIT", "precision=64" in self.spec),
+            self.define_from_variant("FPIC", "pic"),
         ]
+        with when("@2023.02:"):
+            args.append(self.define_from_variant("USE_DEPRECATED_IO", "use_fmsio"))
 
         args.append(self.define("CMAKE_C_COMPILER", self.spec["mpi"].mpicc))
         args.append(self.define("CMAKE_CXX_COMPILER", self.spec["mpi"].mpicxx))
@@ -116,13 +122,16 @@ class Fms(CMakePackage):
         fflags = []
 
         if self.compiler.name in ["gcc", "clang", "apple-clang"]:
-            gfortran_major_version = int(spack.compiler.get_compiler_version_output(
-                self.compiler.fc, "-dumpversion").split(".")[0])
+            gfortran_major_version = int(
+                spack.compiler.get_compiler_version_output(self.compiler.fc, "-dumpversion").split(
+                    "."
+                )[0]
+            )
 
             if gfortran_major_version >= 10:
                 fflags.append("-fallow-argument-mismatch")
 
         if fflags:
-            args.append(self.define('CMAKE_Fortran_FLAGS', ' '.join(fflags)))
+            args.append(self.define("CMAKE_Fortran_FLAGS", " ".join(fflags)))
 
         return args

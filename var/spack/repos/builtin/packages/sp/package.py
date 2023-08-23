@@ -13,9 +13,11 @@ class Sp(CMakePackage):
 
     homepage = "https://noaa-emc.github.io/NCEPLIBS-sp"
     url = "https://github.com/NOAA-EMC/NCEPLIBS-sp/archive/refs/tags/v2.3.3.tar.gz"
+    git = "https://github.com/NOAA-EMC/NCEPLIBS-sp"
 
     maintainers("t-brown", "AlexanderRichert-NOAA", "edwardhartnett", "Hang-Lei-NOAA")
 
+    version("develop", branch="develop")
     version("2.4.0", sha256="dbb4280e622d2683b68a28f8e3837744adf9bbbb1e7940856e8f4597f481c708")
     version("2.3.3", sha256="c0d465209e599de3c0193e65671e290e9f422f659f1da928505489a3edeab99f")
 
@@ -36,6 +38,7 @@ class Sp(CMakePackage):
             suffixes = self.spec.variants["precision"].value
         else:
             suffixes = ["4", "d", "8"]
+
         for suffix in suffixes:
             lib = find_libraries(
                 "libsp_" + suffix,
