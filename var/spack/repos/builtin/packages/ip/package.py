@@ -49,10 +49,8 @@ class Ip(CMakePackage):
             self.define_from_variant("CMAKE_POSITION_INDEPENDENT_CODE", "pic"),
         ]
 
-        if self.spec.satisfies("@4:"):
-            args.append(self.define("BUILD_TESTING", "NO"))
-        else:
-            args.append(self.define("ENABLE_TESTS", "NO"))
+        if self.spec.satisfies("@:3"):
+            args.append(self.define("ENABLE_TESTS", self.run_tests))
 
         if self.spec.satisfies("@4.1:"):
             args.append(self.define_from_variant("BUILD_SHARED_LIBS", "shared"))
