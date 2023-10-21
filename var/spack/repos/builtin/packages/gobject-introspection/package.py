@@ -88,11 +88,6 @@ class GobjectIntrospection(MesonPackage, AutotoolsPackage):
         if self.spec.satisfies("@:1.60"):
             env.set("SPACK_SBANG", sbang.sbang_install_path())
 
-        if self.spec.satisfies("^cairo ~shared"):
-            pkgconfig = which("pkg-config")
-            cairo_libs = pkgconfig("cairo", "--static", "--libs", output=str).strip()
-            env.set("CFLAGS", cairo_libs)
-
     def setup_run_environment(self, env):
         env.prepend_path("GI_TYPELIB_PATH", join_path(self.prefix.lib, "girepository-1.0"))
 
@@ -114,3 +109,11 @@ class AutotoolsBuilderPackage(spack.build_systems.autotools.AutotoolsBuilder):
     def filter_file_to_avoid_overly_long_shebangs(self):
         # we need to filter this file to avoid an overly long hashbang line
         filter_file("#!/usr/bin/env @PYTHON@", "#!@PYTHON@", "tools/g-ir-tool-template.in")
+
+
+class MesonBuilder(spack.build_systems.meson.MesonBuilder):
+    def meson_args(self):
+        if self.spec.satisfies("^cairo ~shared"):
+            pkgconfig = which("pkg-config")
+            cairo_libs = pkgconfig("cairo", "--static", "--libs", output=str).strip()
+            return [f"-Dc_link_args={cairo_libs}"]
