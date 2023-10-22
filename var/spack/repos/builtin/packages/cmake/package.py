@@ -394,16 +394,13 @@ class Cmake(Package):
             args.append(
                 "-DOPENSSL_CRYPTO_LIBRARY={0};{1}".format(
                     find_libraries(
-                        "libcrypto",
-                        self.spec["openssl"].prefix,
-                        recursive=True,
-                        shared=False
+                        "libcrypto", self.spec["openssl"].prefix, recursive=True, shared=False
                     ),
                     find_libraries(
                         "libz",
                         self.spec["zlib"].prefix.lib,
                         shared=self.spec["zlib"].satisfies("+shared"),
-                    )
+                    ),
                 )
             )
 
