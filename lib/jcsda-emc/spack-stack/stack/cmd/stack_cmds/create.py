@@ -162,6 +162,12 @@ def setup_env_parser(subparser):
                 modules (not the spack environment).""",
     )
 
+    subparser.add_argument(
+        "--modify-pkg",
+        action="append",
+        help="Modify selected package's and place in an environment-specific repository",
+    )
+
 
 def setup_create_parser(subparser):
     sp = subparser.add_subparsers(metavar="SUBCOMMAND", dest="env_type")
@@ -201,6 +207,7 @@ def dict_from_args(args):
     dict["dir"] = args.dir
     dict["upstreams"] = args.upstream
     dict["modulesys"] = args.modulesys
+    dict["modifypkg"] = args.modify_pkg
 
     return dict
 

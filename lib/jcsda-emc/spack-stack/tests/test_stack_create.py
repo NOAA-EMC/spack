@@ -147,3 +147,60 @@ def test_upstream():
     with open(spack_yaml_path, "r") as f:
         spack_yaml_txt = f.read()
     assert "install_tree: /test/path/to/upstream/env" in spack_yaml_txt
+    assert (
+        "repos: [$env/envrepo]" not in spack_yaml_txt
+    ), "--modify-pkg functionality modified spack.yaml without being called"
+
+
+@pytest.mark.extension("stack")
+@pytest.mark.filterwarnings("ignore::UserWarning")
+def test_modifypkg():
+    stack_create(
+        "create",
+        "env",
+        "--site",
+        "hera",
+        "--name",
+        "modifypkg_test",
+        "--dir",
+        test_dir,
+        "--overwrite",
+        "--modify-pkg",
+        "hdf5",
+        "--modify-pkg",
+        "ufs-weather-model-env",
+    )
+    env_dir = os.path.join(test_dir, "modifypkg_test")
+    spack_yaml_path = os.path.join(test_dir, "modifypkg_test/spack.yaml")
+    with open(spack_yaml_path, "r") as f:
+        spack_yaml_txt = f.read()
+    assert "repos: [$env/envrepo]" in spack_yaml_txt, "--modify-pkg did not update spack.yaml"
+    custom_hdf5_path = os.path.join(test_dir, "modifypkg_test/envrepo/packages/hdf5/package.py")
+    assert os.path.exists(
+        custom_hdf5_path
+    ), "'--modify-pkg hdf5' failed to create custom package.py"
+    custom_ufswm_path = os.path.join(
+        test_dir, "modifypkg_test/envrepo/packages/ufs-weather-model-env/package.py"
+    )
+    assert os.path.exists(
+        custom_ufswm_path
+    ), "'--modify-pkg ufs-weather-model-env' failed to create custom package.py"
+    spack_cmd = spack.util.executable.which("spack")
+    hdf5_spack_path = spack_cmd(
+        "--env-dir", env_dir, "location", "--package-dir", "hdf5", output=str
+    ).strip()
+    assert custom_hdf5_path == os.path.join(
+        hdf5_spack_path, "package.py"
+    ), "Incorrect hdf5 location in modifypkg_test"
+    ufswm_spack_path = spack_cmd(
+        "--env-dir", env_dir, "location", "--package-dir", "ufs-weather-model-env", output=str
+    ).strip()
+    assert custom_ufswm_path == os.path.join(
+        ufswm_spack_path, "package.py"
+    ), "Incorrect ufs-weather-model-env location in modifypkg_test"
+    netcdfc_spack_path = spack_cmd(
+        "--env-dir", env_dir, "location", "--package-dir", "netcdf-c", output=str
+    ).strip()
+    assert (
+        os.path.join(spack.paths.packages_path, "packages/netcdf-c") == netcdfc_spack_path
+    ), "Incorrect netcdf-c location in modifypkg_test"

@@ -98,6 +98,7 @@ class StackEnv(object):
         self.mirror = kwargs.get("mirror", None)
         self.upstreams = kwargs.get("upstreams", None)
         self.modulesys = kwargs.get("modulesys", None)
+        self.modifypkg = kwargs.get("modifypkg", None)
 
         if not self.name:
             # site = self.site if self.site else 'default'
@@ -263,6 +264,29 @@ class StackEnv(object):
                 upstream = "upstreams:%s:install_tree:'%s'" % (name, upstream_path)
                 logging.info("Adding upstream path '%s'" % upstream_path)
                 spack.config.add(upstream, scope=env_scope)
+        if self.modifypkg:
+            logging.info("Creating custom repo with packages %s" % ", ".join(self.modifypkg))
+            env_repo_path = os.path.join(env_dir, "envrepo")
+            env_pkgs_path = os.path.join(env_repo_path, "packages")
+            os.makedirs(env_pkgs_path, exist_ok=False)
+            with open(os.path.join(env_repo_path, "repo.yaml"), "w") as f:
+                f.write("repo:\n  namespace: envrepo")
+            repo_paths = spack.config.get("repos", scope=spack.config.default_list_scope())
+            repo_paths = [p.replace("$spack/", spack.paths.spack_root+"/") for p in repo_paths]
+            for pkg_name in self.modifypkg:
+                pkg_found = False
+                for repo_path in repo_paths:
+                    pkg_path = os.path.join(repo_path, "packages", pkg_name)
+                    if os.path.exists(pkg_path):
+                        shutil.copytree(pkg_path, os.path.join(env_pkgs_path, pkg_name))
+                        pkg_found = True
+                        # Use the first repo where the package exists:
+                        break
+                if not pkg_found:
+                    logging.warning(f"WARNING: package '{pkg_name}' could not be found")
+            logging.info("Adding custom repo 'envrepo' to env config")
+            repo_cfg = "repos:[$env/envrepo]"
+            spack.config.add(repo_cfg, scope=env_scope)
 
         # Merge the original spack.yaml template back in
         # so it has the higest precedence
