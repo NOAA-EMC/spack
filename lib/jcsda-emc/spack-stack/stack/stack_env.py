@@ -278,7 +278,11 @@ class StackEnv(object):
                 for repo_path in repo_paths:
                     pkg_path = os.path.join(repo_path, "packages", pkg_name)
                     if os.path.exists(pkg_path):
-                        shutil.copytree(pkg_path, os.path.join(env_pkgs_path, pkg_name))
+                        shutil.copytree(
+                            pkg_path,
+                            os.path.join(env_pkgs_path, pkg_name),
+                            ignore=shutil.ignore_patterns("__pycache__"),
+                        )
                         pkg_found = True
                         # Use the first repo where the package exists:
                         break
