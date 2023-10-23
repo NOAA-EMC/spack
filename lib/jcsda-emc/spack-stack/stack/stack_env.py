@@ -272,7 +272,7 @@ class StackEnv(object):
             with open(os.path.join(env_repo_path, "repo.yaml"), "w") as f:
                 f.write("repo:\n  namespace: envrepo")
             repo_paths = spack.config.get("repos", scope=spack.config.default_list_scope())
-            repo_paths = [p.replace("$spack/", spack.paths.spack_root+"/") for p in repo_paths]
+            repo_paths = [p.replace("$spack/", spack.paths.spack_root + "/") for p in repo_paths]
             for pkg_name in self.modifypkg:
                 pkg_found = False
                 for repo_path in repo_paths:
