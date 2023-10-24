@@ -165,7 +165,7 @@ def setup_env_parser(subparser):
     subparser.add_argument(
         "--modify-pkg",
         action="append",
-        help="Modify selected package's and place in an environment-specific repository",
+        help="Modify selected package and place in an environment-specific repository",
     )
 
 
