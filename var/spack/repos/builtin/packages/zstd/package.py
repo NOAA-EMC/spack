@@ -62,7 +62,7 @@ class Zstd(CMakePackage, MakefilePackage):
     # (last tested: nvhpc@22.3)
     conflicts("+programs %nvhpc")
 
-    conflicts("+pic libs=shared")
+    conflicts("~pic libs=shared")
 
     build_system("cmake", "makefile", default="makefile")
 
