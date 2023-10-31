@@ -332,9 +332,10 @@ class Qt(Package):
                 llvm_path = "/spack-disable-llvm"
             env.set("LLVM_INSTALL_DIR", llvm_path)
 
-        if self.spec.satisfies("+ssl"):
-            if self.spec["openssl"].satisfies("~shared"):
-                env.set("OPENSSL_LIBS", "-lssl -lcrypto -lz")
+        if self.spec.satisfies("+ssl ^openssl~shared"):
+            pc = which("pkg-config")
+            ssl_flags = pc("openssl", "--libs-only-l", "--static", output=str).strip()
+            env.set("OPENSSL_LIBS", ssl_flags)
 
     def setup_run_environment(self, env):
         env.set("QTDIR", self.prefix)
