@@ -113,7 +113,9 @@ class AutotoolsBuilderPackage(spack.build_systems.autotools.AutotoolsBuilder):
 
 class MesonBuilder(spack.build_systems.meson.MesonBuilder):
     def meson_args(self):
+        args = []
         if self.spec.satisfies("^cairo ~shared"):
             pkgconfig = which("pkg-config")
             cairo_libs = pkgconfig("cairo", "--static", "--libs", output=str).strip()
-            return [f"-Dc_link_args={cairo_libs}"]
+            args.append(f"-Dc_link_args={cairo_libs}")
+        return args
