@@ -18,6 +18,7 @@ class Fms(CMakePackage):
 
     maintainers("AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett", "rem1776", "climbfuji")
 
+    version("2023.03", sha256="008a9ff394efe6a8adbcf37dd45ca103e00ae25748fc2960b7bc54f2f3b08d85")
     version(
         "2023.02.01", sha256="1597f7a485d02e401ce76444b2401060d74bd032cbb060cef917f001b4ff14bc"
     )
