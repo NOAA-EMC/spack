@@ -45,6 +45,13 @@ class Fms(CMakePackage):
         "2020.04.01", sha256="2c409242de7dea0cf29f8dbf7495698b6bcac1eeb5c4599a728bdea172ffe37c"
     )
 
+    # https://github.com/NOAA-GFDL/FMS/issues/1417
+    patch(
+        "https://github.com/NOAA-GFDL/FMS/pull/1418/commits/c9bba516ba1115d4a7660fba92f9d67cf3fd32ad.patch?full_index=1",
+        sha256="f835c54b2898c980a4cc2a9786134af91a8b1e8b1f11b1734227c6dea26c3b79",
+        when="@2023.03",
+    )
+
     # DH* 20220602
     # These versions were adapated by JCSDA and are only meant to be
     # used temporarily, until the JCSDA changes have found their way
