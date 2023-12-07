@@ -1,4 +1,4 @@
-# Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -33,13 +33,16 @@ class Gsibec(CMakePackage):
     depends_on("netcdf-c +mpi", type=("build", "run"))
     depends_on("netcdf-fortran", type=("build", "run"))
 
-    depends_on("mkl", when="+mkl", type=("build", "run"))
-    depends_on("lapack", when="~mkl", type=("build", "run"))
+    depends_on("lapack", type=("build", "run"))
 
     depends_on("ecbuild", type=("build"))
     depends_on("jedi-cmake", type=("build"))
     depends_on("sp", type=("build"))
 
     def cmake_args(self):
-        args = [self.define_from_variant("ENABLE_MKL", "mkl")]
+        args = []
+
+        mkl_providers = ["intel-mkl", "intel-oneapi-mkl", "intel-parallel-studio"]
+        args.append(self.define("ENABLE_MKL", self.spec["lapack"].name in mkl_providers))
+
         return args

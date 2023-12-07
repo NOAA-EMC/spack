@@ -86,6 +86,8 @@ class Wgrib2(MakefilePackage):
     conflicts("+openmp", when="%apple-clang")
 
     depends_on("wget", type=("build"), when="+netcdf4")
+    # makefile behavior with shell commands/character escapes breaks with gmake@4.3:
+    depends_on("gmake@:4.2")
 
     variant_map = {
         "netcdf3": "USE_NETCDF3",

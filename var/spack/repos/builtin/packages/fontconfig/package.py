@@ -62,7 +62,6 @@ class Fontconfig(AutotoolsPackage):
         args.extend(self.with_or_without("pic"))
 
         return args
-        
 
     @run_after("install")
     def system_fonts(self):

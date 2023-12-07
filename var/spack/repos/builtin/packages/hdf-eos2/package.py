@@ -21,6 +21,8 @@ class HdfEos2(AutotoolsPackage):
     # Template for url_for_version. 0 is sha256 checksum, 1 is filename
     url = "https://git.earthdata.nasa.gov/rest/git-lfs/storage/DAS/hdfeos/{0}?response-content-disposition=attachment%3B%20filename%3D%22{1}%22%3B%20filename*%3Dutf-8%27%27{1}"
 
+    maintainers("climbfuji")
+
     # Crazy URL scheme, differing with each version, and including the
     # sha256 checksum in the URL.  Yuck
     # The data in version_list is used to generate versions and urls
@@ -57,7 +59,7 @@ class HdfEos2(AutotoolsPackage):
     depends_on("hdf")
     # Because hdf always depends on zlib and jpeg in spack, the tests below in configure_args
     # (if "jpeg" in self.spec:) always returns true and hdf-eos2 wants zlib and jpeg, too.
-    depends_on("zlib")
+    depends_on("zlib-api")
     depends_on("jpeg")
     depends_on("szip", when="^hdf +szip")
 
@@ -81,17 +83,12 @@ class HdfEos2(AutotoolsPackage):
                 "version/checksum not found in version_list".format(version)
             )
 
+    # spack patches the configure file unless autoconf is run,
+    # and this fails because configure has the wrong permissions (644)
     @run_before("configure")
     def fix_permissions(self):
         if not self.force_autoreconf:
             chmod(join_path(self.stage.source_path, "configure"), 0o755)
-
-    def flag_handler(self, name, flags):
-        if self.spec.compiler.name == "apple-clang":
-            if name == "cflags":
-                flags.append("-Wno-error=implicit-function-declaration")
-
-        return flags, None, None
 
     def configure_args(self):
         extra_args = []
@@ -114,6 +111,10 @@ class HdfEos2(AutotoolsPackage):
         if "szip" in self.spec:
             extra_args.append("--with-szlib={0}".format(self.spec["szip"].prefix))
         if "zlib" in self.spec:
-            extra_args.append("--with-zlib={0}".format(self.spec["zlib"].prefix))
+            extra_args.append("--with-zlib={0}".format(self.spec["zlib-api"].prefix))
+
+        # https://forum.hdfgroup.org/t/help-building-hdf4-with-clang-error-implicit-declaration-of-function-test-mgr-szip-is-invalid-in-c99/7680
+        if self.spec.satisfies("%apple-clang"):
+            extra_args.append("CFLAGS=-Wno-error=implicit-function-declaration")
 
         return extra_args

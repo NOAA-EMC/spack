@@ -21,6 +21,11 @@ class Cdo(AutotoolsPackage):
     maintainers("skosukhin", "Try2Code")
 
     version(
+        "2.2.2",
+        sha256="419c77315244019af41a296c05066f474cccbf94debfaae9e2106da51bc7c937",
+        url="https://code.mpimet.mpg.de/attachments/download/28882/cdo-2.2.2.tar.gz",
+    )
+    version(
         "2.2.0",
         sha256="679c8d105706caffcba0960ec5ddc4a1332c1b40c52f82c3937356999d8fadf2",
         url="https://code.mpimet.mpg.de/attachments/download/28013/cdo-2.2.0.tar.gz",
@@ -167,6 +172,9 @@ class Cdo(AutotoolsPackage):
     # We also need the backend of netcdf to be thread safe.
     depends_on("hdf5+threadsafe", when="+netcdf +openmp")
 
+    # Same in case hdf5 is used in the frontend
+    depends_on("hdf5+threadsafe", when="+hdf5")
+
     depends_on("grib-api", when="grib2=grib-api")
     depends_on("eccodes", when="grib2=eccodes")
 
@@ -222,12 +230,11 @@ class Cdo(AutotoolsPackage):
             config_args.append("--without-netcdf")
 
         if self.spec.variants["grib2"].value == "eccodes":
+            config_args.append("--without-grib_api")
             eccodes_spec = self.spec["eccodes"]
             if self.spec.satisfies("@1.9:") and eccodes_spec.satisfies("+shared"):
                 config_args.append("--with-eccodes=" + yes_or_prefix("eccodes"))
-                config_args.append("--without-grib_api")
             else:
-                config_args.append("--with-grib_api=yes")
                 eccodes_libs = eccodes_spec.libs
                 flags["LIBS"].append(eccodes_libs.link_flags)
                 if not is_system_path(eccodes_spec.prefix):

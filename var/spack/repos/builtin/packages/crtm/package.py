@@ -52,20 +52,22 @@ class Crtm(CMakePackage):
     depends_on("ecbuild", type=("build"), when="@v2.4.1-jedi")
     depends_on("ecbuild", type=("build"), when="@v3.0.0-rc.1")
 
-    version("v2.4.1-jedi", sha256="fd8bf4db4f2a3b420b4186de84483ba2a36660519dffcb1e0ff14bfe8c6f6a14")
+    version(
+        "v2.4.1-jedi", sha256="fd8bf4db4f2a3b420b4186de84483ba2a36660519dffcb1e0ff14bfe8c6f6a14"
+    )
     # REL-2.4.0_emc (v2.4.0 ecbuild does not work)
-    version("2.4.0", commit="5ddd0d6")
+    version("2.4.0", commit="5ddd0d6b0138284764065feda73b5adf599082a2")
     # Uses the tip of REL-2.3.0_emc branch
-    version("2.3.0", commit="99760e6")
+    version("2.3.0", commit="99760e693ce3b90a3b3b0e97d80972b4dfb61196")
     # JEDI applications so far use these versions
     # Branch release/crtm_jedi
-    version("v2.3-jedi.4", commit="bfede42")
+    version("v2.3-jedi.4", commit="bfede42adc6149213f28f58bf4e02fa8f7cb0198")
     # Branch release/crtm_jedi_v2.4.0
-    version("v2.4-jedi.1", commit="8222341")
-    version("v2.4-jedi.2", commit="62831cb")
+    version("v2.4-jedi.1", commit="82223419fdb479d76c2f2109c2b704e1d9618f22")
+    version("v2.4-jedi.2", commit="62831cbb6c1ffcbb219eeec60e1b1c422526f597")
 
     def url_for_version(self, version):
-        if self.spec.satisfies("@v3") or version >=  Version("3.0.0"):
+        if self.spec.satisfies("@v3") or version >= Version("3.0.0"):
             return "https://github.com/JCSDA/crtmv3/archive/refs/tags/{}.tar.gz".format(version)
         else:
             return "https://github.com/JCSDA/crtm/archive/refs/tags/{}.tar.gz".format(version)

@@ -74,8 +74,8 @@ class GobjectIntrospection(MesonPackage, AutotoolsPackage):
     # https://gitlab.gnome.org/GNOME/gobject-introspection/-/issues/325
     patch(
         "https://gitlab.gnome.org/GNOME/gobject-introspection/-/commit/"
-        "1f9284228092b2a7200e8a78bc0ea6702231c6db.patch",
-        sha256="7700828b638c85255c87fcc317ea7e9572ff443f65c86648796528885e5b4cea",
+        "1f9284228092b2a7200e8a78bc0ea6702231c6db.diff",
+        sha256="dcb9e7c956dff49c3a73535829382e8662fa6bd13bdfb416e8eac47b2604fa0a",
         when="@:1.63.1",
     )
 
@@ -88,19 +88,10 @@ class GobjectIntrospection(MesonPackage, AutotoolsPackage):
         if self.spec.satisfies("@:1.60"):
             env.set("SPACK_SBANG", sbang.sbang_install_path())
 
-        cairo = self.spec["cairo"]
-        if cairo.satisfies("~shared"):
-            ldflags = []
-            libs = []
-            if cairo.satisfies("+fc"):
-                ldflags.append("-L%s" % cairo["fontconfig"].prefix.lib)
-                libs.append("-lfontconfig")
-            if cairo.satisfies("+ft"):
-                ldflags.append("-L%s" % cairo["freetype"].prefix.lib)
-                libs.append("-lfreetype")
-            ldflags.append("-L%s" % cairo["pixman"].prefix.lib)
-            libs.append("-lpixman-1")
-            env.set("CFLAGS", " ".join(ldflags) + " " + " ".join(libs))
+        if self.spec.satisfies("^cairo ~shared"):
+            pkgconfig = which("pkg-config")
+            cairo_libs = pkgconfig("cairo", "--static", "--libs", output=str).strip()
+            env.set("CFLAGS", cairo_libs)
 
     def setup_run_environment(self, env):
         env.prepend_path("GI_TYPELIB_PATH", join_path(self.prefix.lib, "girepository-1.0"))
@@ -123,3 +114,13 @@ class AutotoolsBuilderPackage(spack.build_systems.autotools.AutotoolsBuilder):
     def filter_file_to_avoid_overly_long_shebangs(self):
         # we need to filter this file to avoid an overly long hashbang line
         filter_file("#!/usr/bin/env @PYTHON@", "#!@PYTHON@", "tools/g-ir-tool-template.in")
+
+
+class MesonBuilder(spack.build_systems.meson.MesonBuilder):
+    def meson_args(self):
+        args = []
+        if self.spec.satisfies("^cairo ~shared"):
+            pkgconfig = which("pkg-config")
+            cairo_libs = pkgconfig("cairo", "--static", "--libs", output=str).strip()
+            args.append(f"-Dc_link_args={cairo_libs}")
+        return args

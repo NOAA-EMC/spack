@@ -220,7 +220,7 @@ class StackEnv(object):
         # Precedence order (high to low) is original spack.yaml,
         # then common configs, then site configs.
         original_sections = {}
-        for key in spack.config.section_schemas.keys():
+        for key in spack.config.SECTION_SCHEMAS.keys():
             section = spack.config.get(key, scope=env_scope)
             if section:
                 original_sections[key] = copy.deepcopy(section)
@@ -294,7 +294,7 @@ class StackEnv(object):
 
         # Merge the original spack.yaml template back in
         # so it has the higest precedence
-        for section in spack.config.section_schemas.keys():
+        for section in spack.config.SECTION_SCHEMAS.keys():
             original = original_sections.get(section, {})
             existing = spack.config.get(section, scope=env_scope)
             new = spack.config.merge_yaml(existing, original)

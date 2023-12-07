@@ -3,8 +3,6 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import sys
-
 from spack.package import *
 
 
@@ -16,12 +14,15 @@ class ProdUtil(CMakePackage):
 
     homepage = "https://github.com/NOAA-EMC/NCEPLIBS-prod_util"
     url = "https://github.com/NOAA-EMC/NCEPLIBS-prod_util/archive/refs/tags/v1.2.2.tar.gz"
+    git = "https://github.com/NOAA-EMC/NCEPLIBS-prod_util"
 
     maintainers("AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett")
 
-    version("1.2.2", sha256="c51b903ea5a046cb9b545b5c04fd28647c58b4ab6182e61710f0287846350ef8")
+    version("develop", branch="develop")
+    version("2.1.0", sha256="fa7df4a82dae269ffb347b9007376fb0d9979c17c4974814ea82204b12d70ea5")
 
-    depends_on("w3nco")
+    depends_on("w3emc")
 
-    if sys.platform == "darwin":
-        patch("darwin/apple-clang-13.0.0-stdlib.patch")
+    def check(self):
+        with working_dir(self.builder.build_directory):
+            make("test")

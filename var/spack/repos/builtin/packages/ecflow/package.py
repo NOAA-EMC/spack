@@ -21,7 +21,7 @@ class Ecflow(CMakePackage):
     homepage = "https://confluence.ecmwf.int/display/ECFLOW/"
     url = "https://confluence.ecmwf.int/download/attachments/8650755/ecFlow-4.11.1-Source.tar.gz"
 
-    maintainers("climbfuji")
+    maintainers("climbfuji", "AlexanderRichert-NOAA")
 
     version("5.11.4", sha256="4836a876277c9a65a47a3dc87cae116c3009699f8a25bab4e3afabf160bcf212")
     version("5.8.4", sha256="bc628556f8458c269a309e4c3b8d5a807fae7dfd415e27416fe9a3f544f88951")
@@ -63,6 +63,7 @@ class Ecflow(CMakePackage):
     )
 
     depends_on("openssl@1:", when="@5:")
+    depends_on("pkgconfig", type="build", when="+ssl ^openssl ~shared")
     depends_on("qt@5:", when="+ui")
     # Requirement to use the Python3_EXECUTABLE variable
     depends_on("cmake@3.16:", type="build")
@@ -96,9 +97,8 @@ class Ecflow(CMakePackage):
         ]
 
         if spec.satisfies("+ssl ^openssl ~shared"):
-            ssl_libs = [os.path.join(spec["openssl"].prefix.lib, "libcrypto.a")]
-            ssl_libs.extend(spec["zlib"].libs)
-            args.append(self.define("OPENSSL_CRYPTO_LIBRARY", ";".join(ssl_libs)))
+            ssllibs = ";".join(spec["openssl"].libs + spec["zlib"].libs)
+            args.append(self.define("OPENSSL_CRYPTO_LIBRARY", ssllibs))
 
         if self.spec.satisfies("@5.8.3:"):
             args.append("-DCMAKE_CXX_FLAGS=-DBOOST_NO_CXX98_FUNCTION_BASE")
@@ -115,5 +115,12 @@ class Ecflow(CMakePackage):
 
     @when("+ssl ^openssl~shared")
     def patch(self):
+        pkgconf = which("pkg-config")
+        liblist_l = pkgconf("--libs-only-l", "--static", "openssl", output=str).split()
+        liblist = " ".join([ll.replace("-l", "") for ll in liblist_l])
         for sdir in ["Client", "Server"]:
-            filter_file("(target_link_libraries.*pthread)", r"\1 ssl crypto z", os.path.join(sdir, "CMakeLists.txt"))
+            filter_file(
+                "(target_link_libraries.*pthread)",
+                f"\\1 {liblist}",
+                os.path.join(sdir, "CMakeLists.txt"),
+            )

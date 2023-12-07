@@ -12,6 +12,8 @@ class Udunits(AutotoolsPackage):
     homepage = "https://www.unidata.ucar.edu/software/udunits"
     url = "https://artifacts.unidata.ucar.edu/repository/downloads-udunits/2.2.28/udunits-2.2.28.tar.gz"
 
+    maintainers("AlexanderRichert-NOAA")
+
     # Unidata now only provides the latest version of each X.Y branch.
     # Older 2.2 versions have been deprecated accordingly but are still
     # available in the build cache.
@@ -35,10 +37,18 @@ class Udunits(AutotoolsPackage):
     depends_on("expat")
 
     variant("shared", default=True, description="Build shared library")
+    variant(
+        "pic", default=True, description="Enable position-independent code (PIC)", when="~shared"
+    )
 
     @property
     def libs(self):
-        return find_libraries(["libudunits2"], root=self.prefix, recursive=True, shared=True)
+        return find_libraries(
+            "libudunits2", root=self.prefix, recursive=True, shared=self.spec.satisfies("+shared")
+        )
 
     def configure_args(self):
-        return self.enable_or_disable("shared")
+        config_args = []
+        config_args.extend(self.enable_or_disable("shared"))
+        config_args.extend(self.with_or_without("pic"))
+        return config_args

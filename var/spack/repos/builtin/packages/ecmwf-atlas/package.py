@@ -52,9 +52,8 @@ class EcmwfAtlas(CMakePackage):
     variant("openmp", default=True, description="Use OpenMP")
     depends_on("llvm-openmp", when="+openmp %apple-clang", type=("build", "run"))
     variant("shared", default=True, description="Build shared libraries")
-
-    variant("ectrans", default=False, description="Enable ectrans", when="@0.31.0:")
-    depends_on("ectrans@1.1.0:", when="+ectrans")
+    variant("trans", default=False, description="Enable trans")
+    depends_on("ectrans@1.1.0:", when="@0.31.0: +trans")
     variant("eigen", default=True, description="Enable eigen")
     depends_on("eigen", when="+eigen")
     variant("fftw", default=True, description="Enable fftw")
@@ -73,9 +72,9 @@ class EcmwfAtlas(CMakePackage):
             "-DPYTHON_EXECUTABLE:FILEPATH=" + self.spec["python"].command.path,
         ]
         if self.spec.satisfies("@0.31:0.34"):
-            args.append(self.define_from_variant("ENABLE_TRANS", "ectrans"))
+            args.append(self.define_from_variant("ENABLE_TRANS", "trans"))
         if self.spec.satisfies("@0.35:"):
-            args.append(self.define_from_variant("ENABLE_ECTRANS", "ectrans"))
+            args.append(self.define_from_variant("ENABLE_ECTRANS", "trans"))
             args.append(self.define_from_variant("ENABLE_TESSELATION", "tesselation"))
         if "~shared" in self.spec:
             args.append("-DBUILD_SHARED_LIBS=OFF")

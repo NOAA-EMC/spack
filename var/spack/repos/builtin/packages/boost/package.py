@@ -233,7 +233,7 @@ class Boost(Package):
 
     depends_on("mpi", when="+mpi")
     depends_on("bzip2", when="+iostreams")
-    depends_on("zlib", when="+iostreams")
+    depends_on("zlib-api", when="+iostreams")
     depends_on("zstd", when="+iostreams")
     depends_on("xz", when="+iostreams")
     depends_on("py-numpy", when="+numpy", type=("build", "run"))
@@ -434,6 +434,12 @@ class Boost(Package):
 
         return url.format(version.dotted, version.underscored)
 
+    def flag_handler(self, name, flags):
+        if name == "cxxflags":
+            if self.spec.satisfies("@1.79.0 %oneapi"):
+                flags.append("-Wno-error=enum-constexpr-conversion")
+        return (flags, None, None)
+
     def determine_toolset(self, spec):
         toolsets = {
             "g++": "gcc",
@@ -492,7 +498,9 @@ class Boost(Package):
         with open("user-config.jam", "w") as f:
             # Boost may end up using gcc even though clang+gfortran is set in
             # compilers.yaml. Make sure this does not happen:
-            f.write("using {0} : : {1} ;\n".format(boost_toolset_id, spack_cxx))
+            if not spec.satisfies("platform=windows"):
+                # Skip this on Windows since we don't have a cl.exe wrapper in spack
+                f.write("using {0} : : {1} ;\n".format(boost_toolset_id, spack_cxx))
 
             if "+mpi" in spec:
                 # Use the correct mpi compiler.  If the compiler options are
@@ -530,9 +538,9 @@ class Boost(Package):
                     "-s",
                     "BZIP2_LIBPATH=%s" % spec["bzip2"].prefix.lib,
                     "-s",
-                    "ZLIB_INCLUDE=%s" % spec["zlib"].prefix.include,
+                    "ZLIB_INCLUDE=%s" % spec["zlib-api"].prefix.include,
                     "-s",
-                    "ZLIB_LIBPATH=%s" % spec["zlib"].prefix.lib,
+                    "ZLIB_LIBPATH=%s" % spec["zlib-api"].prefix.lib,
                     "-s",
                     "LZMA_INCLUDE=%s" % spec["xz"].prefix.include,
                     "-s",
@@ -578,7 +586,7 @@ class Boost(Package):
 
         options.extend(["link=%s" % ",".join(link_types), "--layout=%s" % layout])
 
-        if not spec.satisfies("@:1.75 %intel"):
+        if not spec.satisfies("@:1.75 %intel") and not spec.satisfies("platform=windows"):
             # When building any version >= 1.76, the toolset must be specified.
             # Earlier versions could not specify Intel as the toolset
             # as that was considered to be redundant/conflicting with
@@ -645,7 +653,7 @@ class Boost(Package):
         return threading_opts
 
     def add_buildopt_symlinks(self, prefix):
-        with working_dir(prefix.lib):
+        with working_dir(prefix.lib, create=True):
             for lib in os.listdir(os.curdir):
                 if os.path.isfile(lib):
                     prefix, remainder = lib.split(".", 1)
@@ -698,12 +706,15 @@ class Boost(Package):
         # to make Boost find the user-config.jam
         env["BOOST_BUILD_PATH"] = self.stage.source_path
 
-        bootstrap = Executable("./bootstrap.sh")
-
         bootstrap_options = ["--prefix=%s" % prefix]
         self.determine_bootstrap_options(spec, with_libs, bootstrap_options)
 
-        bootstrap(*bootstrap_options)
+        if self.spec.satisfies("platform=windows"):
+            bootstrap = Executable("cmd.exe")
+            bootstrap("/c", ".\\bootstrap.bat", *bootstrap_options)
+        else:
+            bootstrap = Executable("./bootstrap.sh")
+            bootstrap(*bootstrap_options)
 
         # strip the toolchain to avoid double include errors (intel) or
         # user-config being overwritten (again intel, but different boost version)
@@ -715,6 +726,8 @@ class Boost(Package):
 
         # b2 used to be called bjam, before 1.47 (sigh)
         b2name = "./b2" if spec.satisfies("@1.47:") else "./bjam"
+        if self.spec.satisfies("platform=windows"):
+            b2name = "b2.exe" if spec.satisfies("@1.47:") else "bjam.exe"
 
         b2 = Executable(b2name)
         jobs = make_jobs
@@ -722,11 +735,14 @@ class Boost(Package):
         if jobs > 64 and spec.satisfies("@:1.58"):
             jobs = 64
 
-        b2_options = [
-            "-j",
-            "%s" % jobs,
-            "--user-config=%s" % os.path.join(self.stage.source_path, "user-config.jam"),
-        ]
+        # Windows just wants a b2 call with no args
+        b2_options = []
+        if not self.spec.satisfies("platform=windows"):
+            path_to_config = "--user-config=%s" % os.path.join(
+                self.stage.source_path, "user-config.jam"
+            )
+            b2_options = ["-j", "%s" % jobs]
+            b2_options.append(path_to_config)
 
         threading_opts = self.determine_b2_options(spec, b2_options)
 
@@ -738,8 +754,11 @@ class Boost(Package):
 
         # In theory it could be done on one call but it fails on
         # Boost.MPI if the threading options are not separated.
-        for threading_opt in threading_opts:
-            b2("install", "threading=%s" % threading_opt, *b2_options)
+        if not self.spec.satisfies("platform=windows"):
+            for threading_opt in threading_opts:
+                b2("install", "threading=%s" % threading_opt, *b2_options)
+        else:
+            b2("install", *b2_options)
 
         if "+multithreaded" in spec and "~taggedlayout" in spec:
             self.add_buildopt_symlinks(prefix)

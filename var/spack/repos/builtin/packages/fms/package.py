@@ -23,6 +23,9 @@ class Fms(CMakePackage):
         "2023.02.01", sha256="1597f7a485d02e401ce76444b2401060d74bd032cbb060cef917f001b4ff14bc"
     )
     version("2023.02", sha256="dc029ffadfd82c334f104268bedd8635c77976485f202f0966ae4cf06d2374be")
+    version(
+        "2023.01.01", sha256="f83e2814a1e3ba439ab847ec8bb251f3889d5ca14fb20849507590adbbe8e899"
+    )
     version("2023.01", sha256="6079ea885e9365513b453c77aadfc7c305bf413b840656bb333db1eabba0f18e")
     version("2022.04", sha256="f741479128afc2b93ca8291a4c5bcdb024a8cbeda1a26bf77a236c0f629e1b03")
     version("2022.03", sha256="42d2ac53d3c889a8177a6d7a132583364c0f6e5d5cbde0d980443b6797ad4838")
@@ -98,7 +101,10 @@ class Fms(CMakePackage):
         "pic", default=False, description="Build with position independent code", when="@2022.02:"
     )
     variant(
-        "use_fmsio", default=False, description="Enable deprecated fms_io API", when="@2023.02:"
+        "deprecated_io",
+        default=False,
+        description="Compiles with support for deprecated io modules fms_io and mpp_io",
+        when="@2023.02:",
     )
 
     depends_on("netcdf-c")
@@ -122,9 +128,8 @@ class Fms(CMakePackage):
             self.define("32BIT", "precision=32" in self.spec),
             self.define("64BIT", "precision=64" in self.spec),
             self.define_from_variant("FPIC", "pic"),
+            self.define_from_variant("USE_DEPRECATED_IO", "deprecated_io"),
         ]
-        with when("@2023.02:"):
-            args.append(self.define_from_variant("USE_DEPRECATED_IO", "use_fmsio"))
 
         args.append(self.define("CMAKE_C_COMPILER", self.spec["mpi"].mpicc))
         args.append(self.define("CMAKE_CXX_COMPILER", self.spec["mpi"].mpicxx))

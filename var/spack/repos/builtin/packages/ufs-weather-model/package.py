@@ -22,8 +22,18 @@ class UfsWeatherModel(CMakePackage):
     maintainers("t-brown", "AlexanderRichert-NOAA")
 
     version("develop", branch="develop", submodules=True, commit="ea0b6e4")
-    version("2.0.0", tag="ufs-v2.0.0", submodules=True)
-    version("1.1.0", tag="ufs-v1.1.0", submodules=True)
+    version(
+        "2.0.0",
+        tag="ufs-v2.0.0",
+        commit="e3cb92f1cd8941c019ee5ef7da5c9aef67d55cf8",
+        submodules=True,
+    )
+    version(
+        "1.1.0",
+        tag="ufs-v1.1.0",
+        commit="5bea16b6d41d810dc2e45cba0fa3841f45ea7c7a",
+        submodules=True,
+    )
 
     variant("mpi", default=True, description="Enable MPI")
     variant(
@@ -98,7 +108,11 @@ class UfsWeatherModel(CMakePackage):
     )
     variant("mom6solo", default=False, description="Build MOM6 solo executable", when="@develop")
 
-    variant("cmake_platform", default="auto", description="Override value for CMAKE_Platform env variable ('linux.intel', 'hera.gnu', 'acorn', etc.)")
+    variant(
+        "cmake_platform",
+        default="auto",
+        description="Override CMAKE_Platform env variable ('linux.intel', 'hera.gnu', etc.)",
+    )
 
     variant("app", default="ATM", description="UFS application", when="@develop")
 

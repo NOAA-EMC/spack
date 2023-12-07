@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-from spack import *
+from spack.package import *
 
 
 class Solo(PythonPackage):
@@ -14,10 +14,10 @@ class Solo(PythonPackage):
     git = "https://github.com/JCSDA/solo.git"
     url = "https://github.com/JCSDA/solo/archive/refs/tags/1.0.0.tar.gz"
 
-    maintainers('climbfuji', 'ericlingerfelt')
+    maintainers("climbfuji", "ericlingerfelt")
 
-    version('develop', branch='develop', no_cache=True)
-    version('1.0.0', commit='4231f2f917225704cc53b5238a51853a1beeb9b0', preferred=True)
+    version("develop", branch="develop", no_cache=True)
+    version("1.0.0", commit="4231f2f917225704cc53b5238a51853a1beeb9b0", preferred=True)
 
-    depends_on('python@3.7:', type=('build', 'run'))
-    depends_on('py-pyyaml@5.3.1:', type=('build', 'run'))
+    depends_on("python@3.7:", type=("build", "run"))
+    depends_on("py-pyyaml@5.3.1:", type=("build", "run"))

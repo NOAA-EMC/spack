@@ -47,7 +47,7 @@ class Ectrans(CMakePackage):
     depends_on("blas")
     depends_on("lapack")
     # ectrans distinguishes between mkl and fftw
-    depends_on("fftw", when="+fftw")
+    depends_on("fftw-api", when="+fftw")
     depends_on("mkl", when="+mkl")
     conflicts("+mkl", when="+fftw")
 

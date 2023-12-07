@@ -14,10 +14,20 @@ class Sfcio(CMakePackage):
 
     homepage = "https://noaa-emc.github.io/NCEPLIBS-sfcio"
     url = "https://github.com/NOAA-EMC/NCEPLIBS-sfcio/archive/refs/tags/v1.4.1.tar.gz"
+    git = "https://github.com/NOAA-EMC/NCEPLIBS-sfcio"
 
-    maintainers("t-brown", "AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett")
+    maintainers("AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett")
 
+    version("develop", branch="develop")
     version("1.4.1", sha256="d9f900cf18ec1a839b4128c069b1336317ffc682086283443354896746b89c59")
+
+    variant("pfunit", default=False, description="Add pfunit dependency to enable testing")
+
+    depends_on("pfunit", when="+pfunit")
+
+    def cmake_args(self):
+        args = [self.define("ENABLE_TESTS", self.run_tests)]
+        return args
 
     def setup_run_environment(self, env):
         lib = find_libraries("libsfcio", root=self.prefix, shared=False, recursive=True)
@@ -31,3 +41,7 @@ class Sfcio(CMakePackage):
             if name == "fflags":
                 flags.append("-Free")
         return (None, None, flags)
+
+    def check(self):
+        with working_dir(self.builder.build_directory):
+            make("test")
