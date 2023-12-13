@@ -137,6 +137,8 @@ def get_matched_dict(root_dir, candidate_list, sub_candidate_list=None):
                 matched_dict[matched_name] = [matched_version]
             else:
                 matched_dict[matched_name].append(matched_version)
+                # Dedupe
+                matched_dict[matched_name] = list(set(matched_dict[matched_name]))
         # MPI providers or example depend on compilers
         else:
             if matched_name not in matched_dict.keys():
@@ -302,11 +304,7 @@ def setup_meta_modules():
     # Then, check for mpi providers - recursively for compilers
     mpi_dict = get_matched_dict(module_dir, mpi_candidate_list, compiler_candidate_list)
     if not mpi_dict:
-        user_input = input(
-            "No matching MPI providers found, proceed without creating MPI module hierarchy? (yes/no): "
-        )
-        if not user_input.lower() in ["yes", "y"]:
-            raise Exception("No matching MPI providers found")
+        logging.warn("No matching MPI providers found, skipping MPI module hierarchy")
     else:
         logging.info(" ... stack mpi providers: '{}'".format(mpi_dict))
 
@@ -697,82 +695,46 @@ def setup_meta_modules():
                         f.write(module_content)
                     logging.info("  ... writing {}".format(mpi_module_file))
 
-    try:
-        del package_name
-    except:
-        pass
     # Create python modules. Need to accommodate both external
     # Python distributions and spack-built Python distributions.
-    # If there is no package config info for Python, then we are
-    # using a spack-built Python without knowing the version - not supported.
-    if not "python" in package_config.keys():
-        raise Exception(
-            """No information on Python in package config. For external
-Python distributions, specify complete specifications. For spack-built
-Python, list the correct version in the package config"""
-        )
-    else:
-        package_name = "python"
-        if "externals" in package_config[package_name].keys():
-            # Loop through all external specs and find the
-            # latest version, this is what spack is using
-            spack_python_build = False
-            python_version = None
-            for i in range(len(package_config[package_name]["externals"])):
-                (python_name, python_version_test) = get_name_and_version_from_spec(
-                    package_config[package_name]["externals"][i]["spec"]
-                )
-                if not python_version or versiontuple(python_version_test) > versiontuple(
-                    python_version
-                ):
-                    python_version = python_version_test
-                    python_package_config = package_config[python_name]["externals"][i]
-            logging.debug("  ... using external python version {}".format(python_version))
-        else:
-            spack_python_build = True
-            python_name = "python"
-            python_version = None
-            python_package_config = None
-            # Loop through versions, pick the most-recent
-            for python_version_test in package_config[package_name]["version"]:
-                if not python_version or versiontuple(python_version_test) > versiontuple(
-                    python_version
-                ):
-                    python_version = python_version_test
-            logging.debug("  ... using spack-built python version {}".format(python_version))
-            # Check that the Python version we determined is indeed what's installed
-            python_candidate_list = ["python@{}".format(python_version)]
-            for compiler_name in compiler_dict.keys():
-                for compiler_version in compiler_dict[compiler_name]:
-                    compiler_install_dir = os.path.join(
-                        install_dir, compiler_name, compiler_version
-                    )
-                    python_dict = get_matched_dict(compiler_install_dir, python_candidate_list)
-            logging.info(" ... stack python providers: '{}'".format(python_dict))
-            if not python_dict:
-                user_input = input(
-                    "No matching Python version found found, proceed without creating Python modules? (yes/no): "
-                )
-                if not user_input.lower() in ["yes", "y"]:
-                    raise Exception(
-                        """"No matching Python version found. Make sure that the
-Python version in the package config matches what spack installed."""
-                    )
-                else:
-                    logging.info(
-                        "Metamodule generation completed successfully in {}".format(
-                            meta_module_dir
-                        )
-                    )
-                    return
+    python_dict = {}
+    python_name = "python"
+
+    # First, collect all Python packages in the environment
+    for spec in ev.installed_specs():
+        if spec.name == python_name:
+            compiler_name = spec.compiler.name
+            compiler_version = str(spec.compiler.version)
+            if not compiler_name in python_dict.keys():
+                python_dict[compiler_name] = {}
+            if compiler_version in python_dict[compiler_name].keys():
+                raise Exception("Duplicate Python packages for compiler {spec.compiler}")
+            python_dict[compiler_name][compiler_version] = spec
 
     for compiler_name in compiler_dict.keys():
         for compiler_version in compiler_dict[compiler_name]:
+            if (
+                not compiler_name in python_dict.keys()
+                or not compiler_version in python_dict[compiler_name].keys()
+            ):
+                logging.warn(
+                    "No Python version found for compiler {compiler_name}@{compiler_version}, skipping Python modules"
+                )
+                continue
+            spec = python_dict[compiler_name][compiler_version]
+            python_version = str(spec.version)
             logging.info(
                 "  ... configuring stack python interpreter {}@{} for compiler {}@{}".format(
                     python_name, python_version, compiler_name, compiler_version
                 )
             )
+
+            if spec.external:
+                logging.debug(f"  ... using external python version {python_version}")
+                prefix = spec.external_path
+                modules = spec.external_modules
+            else:
+                logging.debug(f"  ... using spack-built python version {python_version}")
 
             # Path and name for lua module file
             python_module_dir = os.path.join(
@@ -783,12 +745,12 @@ Python version in the package config matches what spack installed."""
             )
 
             substitutes = SUBSTITUTES_TEMPLATE.copy()
-            #
-            if spack_python_build:
+            # Spack-built Python vs external Python
+            if not spec.external:
                 module = "python/{}".format(python_version)
                 # Load spack python module
                 substitutes["MODULELOADS"] += module_load_command(module_choice, module)
-            elif "modules" in python_package_config.keys():
+            elif modules:
                 # Existing non-spack modules to load
                 for module in python_package_config["modules"]:
                     substitutes["MODULELOADS"] += module_load_command(module_choice, module)
@@ -798,14 +760,12 @@ Python version in the package config matches what spack installed."""
                 logging.debug("  ... ... MODULELOADS: {}".format(substitutes["MODULELOADS"]))
                 logging.debug("  ... ... MODULEPREREQS: {}".format(substitutes["MODULEPREREQS"]))
                 # python_name_ROOT - replace "-" in python_name with "_" for environment variables
-                if "prefix" in python_package_config.keys():
-                    prefix = python_package_config["prefix"]
+                if prefix:
                     substitutes["PYTHONROOT"] = setenv_command(
                         module_choice, python_name.replace("-", "_") + "_ROOT", prefix
                     )
                     logging.debug("  ... ... PYTHONROOT: {}".format(substitutes["PYTHONROOT"]))
-            elif "prefix" in python_package_config.keys():
-                prefix = python_package_config["prefix"]
+            elif prefix:
                 # PATH
                 bindir = os.path.join(prefix, "bin")
                 if os.path.isdir(bindir):
