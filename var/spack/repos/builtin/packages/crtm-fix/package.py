@@ -18,6 +18,9 @@ class CrtmFix(Package):
         "BenjaminTJohnson", "edwardhartnett", "AlexanderRichert-NOAA", "Hang-Lei-NOAA", "climbfuji"
     )
 
+    version(
+        "2.4.0.1_emc", sha256="6e4005b780435c8e280d6bfa23808d8f12609dfd72f77717d046d4795cac0457"
+    )
     version("2.4.0_emc", sha256="d0f1b2ae2905457f4c3731746892aaa8f6b84ee0691f6228dfbe48917df1e85e")
     version("2.3.0_emc", sha256="1452af2d1d11d57ef3c57b6b861646541e7042a9b0f3c230f9a82854d7e90924")
 
@@ -28,7 +31,10 @@ class CrtmFix(Package):
     conflicts("+big_endian", when="+little_endian", msg="big_endian and little_endian conflict")
 
     def url_for_version(self, version):
-        url = "ftp://ftp.ssec.wisc.edu/pub/s4/CRTM/fix_REL-{}.tgz"
+        if version == Version("2.4.0.1_emc"):
+            url = "ftp://ftp.ssec.wisc.edu/pub/s4/CRTM/fix_REL-2.4.0_emc_07112023.tgz"
+        else:
+            url = "ftp://ftp.ssec.wisc.edu/pub/s4/CRTM/fix_REL-{}.tgz"
         return url.format(version)
 
     def install(self, spec, prefix):

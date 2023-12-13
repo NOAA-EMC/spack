@@ -17,6 +17,10 @@ class EwokEnv(BundlePackage):
 
     version("1.0.0")
 
+    # Variants for workflow engines
+    variant("ecflow", default=True, description="Use ecflow workflow engine")
+    variant("cylc", default=False, description="Use cylc workflow engine")
+
     # Variants defining repositories that are not yet publicly available
     variant("solo", default=False, description="Build solo (general tools for Python programmers)")
     variant(
@@ -41,7 +45,12 @@ class EwokEnv(BundlePackage):
     depends_on("py-ruamel-yaml-clib", type="run")
 
     # Workflow engines
-    depends_on("ecflow", type="run")
+    with when("+ecflow"):
+        depends_on("ecflow", type="run")
+    with when("+cylc"):
+        depends_on("py-cylc-flow", type="run")
+        depends_on("py-cylc-rose", type="run")
+        depends_on("py-cylc-uiserver", type="run")
 
     # R2D2 mysql backend
     depends_on("mysql", type="run")

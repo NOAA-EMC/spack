@@ -31,6 +31,7 @@ class GmaoSwellEnv(BundlePackage):
     # depends_on("geos-dev-env", type="run")  # We should have the modules needed to build GEOSgcm
 
     # Python packages for swell, eva, and other utilities
+    depends_on("py-boto3", type="run")
     depends_on("py-cartopy", type="run")
     depends_on("py-click", type="run")
     depends_on("py-contourpy", type="run")
