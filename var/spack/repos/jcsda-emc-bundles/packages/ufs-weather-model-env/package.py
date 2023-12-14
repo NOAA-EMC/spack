@@ -35,6 +35,7 @@ class UfsWeatherModelEnv(BundlePackage):
     depends_on("sp", type="run")
     depends_on("w3emc", type="run")
     depends_on("scotch", type="run")
+    depends_on("cprnc", type="run")
 
     depends_on("esmf~debug", type="run", when="~debug")
     depends_on("esmf+debug", type="run", when="+debug")

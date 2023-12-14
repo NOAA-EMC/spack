@@ -25,5 +25,6 @@ class JediNeptuneEnv(BundlePackage):
     depends_on("w3nco", type="run")
     depends_on("esmf", type="run")
     depends_on("nco", type="run")
+    depends_on("mct", type="run")
 
     # There is no need for install() since there is no code.
