@@ -18,9 +18,9 @@ class GeosGcmEnv(BundlePackage):
     version("1.0.0")
 
     depends_on("base-env", type="run")
+    depends_on("blas", type="run")
     depends_on("mepo", type="run")
-
     depends_on("esmf", type="run")
-    depends_on("mapl+pflogger+f2py", type="run")
+    depends_on("mapl", type="run")
 
     # There is no need for install() since there is no code.
