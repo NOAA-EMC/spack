@@ -23,4 +23,6 @@ class GeosGcmEnv(BundlePackage):
     depends_on("esmf", type="run")
     depends_on("mapl", type="run")
 
+    depends_on("py-numpy", type="run")
+
     # There is no need for install() since there is no code.
