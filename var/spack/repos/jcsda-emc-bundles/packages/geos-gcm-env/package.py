@@ -21,8 +21,13 @@ class GeosGcmEnv(BundlePackage):
     depends_on("blas", type="run")
     depends_on("mepo", type="run")
     depends_on("esmf", type="run")
-    depends_on("mapl", type="run")
-
+    # mapl is built as part of GEOS, don't load;
+    # needs external gftl-shared/fargparse/pflogger
+    #depends_on("mapl", type="run")
+    depends_on("gftl-shared", type="run")
+    depends_on("fargparse", type="run")
+    depends_on("pflogger", type="run")
+    #
     depends_on("py-numpy", type="run")
 
     # There is no need for install() since there is no code.
