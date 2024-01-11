@@ -1,5 +1,3 @@
-import spack.cmd.common.arguments
-import spack.cmd.modules
 from spack.extensions.stack.meta_modules import setup_meta_modules
 
 description = "Create meta-modules"

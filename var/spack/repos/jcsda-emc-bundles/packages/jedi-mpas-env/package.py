@@ -17,7 +17,6 @@ class JediMpasEnv(BundlePackage):
     version("1.0.0")
 
     depends_on("jedi-base-env", type="run")
-
-    # Anything missing?
+    depends_on("metis", type="run")
 
     # There is no need for install() since there is no code.
