@@ -713,7 +713,7 @@ class ErrorHandler:
         (condition_id, set_id) in which the latter idea means that the condition represented by
         the former held in the condition set represented by the latter.
         """
-        seen = set(seen) | set(cause)
+        seen.add(cause)
         parents = [c for e, c in condition_causes if e == cause and c not in seen]
         local = "required because %s " % conditions[cause[0]]
 
@@ -812,7 +812,14 @@ class ErrorHandler:
         errors = sorted(
             [(int(priority), msg, args) for priority, msg, *args in error_args], reverse=True
         )
-        msg = self.message(errors)
+        try:
+            msg = self.message(errors)
+        except Exception as e:
+            msg = (
+                f"unexpected error during concretization [{str(e)}]. "
+                f"Please report a bug at https://github.com/spack/spack/issues"
+            )
+            raise spack.error.SpackError(msg)
         raise UnsatisfiableSpecError(msg)
 
 
@@ -1006,14 +1013,6 @@ class PyclingoDriver:
             # record the possible dependencies in the solve
             result.possible_dependencies = setup.pkgs
 
-            # print any unknown functions in the model
-            for sym in best_model:
-                if sym.name not in ("attr", "error", "opt_criterion"):
-                    tty.debug(
-                        "UNKNOWN SYMBOL: %s(%s)"
-                        % (sym.name, ", ".join([str(s) for s in intermediate_repr(sym.arguments)]))
-                    )
-
         elif cores:
             result.control = self.control
             result.cores.extend(cores)
@@ -1118,11 +1117,8 @@ class SpackSolverSetup:
 
         self.reusable_and_possible = ConcreteSpecsByHash()
 
-        # id for dummy variables
-        self._condition_id_counter = itertools.count()
-        self._trigger_id_counter = itertools.count()
+        self._id_counter = itertools.count()
         self._trigger_cache = collections.defaultdict(dict)
-        self._effect_id_counter = itertools.count()
         self._effect_cache = collections.defaultdict(dict)
 
         # Caches to optimize the setup phase of the solver
@@ -1518,7 +1514,7 @@ class SpackSolverSetup:
         # In this way, if a condition can't be emitted but the exception is handled in the caller,
         # we won't emit partial facts.
 
-        condition_id = next(self._condition_id_counter)
+        condition_id = next(self._id_counter)
         self.gen.fact(fn.pkg_fact(named_cond.name, fn.condition(condition_id)))
         self.gen.fact(fn.condition_reason(condition_id, msg))
 
@@ -1526,7 +1522,7 @@ class SpackSolverSetup:
 
         named_cond_key = (str(named_cond), transform_required)
         if named_cond_key not in cache:
-            trigger_id = next(self._trigger_id_counter)
+            trigger_id = next(self._id_counter)
             requirements = self.spec_clauses(named_cond, body=True, required_from=name)
 
             if transform_required:
@@ -1542,7 +1538,7 @@ class SpackSolverSetup:
         cache = self._effect_cache[named_cond.name]
         imposed_spec_key = (str(imposed_spec), transform_imposed)
         if imposed_spec_key not in cache:
-            effect_id = next(self._effect_id_counter)
+            effect_id = next(self._id_counter)
             requirements = self.spec_clauses(imposed_spec, body=False, required_from=name)
 
             if transform_imposed:
@@ -1832,7 +1828,13 @@ class SpackSolverSetup:
 
             # perform validation of the variant and values
             spec = spack.spec.Spec(pkg_name)
-            spec.update_variant_validate(variant_name, values)
+            try:
+                spec.update_variant_validate(variant_name, values)
+            except (spack.variant.InvalidVariantValueError, KeyError, ValueError) as e:
+                tty.debug(
+                    f"[SETUP]: rejected {str(variant)} as a preference for {pkg_name}: {str(e)}"
+                )
+                continue
 
             for value in values:
                 self.variant_values_from_specs.add((pkg_name, variant.name, value))
@@ -2550,12 +2552,8 @@ class SpackSolverSetup:
             reuse: list of concrete specs that can be reused
             allow_deprecated: if True adds deprecated versions into the solve
         """
-        self._condition_id_counter = itertools.count()
-
-        # preliminary checks
         check_packages_exist(specs)
 
-        # get list of all possible dependencies
         self.possible_virtuals = set(x.name for x in specs if x.virtual)
 
         node_counter = _create_counter(specs, tests=self.tests)
@@ -2675,23 +2673,21 @@ class SpackSolverSetup:
     def literal_specs(self, specs):
         for spec in specs:
             self.gen.h2("Spec: %s" % str(spec))
-            condition_id = next(self._condition_id_counter)
-            trigger_id = next(self._trigger_id_counter)
+            condition_id = next(self._id_counter)
+            trigger_id = next(self._id_counter)
 
             # Special condition triggered by "literal_solved"
             self.gen.fact(fn.literal(trigger_id))
             self.gen.fact(fn.pkg_fact(spec.name, fn.condition_trigger(condition_id, trigger_id)))
-            self.gen.fact(fn.condition_reason(condition_id, f"{spec} requested from CLI"))
+            self.gen.fact(fn.condition_reason(condition_id, f"{spec} requested explicitly"))
 
-            # Effect imposes the spec
             imposed_spec_key = str(spec), None
             cache = self._effect_cache[spec.name]
-            msg = (
-                "literal specs have different requirements. clear cache before computing literals"
-            )
-            assert imposed_spec_key not in cache, msg
-            effect_id = next(self._effect_id_counter)
-            requirements = self.spec_clauses(spec)
+            if imposed_spec_key in cache:
+                effect_id, requirements = cache[imposed_spec_key]
+            else:
+                effect_id = next(self._id_counter)
+                requirements = self.spec_clauses(spec)
             root_name = spec.name
             for clause in requirements:
                 clause_name = clause.args[0]
@@ -2792,9 +2788,11 @@ class SpecBuilder:
                 r"^.*_propagate$",
                 r"^.*_satisfies$",
                 r"^.*_set$",
+                r"^dependency_holds$",
                 r"^node_compiler$",
                 r"^package_hash$",
                 r"^root$",
+                r"^track_dependencies$",
                 r"^variant_default_value_from_cli$",
                 r"^virtual_node$",
                 r"^virtual_root$",

@@ -27,4 +27,8 @@ class JediNeptuneEnv(BundlePackage):
     depends_on("nco", type="run")
     depends_on("mct", type="run")
 
+    # Required by ESPC, not used by JEDI
+    depends_on("fftw", type="build")
+    depends_on("netlib-lapack", type="build")
+
     # There is no need for install() since there is no code.
