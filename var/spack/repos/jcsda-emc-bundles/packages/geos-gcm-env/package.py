@@ -23,7 +23,7 @@ class GeosGcmEnv(BundlePackage):
     depends_on("esmf", type="run")
     # mapl is built as part of GEOS, don't load;
     # needs external gftl-shared/fargparse/pflogger
-    #depends_on("mapl", type="run")
+    # depends_on("mapl", type="run")
     depends_on("gftl-shared", type="run")
     depends_on("fargparse", type="run")
     depends_on("pflogger", type="run")
