@@ -19,6 +19,18 @@ class UfsUtils(CMakePackage):
     maintainers("t-brown", "edwardhartnett", "AlexanderRichert-NOAA", "Hang-Lei-NOAA")
 
     version(
+        "1.13.0",
+        tag="ufs_utils_1_13_0",
+        commit="cadff2ba1a4ec048700b7d7bdf4602ad87186545",
+        submodules=True,
+    )
+    version(
+        "1.12.0",
+        tag="ufs_utils_1_12_0",
+        commit="57bd8321764f39a9e1926d104a9207f800bcc80d",
+        submodules=True,
+    )
+    version(
         "1.11.0",
         tag="ufs_utils_1_11_0",
         commit="72701ab45165ae67a1c4b4d855e763bf5674dbd2",
@@ -63,7 +75,7 @@ class UfsUtils(CMakePackage):
     depends_on("netcdf-fortran")
     depends_on("sfcio")
     depends_on("sigio")
-    depends_on("sp")
+    depends_on("sp", when="^ip@:4")
     depends_on("w3emc")
     depends_on("zlib-api")
 
@@ -75,3 +87,7 @@ class UfsUtils(CMakePackage):
 
     def setup_build_environment(self, env):
         env.set("ESMFMKFILE", join_path(self.spec["esmf"].prefix.lib, "esmf.mk"))
+
+    def check(self):
+        with working_dir(self.builder.build_directory):
+            make("test")
