@@ -34,7 +34,7 @@ class GribUtil(CMakePackage):
     depends_on("bacio")
     depends_on("ip")
     depends_on("ip@:3.3.3", when="@:1.2.4")
-    depends_on("sp")
+    depends_on("sp", when="^ip@:4")
 
     def cmake_args(self):
         args = [
