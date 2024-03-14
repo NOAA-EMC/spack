@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -45,6 +45,8 @@ class Crtm(CMakePackage):
     depends_on("ecbuild", type=("build"), when="@v2.4-jedi.2")
     depends_on("ecbuild", type=("build"), when="@v2.4.1-jedi")
     depends_on("ecbuild", type=("build"), when="@v3.0.0-rc.1")
+
+    license("CC0-1.0")
 
     version(
         "v2.4.1-jedi", sha256="fd8bf4db4f2a3b420b4186de84483ba2a36660519dffcb1e0ff14bfe8c6f6a14"

@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -18,7 +18,10 @@ libdwarf_spec_string = "libdwarf target=x86_64"
 #: Class of the writer tested in this module
 writer_cls = spack.modules.tcl.TclModulefileWriter
 
-pytestmark = pytest.mark.not_on_windows("does not run on windows")
+pytestmark = [
+    pytest.mark.not_on_windows("does not run on windows"),
+    pytest.mark.usefixtures("mock_modules_root"),
+]
 
 
 @pytest.mark.usefixtures("config", "mock_packages", "mock_module_filename")
@@ -116,10 +119,7 @@ class TestTcl:
         assert len([x for x in content if "setenv OMPI_MCA_mpi_leave_pinned {1}" in x]) == 1
         assert len([x for x in content if "setenv OMPI_MCA_MPI_LEAVE_PINNED {1}" in x]) == 0
         assert len([x for x in content if "unsetenv BAR" in x]) == 1
-        assert (
-            len([x for x in content if "setenv MPILEAKS_ROOT" in x]) == 1
-            or len([x for x in content if "setenv mpileaks_ROOT" in x]) == 1
-        )
+        assert len([x for x in content if "setenv MPILEAKS_ROOT" in x]) == 1
 
         content = modulefile_content("libdwarf platform=test target=core2")
 
@@ -128,10 +128,7 @@ class TestTcl:
         assert len([x for x in content if "unsetenv BAR" in x]) == 0
         assert len([x for x in content if "depends-on foo/bar" in x]) == 1
         assert len([x for x in content if "module load foo/bar" in x]) == 1
-        assert (
-            len([x for x in content if "setenv LIBDWARF_ROOT" in x]) == 1
-            or len([x for x in content if "setenv libdwarf_ROOT" in x]) == 1
-        )
+        assert len([x for x in content if "setenv LIBDWARF_ROOT" in x]) == 1
 
     def test_prepend_path_separator(self, modulefile_content, module_configuration):
         """Tests that we can use custom delimiters to manipulate path lists."""
@@ -285,7 +282,7 @@ class TestTcl:
         projection = writer.spec.format(writer.conf.projections["all"])
         assert projection in writer.layout.use_name
 
-    def test_invalid_naming_scheme(self, factory, module_configuration, mock_module_filename):
+    def test_invalid_naming_scheme(self, factory, module_configuration):
         """Tests the evaluation of an invalid naming scheme."""
 
         module_configuration("invalid_naming_scheme")
@@ -296,7 +293,7 @@ class TestTcl:
         with pytest.raises(RuntimeError):
             writer.layout.use_name
 
-    def test_invalid_token_in_env_name(self, factory, module_configuration, mock_module_filename):
+    def test_invalid_token_in_env_name(self, factory, module_configuration):
         """Tests setting environment variables with an invalid name."""
 
         module_configuration("invalid_token_in_env_var_name")

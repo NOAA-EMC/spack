@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -16,6 +16,8 @@ class PyGlobusSdk(PythonPackage):
     pypi = "globus-sdk/globus-sdk-3.0.2.tar.gz"
 
     maintainers("hategan", "climbfuji")
+
+    license("Apache-2.0")
 
     version("3.25.0", sha256="d9be275d4ec18054db04732f75649c4227800c79b31fbcfb3f4f31eccfa5f4f7")
     version("3.10.1", sha256="c20fec55fc7e099f4d0c8224a36e194604577539445c5985cb465b23779baee8")

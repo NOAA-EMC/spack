@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -61,8 +61,6 @@ class Met(AutotoolsPackage):
     patch("openmp_shape_patch.patch", when="@10.1.0")
 
     # https://github.com/JCSDA/spack-stack/issues/615
-    # TODO(srherbener) Apple clang 14.x is getting pickier! When these updates are
-    # merged into the MET code base, the following two patches can be removed.
     patch("apple-clang-string-cast-operator.patch", when="@10.1.1:11.0 %apple-clang@14:")
     patch("apple-clang-no-register.patch", when="@10.1.1:11.0 %apple-clang@14:")
 
@@ -131,11 +129,8 @@ class Met(AutotoolsPackage):
 
         if "+python" in spec:
             python = spec["python"]
-            # Syntax changed from 11.0.x to 11.1.y
-            with when("@:11.0"):
-                env.set("MET_PYTHON", python.command.path)
-            with when("@11.1:"):
-                env.set("MET_PYTHON_BIN_EXE", python.command.path)
+            env.set("MET_PYTHON", python.command.path)
+            env.set("MET_PYTHON_BIN_EXE", python.command.path)
             env.set("MET_PYTHON_CC", "-I" + python.headers.directories[0])
             py_ld = [python.libs.ld_flags]
             if spec["python"].satisfies("~shared"):
@@ -150,6 +145,11 @@ class Met(AutotoolsPackage):
             hdfeos = spec["hdf-eos2"]
             env.set("MET_HDF5", hdf.prefix)
             env.set("MET_HDFEOS", hdfeos.prefix)
+
+            if "+szip" in hdf:
+                libs.append(" ".join(hdf["szip"].libs))
+            if "+external-xdr" in hdf:
+                libs.append(" ".join(hdf["rpc"].libs))
 
         if "+graphics" in spec:
             cairo = spec["cairo"]

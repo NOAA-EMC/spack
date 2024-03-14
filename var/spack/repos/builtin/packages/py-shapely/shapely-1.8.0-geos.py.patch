@@ -19,12 +19,12 @@
 -            'libgeos_c.so',
 -        ]
 +        # Use geos installation if spack geos module is loaded
-+        if 'geos_ROOT' in os.environ:
++        if 'GEOS_ROOT' in os.environ:
 +            alt_paths = [
-+                os.path.join(os.environ['geos_ROOT'], 'lib', 'libgeos_c.so'),
-+                os.path.join(os.environ['geos_ROOT'], 'lib64', 'libgeos_c.so'),
-+                os.path.join(os.environ['geos_ROOT'], 'lib', 'libgeos_c.so.1'),
-+                os.path.join(os.environ['geos_ROOT'], 'lib64', 'libgeos_c.so.1'),
++                os.path.join(os.environ['GEOS_ROOT'], 'lib', 'libgeos_c.so'),
++                os.path.join(os.environ['GEOS_ROOT'], 'lib64', 'libgeos_c.so'),
++                os.path.join(os.environ['GEOS_ROOT'], 'lib', 'libgeos_c.so.1'),
++                os.path.join(os.environ['GEOS_ROOT'], 'lib64', 'libgeos_c.so.1'),
 +            ]
 +        else:
 +            alt_paths = [
@@ -56,8 +56,8 @@
                      alt_paths.append(
                          os.path.join(sys._MEIPASS, 'libgeos_c.1.dylib'))
 +        # Use geos installation if spack geos module is loaded
-+        elif 'geos_ROOT' in os.environ:
-+            alt_paths = [os.path.join(os.environ['geos_ROOT'], 'lib', 'libgeos_c.dylib')]
++        elif 'GEOS_ROOT' in os.environ:
++            alt_paths = [os.path.join(os.environ['GEOS_ROOT'], 'lib', 'libgeos_c.dylib')]
          else:
              alt_paths = [
                  # The Framework build from Kyng Chaos

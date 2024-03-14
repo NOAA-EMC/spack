@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -10,6 +10,7 @@ class PyMetomiIsodatetime(PythonPackage):
     """Python ISO 8601 date time parser and data model/manipulation utilities."""
 
     homepage = "https://github.com/metomi/isodatetime"
+    # NOTE: spack checksum does not yet work for epoch versions
     pypi = "metomi-isodatetime/metomi-isodatetime-1!3.0.0.tar.gz"
 
     maintainers("LydDeb")
@@ -20,5 +21,4 @@ class PyMetomiIsodatetime(PythonPackage):
     depends_on("py-setuptools", type="build")
 
     def url_for_version(self, version):
-        url = "https://files.pythonhosted.org/packages/source/m/metomi-isodatetime/metomi-isodatetime-1!{}.tar.gz"
-        return url.format(version)
+        return f"https://files.pythonhosted.org/packages/source/m/metomi-isodatetime/metomi-isodatetime-1!{version}.tar.gz"

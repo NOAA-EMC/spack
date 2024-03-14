@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -25,17 +25,6 @@ from .common import BaseConfiguration, BaseContext, BaseFileLayout, BaseModuleFi
 #: lmod specific part of the configuration
 def configuration(module_set_name: str) -> dict:
     return spack.config.get(f"modules:{module_set_name}:lmod", {})
-
-
-# DH* this is not the best way, but works for now
-def get_hash_length():
-    if "hash_length" in configuration("default").keys():
-        return configuration("default")["hash_length"]
-    else:
-        return 7
-
-
-# *DH
 
 
 # Caches the configuration {spec_hash: configuration}
@@ -326,14 +315,7 @@ class LmodFileLayout(BaseFileLayout):
         # we need to append a hash to the version to distinguish
         # among flavors of the same library (e.g. openblas~openmp vs.
         # openblas+openmp)
-        path = path_part_fmt(token=value)
-
-        # Use the hash length that the user specied, not something else
-        if get_hash_length() > 0:
-            path = "-".join([path, value.dag_hash(get_hash_length())])
-        # path = "-".join([path, value.dag_hash(length=7)])
-
-        return path
+        return f"{path_part_fmt(token=value)}-{value.dag_hash(length=7)}"
 
     @property
     def available_path_parts(self):
@@ -447,13 +429,7 @@ class LmodContext(BaseContext):
     def version_part(self):
         """Version of this provider."""
         s = self.spec
-
-        # Use the hash length that the user specied, not something else
-        if get_hash_length() > 0:
-            return "-".join([str(s.version), s.dag_hash(length=get_hash_length())])
-        else:
-            return str(s.version)
-        # return "-".join([str(s.version), s.dag_hash(length=7)])
+        return "-".join([str(s.version), s.dag_hash(length=7)])
 
     @tengine.context_property
     def provides(self):

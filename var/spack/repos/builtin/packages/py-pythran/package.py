@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -15,6 +15,8 @@ class PyPythran(PythonPackage):
 
     homepage = "https://github.com/serge-sans-paille/pythran"
     pypi = "pythran/pythran-0.9.11.tar.gz"
+
+    license("BSD-3-Clause")
 
     version("0.12.2", sha256="2344c7ad76255f31f79d87877cc6bb8bddc5e5593015dae29b3f821c6c06a627")
     version("0.12.1", sha256="702c2701187cfb38f66c0c20cc85d04d0e156d260a8d92892da65947faa5360e")

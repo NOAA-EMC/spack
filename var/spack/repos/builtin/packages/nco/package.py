@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -12,6 +12,8 @@ class Nco(AutotoolsPackage):
 
     homepage = "http://nco.sourceforge.net/"
     url = "https://github.com/nco/nco/archive/5.0.1.tar.gz"
+
+    license("BSD-3-Clause")
 
     version("5.1.6", sha256="6b217156cb14f670c80d5de5c5b88905cdb281f6e239e83397f14eaf3d0b390b")
     version("5.1.5", sha256="6a35c2d45744b427a424896d32066e483c0a49a46dba83ba90f2cc5ed3dca869")
@@ -41,6 +43,9 @@ class Nco(AutotoolsPackage):
     # https://github.com/nco/nco/issues/244
     patch("nco-5_0_1-intel-omp.patch", when="@5.0.1 %intel")
 
+    # Similar but not the same as above
+    patch("nco-5_1_6-intel-omp.patch", when="@5.1.6 %intel")
+
     variant("doc", default=False, description="Build/install NCO TexInfo-based documentation")
 
     # See "Compilation Requirements" at:
@@ -55,6 +60,9 @@ class Nco(AutotoolsPackage):
     depends_on("texinfo@4.12:", type="build", when="+doc")
 
     conflicts("%gcc@9:", when="@:4.7.8")
+
+    # Only patched 5.0.1 and 5.1.6 for Intel
+    conflicts("%intel", when="@5.0.2:5.1.5")
 
     def configure_args(self):
         config_args = []
