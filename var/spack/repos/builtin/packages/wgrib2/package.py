@@ -85,6 +85,9 @@ class Wgrib2(MakefilePackage):
     conflicts("+netcdf3", when="+netcdf4")
     conflicts("+openmp", when="%apple-clang")
 
+    # Temporary (hopefully)
+    conflicts("%oneapi", msg="Does not build with oneapi compilers")
+
     depends_on("wget", type=("build"), when="+netcdf4")
     # makefile behavior with shell commands/character escapes breaks with gmake@4.3:
     depends_on("gmake@:4.2")
