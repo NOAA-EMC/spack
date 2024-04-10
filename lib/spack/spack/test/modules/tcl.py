@@ -119,7 +119,7 @@ class TestTcl:
         assert len([x for x in content if "setenv OMPI_MCA_mpi_leave_pinned {1}" in x]) == 1
         assert len([x for x in content if "setenv OMPI_MCA_MPI_LEAVE_PINNED {1}" in x]) == 0
         assert len([x for x in content if "unsetenv BAR" in x]) == 1
-        assert len([x for x in content if "setenv MPILEAKS_ROOT" in x]) == 1
+        assert len([x for x in content if "setenv mpileaks_ROOT" in x]) == 1
 
         content = modulefile_content("libdwarf platform=test target=core2")
 
@@ -128,7 +128,7 @@ class TestTcl:
         assert len([x for x in content if "unsetenv BAR" in x]) == 0
         assert len([x for x in content if "depends-on foo/bar" in x]) == 1
         assert len([x for x in content if "module load foo/bar" in x]) == 1
-        assert len([x for x in content if "setenv LIBDWARF_ROOT" in x]) == 1
+        assert len([x for x in content if "setenv libdwarf_ROOT" in x]) == 1
 
     def test_prepend_path_separator(self, modulefile_content, module_configuration):
         """Tests that we can use custom delimiters to manipulate path lists."""
