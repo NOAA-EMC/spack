@@ -758,9 +758,11 @@ class BaseContext(tengine.Context):
         # Prepare a suitable transformation dictionary for the names
         # of the environment variables. This means turn the valid
         # tokens uppercase.
+        # DH 20240410 - reverting this to case-preserving, see
+        # https://github.com/spack/spack/issues/43569
         transform = {}
         for token in _valid_tokens:
-            transform[token] = lambda s, string: str.upper(string)
+            transform[token] = lambda s, string: string
 
         for x in env:
             # Ensure all the tokens are valid in this context
