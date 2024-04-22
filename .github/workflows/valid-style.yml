@@ -5,13 +5,13 @@ on:
     branches:
       - develop
       - releases/**
-      - jcsda_emc_spack_stack
+      - spack-stack-dev
       - release/**
   pull_request:
     branches:
       - develop
       - releases/**
-      - jcsda_emc_spack_stack
+      - spack-stack-dev
       - release/**
   workflow_dispatch:
   workflow_call:
