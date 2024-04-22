@@ -34,8 +34,8 @@ class CrtmFix(Package):
         if version == Version("2.4.0.1_emc"):
             url = "ftp://ftp.ssec.wisc.edu/pub/s4/CRTM/fix_REL-2.4.0_emc_07112023.tgz"
         else:
-            url = "ftp://ftp.ssec.wisc.edu/pub/s4/CRTM/fix_REL-{}.tgz"
-        return url.format(version)
+            url = f"ftp://ftp.ssec.wisc.edu/pub/s4/CRTM/fix_REL-{version}.tgz"
+        return url
 
     def install(self, spec, prefix):
         spec = self.spec
