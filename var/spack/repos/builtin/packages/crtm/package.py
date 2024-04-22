@@ -52,16 +52,20 @@ class Crtm(CMakePackage):
     license("CC0-1.0")
 
     version(
-        "v3.1.0-skylabv8", sha256="a475c8a444072aef1e8c2babba3d12f13ab0fb6c7ecab88edad57130839e29ff"
+        "v3.1.0-skylabv8",
+        sha256="a475c8a444072aef1e8c2babba3d12f13ab0fb6c7ecab88edad57130839e29ff",
     )
     version(
-        "v3.1.0-skylabv7", sha256="3ac45c49562ab41c3baf443ce382e3a6bcb7226831b54146d9f73995be165ec7"
+        "v3.1.0-skylabv7",
+        sha256="3ac45c49562ab41c3baf443ce382e3a6bcb7226831b54146d9f73995be165ec7",
     )
     version(
-        "v3.0.0-skylabv6", sha256="780fbc4e0f3b0414fbade4b595832bb35d9c5d3e7c3b25ad128ca94f71bea2b8"
+        "v3.0.0-skylabv6",
+        sha256="780fbc4e0f3b0414fbade4b595832bb35d9c5d3e7c3b25ad128ca94f71bea2b8",
     )
     version(
-        "v3.0.0-skylabv5", sha256="4fa5dd2d65b4d4ff77d50992e8e0c02a59584b35599f424085fccdc2174d7bd2"
+        "v3.0.0-skylabv5",
+        sha256="4fa5dd2d65b4d4ff77d50992e8e0c02a59584b35599f424085fccdc2174d7bd2",
     )
     version(
         "v2.4.1-jedi", sha256="fd8bf4db4f2a3b420b4186de84483ba2a36660519dffcb1e0ff14bfe8c6f6a14"
