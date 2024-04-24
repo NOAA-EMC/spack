@@ -70,6 +70,7 @@ class Crtm(CMakePackage):
     version(
         "v2.4.1-jedi", sha256="fd8bf4db4f2a3b420b4186de84483ba2a36660519dffcb1e0ff14bfe8c6f6a14"
     )
+    version("v2.4-jedi.2", commit="62831cbb6c1ffcbb219eeec60e1b1c422526f597")
     version("2.4.0.1", tag="v2.4.0_emc.3", commit="7ecad4866c400d7d0db1413348ee225cfa99ff36")
     # REL-2.4.0_emc (v2.4.0 ecbuild does not work)
     version("2.4.0", commit="5ddd0d6b0138284764065feda73b5adf599082a2")
