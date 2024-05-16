@@ -30,6 +30,7 @@ class Esmf(MakefilePackage):
     version("develop", branch="develop")
     # generate chksum with 'spack checksum esmf@x.y.z'
     version("8.7.0b04", commit="609c81179572747407779492c43776e34495d267")
+    version("8.6.1", sha256="dc270dcba1c0b317f5c9c6a32ab334cb79468dda283d1e395d98ed2a22866364")
     version("8.6.1b04", commit="64d3aacc36f2d4d39255eb521c34123903cc0551")
     version("8.6.0", sha256="ed057eaddb158a3cce2afc0712b49353b7038b45b29aee86180f381457c0ebe7")
     version("8.5.0", sha256="acd0b2641587007cc3ca318427f47b9cae5bfd2da8d2a16ea778f637107c29c4")
