@@ -8,7 +8,7 @@ import sys
 
 from spack.build_environment import dso_suffix, stat_suffix
 from spack.package import *
-import spack as spack
+
 
 class Esmf(MakefilePackage, PythonExtension):
     """The Earth System Modeling Framework (ESMF) is high-performance, flexible
@@ -115,7 +115,7 @@ class Esmf(MakefilePackage, PythonExtension):
     depends_on("parallelio@2.5.10: +mpi", when="@8.5:+external-parallelio+mpi")
     depends_on("parallelio@2.5.10: ~mpi", when="@8.5:+external-parallelio~mpi")
     depends_on("cmake@3.5.2:", type="build", when="~external-parallelio")
-    
+
     # python library
     extends("python", when="+python")
     depends_on("py-setuptools", type="build", when="+python")
@@ -159,12 +159,12 @@ class Esmf(MakefilePackage, PythonExtension):
         # The pyproject.toml file uses a dynamically generated version from git
         # Howeer, this results in a version of 0.0.0 and a mismatch with the loaded version
         # so this hardcodes it to match the library's version
-        filter_file("""dynamic = \[ "version" \]""",
-                f"""version = "{self.version}" """,
-                os.path.join("src/addon/esmpy/pyproject.toml")
-                )
+        filter_file(
+            """dynamic = \\[ "version" \\]""",
+            f"""version = "{self.version}" """,
+            os.path.join("src/addon/esmpy/pyproject.toml"),
+        )
 
-    
     def setup_dependent_run_environment(self, env, dependent_spec):
         env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
 
@@ -173,13 +173,13 @@ class Esmf(MakefilePackage, PythonExtension):
 
 
 class PythonPipBuilder(spack.build_systems.python.PythonPipBuilder):
-    
+
     def setup_build_environment(self, env):
         env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
 
     @property
     def build_directory(self):
-        return os.path.join(self.stage.source_path, 'src/addon/esmpy')
+        return os.path.join(self.stage.source_path, "src/addon/esmpy")
 
 
 class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
@@ -197,7 +197,6 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
     def chmod_scripts(self):
         chmod = which("chmod")
         chmod("+x", "scripts/libs.mvapich2f90")
-
 
     def url_for_version(self, version):
         if version < Version("8.0.0"):
@@ -483,5 +482,3 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
             # build the python library
             python_builder = PythonPipBuilder(pkg)
             python_builder.install(pkg, spec, prefix)
-
-
