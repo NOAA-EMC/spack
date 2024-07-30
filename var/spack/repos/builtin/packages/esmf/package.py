@@ -119,6 +119,8 @@ class Esmf(MakefilePackage, PythonExtension):
     extends("python", when="+python")
     depends_on("py-setuptools", type="build", when="+python")
     depends_on("py-mpi4py", when="+python +mpi")
+    depends_on("py-pip", when="+python")
+    depends_on("py-wheel", when="+python")
 
     # Testing dependencies
     depends_on("perl", type="test")
@@ -151,6 +153,23 @@ class Esmf(MakefilePackage, PythonExtension):
     # https://github.com/spack/spack/issues/35957
     patch("esmf_cpp_info.patch")
 
+    def patch(self):
+        # The pyproject.toml file uses a dynamically generated version from git
+        # Howeer, this results in a version of 0.0.0 and a mismatch with the loaded version
+        # so this hardcodes it to match the library's version
+        filter_file("""dynamic = \[ "version" \]""",
+                f"""version = "{self.version}" """,
+                os.path.join("src/addon/esmpy/pyproject.toml")
+                )
+
+    
+    def setup_dependent_run_environment(self, env, dependent_spec):
+        env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
+
+    def setup_run_environment(self, env):
+        env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
+
+
 class PythonPipBuilder(spack.build_systems.python.PythonPipBuilder):
     
     def setup_build_environment(self, env):
@@ -159,7 +178,6 @@ class PythonPipBuilder(spack.build_systems.python.PythonPipBuilder):
     @property
     def build_directory(self):
         return os.path.join(self.stage.source_path, 'src/addon/esmpy')
-
 
 
 class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
@@ -177,6 +195,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
     def chmod_scripts(self):
         chmod = which("chmod")
         chmod("+x", "scripts/libs.mvapich2f90")
+
 
     def url_for_version(self, version):
         if version < Version("8.0.0"):
@@ -448,20 +467,18 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
                 library_path = os.path.join(self.prefix.lib, "libesmf.%s" % prefix)
                 if os.path.exists(library_path):
                     os.symlink(library_path, os.path.join(self.prefix.lib, "libESMF.%s" % prefix))
+
     def check(self):
         make("check", parallel=False)
 
     def setup_dependent_build_environment(self, env, dependent_spec):
         env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
 
-    def setup_run_environment(self, env):
-        env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
-
     def install(self, pkg, spec, prefix):
         make("install")
 
+        # build the python library
         python_builder = PythonPipBuilder(pkg)
-        # python_builder.build_directory = os.path.join(self.stage.source_path, 'src/addon/esmpy')
         python_builder.install(pkg, spec, prefix)
 
 
