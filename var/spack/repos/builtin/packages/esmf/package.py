@@ -124,7 +124,6 @@ class Esmf(MakefilePackage, PythonExtension):
         depends_on("py-mpi4py", when="+mpi")
         depends_on("py-pip")
 
-
     # Testing dependencies
     depends_on("perl", type="test")
 
