@@ -116,6 +116,7 @@ class Esmf(MakefilePackage, PythonExtension):
     depends_on("parallelio@2.5.10: ~mpi", when="@8.5:+external-parallelio~mpi")
     depends_on("cmake@3.5.2:", type="build", when="~external-parallelio")
     
+    # python library
     extends("python", when="+python")
     depends_on("py-setuptools", type="build", when="+python")
     depends_on("py-mpi4py", when="+python +mpi")
@@ -153,6 +154,7 @@ class Esmf(MakefilePackage, PythonExtension):
     # https://github.com/spack/spack/issues/35957
     patch("esmf_cpp_info.patch")
 
+    @when("+python")
     def patch(self):
         # The pyproject.toml file uses a dynamically generated version from git
         # Howeer, this results in a version of 0.0.0 and a mismatch with the loaded version
@@ -477,8 +479,9 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
     def install(self, pkg, spec, prefix):
         make("install")
 
-        # build the python library
-        python_builder = PythonPipBuilder(pkg)
-        python_builder.install(pkg, spec, prefix)
+        if "+python" in spec:
+            # build the python library
+            python_builder = PythonPipBuilder(pkg)
+            python_builder.install(pkg, spec, prefix)
 
 
