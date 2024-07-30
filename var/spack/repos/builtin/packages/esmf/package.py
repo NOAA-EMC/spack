@@ -117,11 +117,13 @@ class Esmf(MakefilePackage, PythonExtension):
     depends_on("cmake@3.5.2:", type="build", when="~external-parallelio")
 
     # python library
-    extends("python", when="+python")
-    depends_on("py-setuptools", type="build", when="+python")
-    depends_on("py-mpi4py", when="+python +mpi")
-    depends_on("py-pip", when="+python")
-    depends_on("py-wheel", when="+python")
+    with when("+python"):
+        extends("python")
+        depends_on("py-setuptools", type="build")
+        depends_on("py-wheel", type="build")
+        depends_on("py-mpi4py", when="+mpi")
+        depends_on("py-pip")
+
 
     # Testing dependencies
     depends_on("perl", type="test")
@@ -157,7 +159,7 @@ class Esmf(MakefilePackage, PythonExtension):
     @when("+python")
     def patch(self):
         # The pyproject.toml file uses a dynamically generated version from git
-        # Howeer, this results in a version of 0.0.0 and a mismatch with the loaded version
+        # However, this results in a version of 0.0.0 and a mismatch with the loaded version
         # so this hardcodes it to match the library's version
         filter_file(
             """dynamic = \\[ "version" \\]""",
