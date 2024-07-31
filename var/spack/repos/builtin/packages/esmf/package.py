@@ -119,10 +119,11 @@ class Esmf(MakefilePackage, PythonExtension):
     # python library
     with when("+python"):
         extends("python")
+        depends_on("py-pip")
         depends_on("py-setuptools", type="build")
         depends_on("py-wheel", type="build")
         depends_on("py-mpi4py", when="+mpi")
-        depends_on("py-pip")
+        depends_on("py-numpy")
 
     # Testing dependencies
     depends_on("perl", type="test")
@@ -166,17 +167,11 @@ class Esmf(MakefilePackage, PythonExtension):
             os.path.join("src/addon/esmpy/pyproject.toml"),
         )
 
-    def setup_dependent_run_environment(self, env, dependent_spec):
-        env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
-
     def setup_run_environment(self, env):
         env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
 
 
 class PythonPipBuilder(spack.build_systems.python.PythonPipBuilder):
-
-    def setup_build_environment(self, env):
-        env.set("ESMFMKFILE", os.path.join(self.prefix.lib, "esmf.mk"))
 
     @property
     def build_directory(self):
