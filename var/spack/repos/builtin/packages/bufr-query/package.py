@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 import os
+import sys
 from spack.package import *
 
 
@@ -19,18 +20,22 @@ class BufrQuery(CMakePackage):
 
     license("Apache-2.0", checked_by="srherbener")
 
+    version("0.0.2", sha256="b87a128246e79e3c76e3158d89823e2ae38e9ee1a5a81b6f7b423837bdb93a1f")
     version("0.0.1", sha256="001990d864533c101b93d1c351edf50cf8b5ccc575e442d174735f6c332d3d03")
 
     # Required dependencies
-    depends_on("llvm-openmp", type=("build", "run"))
+    depends_on("ecbuild", type=("build"))
+    depends_on("llvm-openmp", when="%apple-clang", type=("build", "run"))
     depends_on("mpi", type=("build", "run"))
     depends_on("eckit@1.24.4:", type=("build", "run"))
     depends_on("eigen@3:", type=("build", "run"))
     depends_on("gsl-lite", type=("build", "run"))
-    depends_on("netcdf-cxx", type=("build", "run"))
+    depends_on("netcdf-c", type=("build", "run"))
+    depends_on("netcdf-cxx4", type=("build", "run"))
+    depends_on("bufr", type=("build", "run"))
 
     # Optional dependencies
-    variant("python", default=False, description="Enable Python interface")
+    variant("python", default=True, description="Enable Python interface")
     depends_on("python@3:", type=("build", "run"), when="+python")
     depends_on("py-pybind11", type=("build"), when="+python")
 
@@ -39,4 +44,10 @@ class BufrQuery(CMakePackage):
         args = [
             self.define_from_variant("BUILD_PYTHON_BINDINGS", "python")
         ]
+
+        # provide path to netcdf-c include files
+        nc_include_dir = Executable("nc-config")("--includedir", output=str).strip()
+        args.append("-DCMAKE_C_FLAGS=-I" + nc_include_dir)
+        args.append("-DCMAKE_CXX_FLAGS=-I" + nc_include_dir)
+
         return args
