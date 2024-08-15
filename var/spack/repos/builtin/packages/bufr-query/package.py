@@ -5,6 +5,7 @@
 
 from spack.package import *
 
+
 class BufrQuery(CMakePackage):
     """The NOAA bufr-query Library can be used to read NCEP and WMO formated BUFR
     files using a simple interface that does not require the user to know the
