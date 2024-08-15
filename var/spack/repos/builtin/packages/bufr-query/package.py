@@ -3,11 +3,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
-import sys
-
 from spack.package import *
-
 
 class BufrQuery(CMakePackage):
     """The NOAA bufr-query Library can be used to read NCEP and WMO formated BUFR
