@@ -5,14 +5,15 @@
 
 import os
 import sys
+
 from spack.package import *
 
 
 class BufrQuery(CMakePackage):
     """The NOAA bufr-query Library can be used to read NCEP and WMO formated BUFR
-       files using a simple interface that does not require the user to know the
-       details of the BUFR format. Detailed documentation for the BUFR Library can
-       be found at https://bufr-query.readthedocs.io/en/latest/index.html"""
+    files using a simple interface that does not require the user to know the
+    details of the BUFR format. Detailed documentation for the BUFR Library can
+    be found at https://bufr-query.readthedocs.io/en/latest/index.html"""
 
     homepage = "https://github.com/NOAA-EMC/bufr-query"
     url = "https://github.com/NOAA-EMC/bufr-query/archive/refs/tags/v0.0.1.tar.gz"
@@ -41,9 +42,7 @@ class BufrQuery(CMakePackage):
 
     # CMake configuration
     def cmake_args(self):
-        args = [
-            self.define_from_variant("BUILD_PYTHON_BINDINGS", "python")
-        ]
+        args = [self.define_from_variant("BUILD_PYTHON_BINDINGS", "python")]
 
         # provide path to netcdf-c include files
         nc_include_dir = Executable("nc-config")("--includedir", output=str).strip()
