@@ -95,7 +95,10 @@ class Esmf(MakefilePackage, PythonExtension):
         default="none",
         description="Named variant for snapshots versions (e.g., 'b09')",
     )
-    variant("python", default=False, description="Build python bindings")
+
+    # The way python is handled here is only avialable >=8.4.0
+    # https://github.com/esmf-org/esmf/releases/tag/v8.4.0
+    variant("python", default=False, description="Build python bindings", when="@8.4.0:")
 
     # Optional dependencies
     depends_on("mpi", when="+mpi")
