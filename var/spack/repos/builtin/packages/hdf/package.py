@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -93,7 +93,7 @@ class Hdf(AutotoolsPackage):
         sha256="49733dd6143be7b30a28d386701df64a72507974274f7e4c0a9e74205510ea72",
         when="@4.2.15:",
     )
-    # https://github.com/NOAA-EMC/spack-stack/issues/317
+    # https://github.com/jcsda/spack-stack/issues/317
     patch("hdfi_h_apple_m1.patch", when="@4.2.15: target=aarch64: platform=darwin")
 
     @property
@@ -132,7 +132,7 @@ class Hdf(AutotoolsPackage):
             libs += self.spec["zlib:transitive"].libs
             if "+szip" in self.spec:
                 libs += self.spec["szip:transitive"].libs
-            if "+external-xdr" in self.spec and self.spec["rpc"].name != "libc":
+            if "+external-xdr" in self.spec and self.spec["rpc"].name == "libtirpc":
                 libs += self.spec["rpc:transitive"].libs
 
         return libs
@@ -146,10 +146,18 @@ class Hdf(AutotoolsPackage):
 
         if name == "cflags":
             # https://forum.hdfgroup.org/t/help-building-hdf4-with-clang-error-implicit-declaration-of-function-test-mgr-szip-is-invalid-in-c99/7680
-            if self.spec.satisfies("@:4.2.15 %apple-clang") or self.spec.satisfies("%clang@16:"):
+            if (
+                self.spec.satisfies("@:4.2.15 %apple-clang")
+                or self.spec.satisfies("%clang@16:")
+                or self.spec.satisfies("%oneapi")
+            ):
                 flags.append("-Wno-error=implicit-function-declaration")
 
-            if self.spec.satisfies("%clang@16:"):
+            if (
+                self.spec.satisfies("%clang@16:")
+                or self.spec.satisfies("%apple-clang@15:")
+                or self.spec.satisfies("%oneapi")
+            ):
                 flags.append("-Wno-error=implicit-int")
 
         return flags, None, None
@@ -174,7 +182,7 @@ class Hdf(AutotoolsPackage):
 
         if "~external-xdr" in self.spec:
             config_args.append("--enable-hdf4-xdr")
-        elif self.spec["rpc"].name != "libc":
+        elif self.spec["rpc"].name == "libtirpc":
             # We should not specify '--disable-hdf4-xdr' due to a bug in the
             # configure script.
             config_args.append("LIBS=%s" % self.spec["rpc"].libs.link_flags)
@@ -197,10 +205,23 @@ class Hdf(AutotoolsPackage):
 
     extra_install_tests = join_path("hdf", "util", "testfiles")
 
+    # Filter h4cc compiler wrapper to substitute the Spack compiler
+    # wrappers with the path of the underlying compilers.
+    filter_compiler_wrappers("h4cc", relative_root="bin")
+
     @property
     def cached_tests_work_dir(self):
         """The working directory for cached test sources."""
         return join_path(self.test_suite.current_test_cache_dir, self.extra_install_tests)
+
+    @run_after("install")
+    def remove_ncgen_ncdump(self):
+        """Remove binaries ncdump and ncgen. These get built and
+        installed even if the netCDF API is turned off (known bug)."""
+        if self.spec.satisfies("~netcdf"):
+            exes_to_remove = ["ncdump", "ncgen"]
+            for exe in exes_to_remove:
+                os.remove(os.path.join(self.prefix.bin, exe))
 
     @run_after("install")
     def setup_build_tests(self):

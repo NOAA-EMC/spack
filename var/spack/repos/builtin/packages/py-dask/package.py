@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -14,10 +14,15 @@ class PyDask(PythonPackage):
 
     maintainers("skosukhin")
 
+    license("BSD-3-Clause")
+
     version("2023.4.1", sha256="9dc72ebb509f58f3fe518c12dd5a488c67123fdd66ccb0b968b34fd11e512153")
     version("2022.10.2", sha256="42cb43f601709575fa46ce09e74bea83fdd464187024f56954e09d9b428ceaab")
     version("2021.6.2", sha256="8588fcd1a42224b7cfcd2ebc8ad616734abb6b1a4517efd52d89c7dd66eb91f8")
     version("2021.4.1", sha256="195e4eeb154222ea7a1c368119b5f321ee4ec9d78531471fe0145a527f744aa8")
+    version("2021.3.1", sha256="1fa7e1809e7c50c5505297b03e6ee161e0695df73b4c4051b5b1c8fd670bf5d7")
+    version("2021.3.0", sha256="566054b493d63c15732f2a640382b21e861571d61639f59341bc7695a9be138e")
+    version("2021.2.0", sha256="e7054b8d685205e95c789900ae87d6174550180cbe38a3cb1142e10c73004c22")
     version("2020.12.0", sha256="43e745afd4b464e6c0113131e430a16dce6ac42460b06e24d799093d098f7ab0")
 
     variant("array", default=True, description="Install requirements for dask.array")

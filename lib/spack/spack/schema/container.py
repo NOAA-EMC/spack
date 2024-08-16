@@ -1,8 +1,9 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 """Schema for the 'container' subsection of Spack environments."""
+from typing import Any, Dict
 
 _stages_from_dockerhub = {
     "type": "object",
@@ -72,7 +73,12 @@ container_schema = {
         "extra_instructions": {
             "type": "object",
             "additionalProperties": False,
-            "properties": {"build": {"type": "string"}, "final": {"type": "string"}},
+            "properties": {
+                "pre_build": {"type": "string"},
+                "build": {"type": "string"},
+                "pre_final": {"type": "string"},
+                "final": {"type": "string"},
+            },
         },
         # Reserved for properties that are specific to each format
         "singularity": {
@@ -89,15 +95,6 @@ container_schema = {
         "docker": {"type": "object", "additionalProperties": False, "default": {}},
         "depfile": {"type": "boolean", "default": False},
     },
-    "deprecatedProperties": {
-        "properties": ["extra_instructions"],
-        "message": (
-            "container:extra_instructions has been deprecated and will be removed "
-            "in Spack v0.21. Set container:template appropriately to use custom Jinja2 "
-            "templates instead."
-        ),
-        "error": False,
-    },
 }
 
-properties = {"container": container_schema}
+properties: Dict[str, Any] = {"container": container_schema}

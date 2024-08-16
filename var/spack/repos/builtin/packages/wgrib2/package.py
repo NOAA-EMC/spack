@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -86,6 +86,8 @@ class Wgrib2(MakefilePackage):
     conflicts("+openmp", when="%apple-clang")
 
     depends_on("wget", type=("build"), when="+netcdf4")
+    # makefile behavior with shell commands/character escapes breaks with gmake@4.3:
+    depends_on("gmake@:4.2")
 
     variant_map = {
         "netcdf3": "USE_NETCDF3",
@@ -150,7 +152,7 @@ class Wgrib2(MakefilePackage):
             makefile.filter(r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value))
 
     def setup_build_environment(self, env):
-        if self.spec.compiler.name in "intel":
+        if self.spec.compiler.name in ["oneapi", "intel"]:
             comp_sys = "intel_linux"
         elif self.spec.compiler.name in ["gcc", "clang", "apple-clang"]:
             comp_sys = "gnu_linux"

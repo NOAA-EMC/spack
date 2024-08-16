@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -16,6 +16,8 @@ class Pango(MesonPackage):
     url = "http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.3.tar.xz"
     list_url = "http://ftp.gnome.org/pub/gnome/sources/pango/"
     list_depth = 1
+
+    license("LGPL-2.1-or-later")
 
     version("1.50.13", sha256="5cdcf6d761d26a3eb9412b6cb069b32bd1d9b07abf116321167d94c2189299fd")
     version("1.50.7", sha256="0477f369a3d4c695df7299a6989dc004756a7f4de27eecac405c6790b7e3ad33")
@@ -126,6 +128,11 @@ class Pango(MesonPackage):
         args.append("GTKDOC_CHECK_PATH={0}".format(true))
         args.append("GTKDOC_MKPDF={0}".format(true))
         args.append("GTKDOC_REBASE={0}".format(true))
+
+        if self.spec.satisfies("^cairo ~shared"):
+            pkgconfig = which("pkg-config")
+            cairo_libs = pkgconfig("cairo", "--static", "--libs", output=str).strip()
+            args.append(f"LIBS={cairo_libs}")
 
         return args
 

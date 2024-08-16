@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -11,6 +11,8 @@ class PyNumexpr(PythonPackage):
 
     homepage = "https://github.com/pydata/numexpr"
     url = "https://github.com/pydata/numexpr/archive/v2.7.0.tar.gz"
+
+    license("MIT")
 
     version("2.8.4", sha256="0e21addd25db5f62d60d97e4380339d9c1fb2de72c88b070c279776ee6455d10")
     version("2.8.3", sha256="389ceefca74eff30ec3fd03fc4c3b7ab3df8f22d1f235117a392ce702ed208c0")
@@ -26,7 +28,7 @@ class PyNumexpr(PythonPackage):
     depends_on("python@3.7:", when="@2.8.3:", type=("build", "run"))
     depends_on("py-setuptools", type="build")
 
-    depends_on("py-numpy@1.13.3:", type=("build", "run"), when="@2.8.3:")
+    depends_on("py-numpy@1.13.3:1.25", type=("build", "run"), when="@2.8.3:")
     # https://github.com/pydata/numexpr/issues/397
     depends_on("py-numpy@1.7:1.22", type=("build", "run"), when="@:2.7")
 

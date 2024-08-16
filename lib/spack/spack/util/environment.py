@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -10,21 +10,16 @@ import json
 import os
 import os.path
 import pickle
-import platform
 import re
-import socket
 import sys
 from functools import wraps
 from typing import Any, Callable, Dict, List, MutableMapping, Optional, Tuple, Union
 
+from llnl.path import path_to_os_path, system_path_filter
 from llnl.util import tty
 from llnl.util.lang import dedupe
 
-import spack.platforms
-import spack.spec
-
 from .executable import Executable, which
-from .path import path_to_os_path, system_path_filter
 
 if sys.platform == "win32":
     SYSTEM_PATHS = [
@@ -41,6 +36,8 @@ else:
 
 SYSTEM_DIRS = [os.path.join(p, s) for s in SUFFIXES for p in SYSTEM_PATHS] + SYSTEM_PATHS
 
+#: used in the compiler wrapper's `/usr/lib|/usr/lib64|...)` case entry
+SYSTEM_DIR_CASE_ENTRY = "|".join(sorted(f'"{d}{suff}"' for d in SYSTEM_DIRS for suff in ("", "/")))
 
 _SHELL_SET_STRINGS = {
     "sh": "export {0}={1};\n",
@@ -222,43 +219,6 @@ def pickle_environment(path: Path, environment: Optional[Dict[str, str]] = None)
     """Pickle an environment dictionary to a file."""
     with open(path, "wb") as pickle_file:
         pickle.dump(dict(environment if environment else os.environ), pickle_file, protocol=2)
-
-
-def get_host_environment_metadata() -> Dict[str, str]:
-    """Get the host environment, reduce to a subset that we can store in
-    the install directory, and add the spack version.
-    """
-    import spack.main
-
-    environ = get_host_environment()
-    return {
-        "host_os": environ["os"],
-        "platform": environ["platform"],
-        "host_target": environ["target"],
-        "hostname": environ["hostname"],
-        "spack_version": spack.main.get_version(),
-        "kernel_version": platform.version(),
-    }
-
-
-def get_host_environment() -> Dict[str, Any]:
-    """Return a dictionary (lookup) with host information (not including the
-    os.environ).
-    """
-    host_platform = spack.platforms.host()
-    host_target = host_platform.target("default_target")
-    host_os = host_platform.operating_system("default_os")
-    arch_fmt = "platform={0} os={1} target={2}"
-    arch_spec = spack.spec.Spec(arch_fmt.format(host_platform, host_os, host_target))
-    return {
-        "target": str(host_target),
-        "os": str(host_os),
-        "platform": str(host_platform),
-        "arch": arch_spec,
-        "architecture": arch_spec,
-        "arch_str": str(arch_spec),
-        "hostname": socket.gethostname(),
-    }
 
 
 @contextlib.contextmanager
@@ -638,6 +598,14 @@ class EnvironmentModifications:
             modifications[item.name].append(item)
         return modifications
 
+    def drop(self, *name) -> bool:
+        """Drop all modifications to the variable with the given name."""
+        old_mods = self.env_modifications
+        new_mods = [x for x in self.env_modifications if x.name not in name]
+        self.env_modifications = new_mods
+
+        return len(old_mods) != len(new_mods)
+
     def is_unset(self, variable_name: str) -> bool:
         """Returns True if the last modification to a variable is to unset it, False otherwise."""
         modifications = self.group_by_name()
@@ -676,8 +644,8 @@ class EnvironmentModifications:
             elif isinstance(envmod, AppendFlagsEnv):
                 rev.remove_flags(envmod.name, envmod.value)
             else:
-                tty.warn(
-                    f"Skipping reversal of unreversable operation {type(envmod)} {envmod.name}"
+                tty.debug(
+                    f"Skipping reversal of irreversible operation {type(envmod)} {envmod.name}"
                 )
 
         return rev

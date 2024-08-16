@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -25,11 +25,14 @@ class Libelf(AutotoolsPackage):
         "https://ftp.osuosl.org/pub/blfs/conglomeration/libelf/libelf-0.8.13.tar.gz",
     ]
 
+    license("LGPL-2.0-only")
+
     version("0.8.13", sha256="591a9b4ec81c1f2042a97aa60564e0cb79d041c52faa7416acb38bc95bd2c76d")
 
     provides("elf@0")
 
-    # configure: error: neither int nor long is 32-bit
+    # configure: error: neither int nor long is 32-bit on aarch64
+    # and on x86_64 in Rosetta2 emulator mode
     depends_on("automake", when="platform=darwin", type="build")
     depends_on("autoconf", when="platform=darwin", type="build")
     depends_on("libtool", when="platform=darwin", type="build")

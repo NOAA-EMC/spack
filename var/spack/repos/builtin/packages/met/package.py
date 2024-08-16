@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -14,12 +14,14 @@ class Met(AutotoolsPackage):
     configurable methods to compute statistics and diagnostics"""
 
     homepage = "https://dtcenter.org/community-code/model-evaluation-tools-met"
-    url = "https://github.com/dtcenter/MET/archive/refs/tags/v11.0.1.tar.gz"
     git = "https://github.com/dtcenter/MET"
+    url = "https://github.com/dtcenter/MET/archive/refs/tags/v11.0.1.tar.gz"
 
-    maintainers("AlexanderRichert-NOAA")
+    maintainers("AlexanderRichert-NOAA", "climbfuji")
 
     version("develop", branch="develop")
+    version("11.1.1", sha256="d02f9281d46bc45c931ca233a51ce20ba2158c0dd26acac2cb76c5a68788022a")
+    version("11.1.0", sha256="e2e371ae1f49185ff8bf08201b1a3e90864a467aa3369b04132d231213c3c9e5")
     version("11.0.2", sha256="f720d15e1d6c235c9a41fd97dbeb0eb1082fb8ae99e1bcdcb5e51be9b50bdfbf")
     version("11.0.1", sha256="48d471ad4634f1b969d9358c51925ce36bf0a1cec5312a6755203a4794b81646")
     version("11.0.0", sha256="648ebb54d07ca099680f4fc23b7ef5095c1a8ac5537c0a5d0e8587bf15991cff")
@@ -51,7 +53,7 @@ class Met(AutotoolsPackage):
     depends_on("cairo", when="+graphics")
     depends_on("freetype", when="+graphics")
 
-    depends_on("python@3.6.3:", when="+python", type=("build", "run"))
+    depends_on("python@3.6.3:", when="+python")
     depends_on("py-netcdf4", when="+python", type=("build", "run"))
     depends_on("py-numpy", when="+python", type=("build", "run"))
     depends_on("py-xarray", when="+python", type=("build", "run"))
@@ -60,10 +62,8 @@ class Met(AutotoolsPackage):
     patch("openmp_shape_patch.patch", when="@10.1.0")
 
     # https://github.com/JCSDA/spack-stack/issues/615
-    # TODO(srherbener) Apple clang 14.x is getting pickier! When these updates are
-    # merged into the MET code base, the following two patches can be removed.
-    patch("apple-clang-string-cast-operator.patch", when="@10.1.1: %apple-clang@14:")
-    patch("apple-clang-no-register.patch", when="@10.1.1: %apple-clang@14:")
+    patch("apple-clang-string-cast-operator.patch", when="@10.1.1:11.0 %apple-clang@14:")
+    patch("apple-clang-no-register.patch", when="@10.1.1:11.0 %apple-clang@14:")
 
     def url_for_version(self, version):
         if version < Version("11"):
@@ -105,7 +105,7 @@ class Met(AutotoolsPackage):
             ldflags.append(nc_config("--libs", "--static", output=str).strip())
             libs.append(nc_config("--libs", "--static", output=str).strip())
 
-        zlib = spec["zlib"]
+        zlib = spec["zlib-api"]
         cppflags.append("-D__64BIT__")
         ldflags.append("-L" + zlib.prefix.lib)
         libs.append("-lz")
@@ -120,13 +120,18 @@ class Met(AutotoolsPackage):
 
         if "+grib2" in spec:
             g2c = spec["g2c"]
-            env.set("MET_GRIB2CLIB", g2c.libs.directories[0])
+            shared_g2c = True if "+shared" in g2c else False
+            g2c_libdir = find_libraries(
+                "libg2c", root=g2c.prefix, shared=shared_g2c, recursive=True
+            ).directories[0]
+            env.set("MET_GRIB2CLIB", g2c_libdir)
             env.set("MET_GRIB2CINC", g2c.prefix.include)
             env.set("GRIB2CLIB_NAME", "-lg2c")
 
         if "+python" in spec:
             python = spec["python"]
             env.set("MET_PYTHON", python.command.path)
+            env.set("MET_PYTHON_BIN_EXE", python.command.path)
             env.set("MET_PYTHON_CC", "-I" + python.headers.directories[0])
             py_ld = [python.libs.ld_flags]
             if spec["python"].satisfies("~shared"):
@@ -141,6 +146,11 @@ class Met(AutotoolsPackage):
             hdfeos = spec["hdf-eos2"]
             env.set("MET_HDF5", hdf.prefix)
             env.set("MET_HDFEOS", hdfeos.prefix)
+
+            if "+szip" in hdf:
+                libs.append(" ".join(hdf["szip"].libs))
+            if "+external-xdr" in hdf:
+                libs.append(" ".join(hdf["rpc"].libs))
 
         if "+graphics" in spec:
             cairo = spec["cairo"]

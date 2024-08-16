@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -16,6 +16,8 @@ class Pixman(AutotoolsPackage):
     homepage = "http://www.pixman.org"
     url = "https://cairographics.org/releases/pixman-0.32.6.tar.gz"
 
+    license("MIT")
+
     version("0.42.2", sha256="ea1480efada2fd948bc75366f7c349e1c96d3297d09a3fe62626e38e234a625e")
     version("0.42.0", sha256="07f74c8d95e4a43eb2b08578b37f40b7937e6c5b48597b3a0bb2c13a53f46c13")
     version("0.40.0", sha256="6d200dec3740d9ec4ec8d1180e25779c00bc749f94278c8b9021f5534db223fc")
@@ -28,6 +30,9 @@ class Pixman(AutotoolsPackage):
     depends_on("flex", type="build")
     depends_on("bison@3:", type="build")
     depends_on("libpng")
+
+    variant("shared", default=True, description="Build shared library")
+    variant("pic", default=False, description="Enable position-independent code")
 
     # As discussed here:
     # https://bugs.freedesktop.org/show_bug.cgi?id=104886
@@ -58,7 +63,9 @@ class Pixman(AutotoolsPackage):
 
     @property
     def libs(self):
-        return find_libraries("libpixman-1", self.prefix, shared=True, recursive=True)
+        return find_libraries(
+            "libpixman-1", self.prefix, shared=self.spec.satisfies("+shared"), recursive=True
+        )
 
     def configure_args(self):
         args = ["--enable-libpng", "--disable-gtk"]
@@ -71,5 +78,18 @@ class Pixman(AutotoolsPackage):
             #  https://gitlab.freedesktop.org/pixman/pixman/-/issues/69
             if self.spec.target.family == "aarch64":
                 args.append("--disable-arm-a64-neon")
+
+        args.extend(self.enable_or_disable("shared"))
+        args.extend(self.with_or_without("pic"))
+
+        png = self.spec["libpng"]
+        if png.satisfies("libs=static") and not png.satisfies("libs=shared"):
+            args.append(
+                "LIBS=%s" % which("libpng-config")("--static", "--ldflags", output=str).strip()
+            )
+
+        # The Fujitsu compiler does not support assembler macros.
+        if self.spec.satisfies("%fj"):
+            args.append("--disable-arm-a64-neon")
 
         return args

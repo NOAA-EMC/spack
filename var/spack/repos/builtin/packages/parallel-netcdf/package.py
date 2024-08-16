@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -110,7 +110,11 @@ class ParallelNetcdf(AutotoolsPackage):
             autoreconf("-iv")
 
     def configure_args(self):
-        args = ["--with-mpi=%s" % self.spec["mpi"].prefix, "SEQ_CC=%s" % spack_cc]
+        if self.spec["mpi"].satisfies("intel-oneapi-mpi"):
+            prefix = os.path.join(self.spec["mpi"].prefix, "mpi", str(self.spec["mpi"].version))
+        else:
+            prefix = self.spec["mpi"].prefix
+        args = ["--with-mpi=%s" % prefix, "SEQ_CC=%s" % spack_cc]
 
         args += self.enable_or_disable("cxx")
         args += self.enable_or_disable("fortran")

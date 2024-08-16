@@ -14,9 +14,14 @@ RUN {% if os_package_update %}{{ os_packages_build.update }} \
  && {{ os_packages_build.clean }}
 {% endif %}
 
+{% if extra_instructions.pre_build %}
+{{ extra_instructions.pre_build }}
+{% endif %}
+
 # What we want to install and how we want to install it
 # is specified in a manifest file (spack.yaml)
-RUN mkdir {{ paths.environment }} \
+RUN mkdir -p {{ paths.environment }} && \
+set -o noclobber \
 {{ manifest }} > {{ paths.environment }}/spack.yaml
 
 # Install the software, remove unnecessary deps
@@ -64,6 +69,10 @@ RUN { \
 && ln -s {{ paths.view }} {{ paths.former_view }}
 
 {% block final_stage %}
+
+{% if extra_instructions.pre_final %}
+{{ extra_instructions.pre_final }}
+{% endif %}
 
 {% if os_packages_final %}
 RUN {% if os_package_update %}{{ os_packages_final.update }} \

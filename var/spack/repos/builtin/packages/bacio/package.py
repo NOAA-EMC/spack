@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -7,7 +7,7 @@ from spack.package import *
 
 
 class Bacio(CMakePackage):
-    """The bacio ibrary performs binary I/O for the NCEP models, processing
+    """The bacio library performs binary I/O for the NCEP models, processing
     unformatted byte-addressable data records, and transforming the little
     endian files and big endian files."""
 
@@ -15,7 +15,7 @@ class Bacio(CMakePackage):
     url = "https://github.com/NOAA-EMC/NCEPLIBS-bacio/archive/refs/tags/v2.4.1.tar.gz"
     git = "https://github.com/NOAA-EMC/NCEPLIBS-bacio"
 
-    maintainers("t-brown", "edwardhartnett", "AlexanderRichert-NOAA", "Hang-Lei-NOAA")
+    maintainers("edwardhartnett", "AlexanderRichert-NOAA", "Hang-Lei-NOAA")
 
     version("develop", branch="develop")
     version("2.6.0", sha256="03fef581e1bd3710fb8d2f2659a6c3e01a0437c1350ba53958d2ff1ffef47bcb")
@@ -43,3 +43,7 @@ class Bacio(CMakePackage):
     def patch(self):
         if self.spec.satisfies("@2.4.1"):
             filter_file(".+", "2.4.1", "VERSION")
+
+    def check(self):
+        with working_dir(self.builder.build_directory):
+            make("test")
