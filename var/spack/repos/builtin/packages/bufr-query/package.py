@@ -39,6 +39,9 @@ class BufrQuery(CMakePackage, PythonExtension):
         extends("python")
         depends_on("py-pybind11")
 
+    # Patches
+    patch("site-packages.patch", when="+python @:0.0.2")
+
     # CMake configuration
     def cmake_args(self):
         args = [self.define_from_variant("BUILD_PYTHON_BINDINGS", "python")]
