@@ -68,10 +68,6 @@ class Esmf(MakefilePackage, PythonExtension):
         deprecated=True,
     )
 
-    # In esmf@8.4.0, esmx was introduced which depends on py-pyyaml
-    depends_on("python", when="@8.4.0:", type="run")
-    depends_on("py-pyyaml", when="@8.4.0:", type="run")
-
     variant("mpi", default=True, description="Build with MPI support")
     variant("external-lapack", default=False, description="Build with external LAPACK library")
     variant("netcdf", default=True, description="Build with NetCDF support")
