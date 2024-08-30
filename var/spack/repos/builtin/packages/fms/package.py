@@ -62,6 +62,17 @@ class Fms(CMakePackage):
         when="@2023.03",
     )
 
+    # macos needs shared libraries for version 2024.02
+    # What the following patch is providing is available in version 2024.03
+    # and newer so it is only needed to 2024.02
+    variant(
+        "sharedlibs",
+        description="Build shared libraries",
+        default=True,
+        when="@2024.02: %apple-clang@15:"
+    )
+    patch("enable-shared-libs.patch", when="@2024.02 %apple-clang@15: +sharedlibs")
+
     variant(
         "precision",
         values=("32", "64"),
@@ -119,6 +130,7 @@ class Fms(CMakePackage):
             self.define_from_variant("GFS_PHYS"),
             self.define_from_variant("OPENMP"),
             self.define_from_variant("ENABLE_QUAD_PRECISION", "quad_precision"),
+            self.define_from_variant("SHARED_LIBS", "sharedlibs"),
             self.define_from_variant("WITH_YAML", "yaml"),
             self.define_from_variant("CONSTANTS"),
             self.define_from_variant("LARGEFILE", "large_file"),
