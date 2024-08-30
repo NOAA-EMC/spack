@@ -69,7 +69,7 @@ class Fms(CMakePackage):
         "sharedlibs",
         description="Build shared libraries",
         default=True,
-        when="@2024.02: %apple-clang@15:"
+        when="@2024.02: %apple-clang@15:",
     )
     patch("enable-shared-libs.patch", when="@2024.02 %apple-clang@15: +sharedlibs")
 
