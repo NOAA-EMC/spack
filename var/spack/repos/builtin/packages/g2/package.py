@@ -59,7 +59,7 @@ class G2(CMakePackage):
 
         return args
 
-# GNU compiler is complaining if not using -fno-range-check argument
+    # GNU compiler is complaining if not using -fno-range-check argument
     def flag_handler(self, name, flags):
         if name == "fflags" and self.compiler.fc.endswith("gfortran"):
             flags.append("-fno-range-check")
