@@ -59,6 +59,12 @@ class G2(CMakePackage):
 
         return args
 
+# GNU compiler is complaining if not using -fno-range-check argument
+    def flag_handler(self, name, flags):
+        if name == "fflags" and self.compiler.fc.endswith("gfortran"):
+            flags.append("-fno-range-check")
+        return (None, None, flags)
+
     def setup_run_environment(self, env):
         precisions = (
             self.spec.variants["precision"].value if self.spec.satisfies("@3.4.6:") else ("4", "d")
