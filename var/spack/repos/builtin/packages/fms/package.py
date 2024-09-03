@@ -62,16 +62,15 @@ class Fms(CMakePackage):
         when="@2023.03",
     )
 
-    # macos needs shared libraries for version 2024.02
+    variant("shared", description="Build shared libraries", when="@2024.02:", default=False)
     # What the following patch is providing is available in version 2024.03
     # and newer so it is only needed to 2024.02
-    variant(
-        "sharedlibs",
-        description="Build shared libraries",
-        default=True,
-        when="@2024.02: %apple-clang@15:",
+    #patch("enable-shared-libs.patch", when="@2024.02") # +shared")
+    patch(
+        "https://github.com/NOAA-GFDL/fms/pull/1559.patch?full_index=1",
+        sha256="2b12a6c35f357c3dddcfa5282576e56ab0e8e6c1ad1dab92a2c85ce3dfb815d4",
+        when="@2024.02",
     )
-    patch("enable-shared-libs.patch", when="@2024.02 %apple-clang@15: +sharedlibs")
 
     variant(
         "precision",
@@ -130,7 +129,7 @@ class Fms(CMakePackage):
             self.define_from_variant("GFS_PHYS"),
             self.define_from_variant("OPENMP"),
             self.define_from_variant("ENABLE_QUAD_PRECISION", "quad_precision"),
-            self.define_from_variant("SHARED_LIBS", "sharedlibs"),
+            self.define_from_variant("SHARED_LIBS", "shared"),
             self.define_from_variant("WITH_YAML", "yaml"),
             self.define_from_variant("CONSTANTS"),
             self.define_from_variant("LARGEFILE", "large_file"),
