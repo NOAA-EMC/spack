@@ -65,7 +65,6 @@ class Fms(CMakePackage):
     variant("shared", description="Build shared libraries", when="@2024.02:", default=False)
     # What the following patch is providing is available in version 2024.03
     # and newer so it is only needed to 2024.02
-    #patch("enable-shared-libs.patch", when="@2024.02") # +shared")
     patch(
         "https://github.com/NOAA-GFDL/fms/pull/1559.patch?full_index=1",
         sha256="2b12a6c35f357c3dddcfa5282576e56ab0e8e6c1ad1dab92a2c85ce3dfb815d4",
