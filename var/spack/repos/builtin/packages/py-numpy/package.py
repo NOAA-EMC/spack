@@ -483,6 +483,8 @@ class PyNumpy(PythonPackage):
         env.set("NPY_LAPACK_ORDER", lapack)
 
     def setup_run_environment(self, env):
+        # https://github.com/numpy/numpy/issues/27840
+        # https://github.com/matplotlib/matplotlib/issues/28762
         archs = ("x86_64_v4:", "cannonlake:", "mic_knl")
         if any([self.spec.satisfies(f"target={arch} %intel") for arch in archs]):
             env.set("NPY_DISABLE_CPU_FEATURES", "AVX512F")
