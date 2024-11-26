@@ -482,6 +482,11 @@ class PyNumpy(PythonPackage):
 
         env.set("NPY_LAPACK_ORDER", lapack)
 
+    def setup_run_environment(self, env):
+        archs = ("x86_64_v4:", "cannonlake:", "mic_knl")
+        if any([self.spec.satisfies(f"target={arch} %intel") for arch in archs]):
+            env.set("NPY_DISABLE_CPU_FEATURES", "AVX512F")
+
     @run_after("install")
     @on_package_attributes(run_tests=True)
     def install_test(self):
