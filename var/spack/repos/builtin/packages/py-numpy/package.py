@@ -284,10 +284,7 @@ class PyNumpy(PythonPackage):
         return blas, lapack
 
     def config_settings(self, spec, prefix):
-        settings = {
-            "builddir": "build",
-            "compile-args": f"-j{make_jobs}",
-        }
+        settings = {"builddir": "build", "compile-args": f"-j{make_jobs}"}
 
         if self.spec.satisfies("@1.26:"):
             settings.update(self.blas_config_settings())
@@ -301,8 +298,10 @@ class PyNumpy(PythonPackage):
             intel_settings = {
                 "setup-args": {
                     "-Dcpu-dispatch": (
-                        settings.get("setup-args", {}).get("-Dcpu-dispatch", "") + " " +
-                        "MAX -AVX512F -AVX512CD -AVX512_KNL -AVX512_KNM -AVX512_SKX -AVX512_CLX -AVX512_CNL -AVX512_ICL -AVX512_SPR"
+                        settings.get("setup-args", {}).get("-Dcpu-dispatch", "")
+                        + " "
+                        + "MAX -AVX512F -AVX512CD -AVX512_KNL -AVX512_KNM -AVX512_SKX "
+                        + "-AVX512_CLX -AVX512_CNL -AVX512_ICL -AVX512_SPR"
                     )
                 }
             }
@@ -321,7 +320,7 @@ class PyNumpy(PythonPackage):
                 # TODO: get this working in CI
                 # "-Dcpu-baseline": "native",
                 # "-Dcpu-dispatch": "none ",
-            },
+            }
         }
 
     def blas_lapack_site_cfg(self) -> None:
