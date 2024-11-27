@@ -283,6 +283,7 @@ class PyNumpy(PythonPackage):
 
         return blas, lapack
 
+    @when("@1.25:")
     def config_settings(self, spec, prefix):
         settings = {"builddir": "build", "compile-args": f"-j{make_jobs}"}
 
