@@ -1,27 +1,5 @@
-From 38bf07f3f6584b02b6df8ae3ab3ccc4be075d9ed Mon Sep 17 00:00:00 2001
-From: Sayed Adel <seiko@imavr.com>
-Date: Mon, 15 Apr 2024 17:35:51 +0200
-Subject: [PATCH] BUG: Workaround for Intel Compiler mask conversion bug
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-  Encountered a specific bug with Intel Compiler when `_cvtmask64_u64` comparisons against `-1`
-  trigger erroneous optimizations. This bug affects equality (`==`) and inequality (`!=`)
-  comparisons crucial for operations like `np.logical_or`.
-  The issue originates from the compiler’s optimizer, which mistakenly duplicates the
-  last vector comparison instruction (targeting `zmm`) onto `ymm`.
-  It then incorrectly performs a bitwise XOR between the masks from the duplicate and original
-  instructions, leading to wrong results.
-  This parch implements a workaround to bypass this behavior.
----
- .../_core/src/common/simd/avx512/conversion.h | 34 ++++++++++++++++---
- 1 file changed, 29 insertions(+), 5 deletions(-)
-
-diff --git a/numpy/_core/src/common/simd/avx512/conversion.h b/numpy/_core/src/common/simd/avx512/conversion.h
-index 474aee446b6a..3b29b6729f20 100644
---- a/numpy/core/src/common/simd/avx512/conversion.h
-+++ b/numpy/core/src/common/simd/avx512/conversion.h
+--- numpy-1.25.0/numpy/core/src/common/simd/avx512/conversion.h.org	2021-02-04 17:38:42.000000000 +0900
++++ numpy-1.25.0/numpy/core/src/common/simd/avx512/conversion.h	2021-02-04 18:29:21.000000000 +0900
 @@ -131,20 +131,44 @@ npyv_pack_b8_b64(npyv_b64 a, npyv_b64 b, npyv_b64 c, npyv_b64 d,
      __mmask16 gh = _mm512_kunpackb((__mmask16)h, (__mmask16)g);
      return npyv_pack_b8_b32(ab, cd, ef, gh);
