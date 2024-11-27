@@ -454,13 +454,6 @@ class PyNumpy(PythonPackage):
     def set_blas_lapack(self):
         self.blas_lapack_site_cfg()
 
-        # AVX512 instructions produce undefined minimums with Intel Classic compilers
-        # https://github.com/numpy/numpy/issues/27840
-        # https://github.com/matplotlib/matplotlib/issues/28762
-        archs = ("x86_64_v4:", "cannonlake:", "mic_knl")
-        if any([self.spec.satisfies(f"target={arch} %intel") for arch in archs]):
-            env.set("NPY_DISABLE_CPU_FEATURES", "AVX512F")
-
     @when("@1.26:")
     def setup_build_environment(self, env):
         if self.spec.satisfies("%msvc"):
