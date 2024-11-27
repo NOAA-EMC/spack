@@ -301,8 +301,8 @@ class PyNumpy(PythonPackage):
             intel_settings = {
                 "setup-args": {
                     "-Dcpu-dispatch": (
-                        settings.get("setup-args", {}).get("-Dcpu-dispatch", "") +
-                        "MAX -AVX512F -AVX512CD -AVX512_KNL -AVX512_KNM -AVX512_SKX -AVX512_CLX -AVX512_CNL -AVX512_ICL"
+                        settings.get("setup-args", {}).get("-Dcpu-dispatch", "") + " " +
+                        "MAX -AVX512F -AVX512CD -AVX512_KNL -AVX512_KNM -AVX512_SKX -AVX512_CLX -AVX512_CNL -AVX512_ICL -AVX512_SPR"
                     )
                 }
             }
