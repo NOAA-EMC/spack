@@ -453,7 +453,6 @@ class PyNumpy(PythonPackage):
     def set_blas_lapack(self):
         self.blas_lapack_site_cfg()
 
-    def check_archs(self, env):
         # AVX512 instructions produce undefined minimums with Intel Classic compilers
         # https://github.com/numpy/numpy/issues/27840
         # https://github.com/matplotlib/matplotlib/issues/28762
@@ -468,8 +467,6 @@ class PyNumpy(PythonPackage):
             # to prevent paths from being split by spaces.
             env.set("CC", f'"{self.compiler.cc}"')
             env.set("CXX", f'"{self.compiler.cxx}"')
-
-        self.check_archs(env)
 
     @when("@:1.25")
     def setup_build_environment(self, env):
@@ -516,8 +513,6 @@ class PyNumpy(PythonPackage):
             lapack = "lapack"
 
         env.set("NPY_LAPACK_ORDER", lapack)
-
-        self.check_archs(env)
 
     @run_after("install")
     @on_package_attributes(run_tests=True)
