@@ -320,7 +320,7 @@ class PyNumpy(PythonPackage):
                 # https://numpy.org/doc/stable/reference/simd/build-options.html
                 # TODO: get this working in CI
                 # "-Dcpu-baseline": "native",
-                # "-Dcpu-dispatch": "none ",
+                # "-Dcpu-dispatch": "none",
             }
         }
 
