@@ -156,6 +156,21 @@ class Eckit(CMakePackage):
             self.define("ENABLE_SANDBOX", False),
         ]
 
+        if self.spec.satisfies("linalg=lapack"):
+            lapack_vendors = {
+                "netlib-lapack": "Generic",
+                "atlas": "ATLAS",
+                "openblas": "OpenBLAS",
+                "amdlibflame": "AOCL",
+                "flexiblas": "FlexiBLAS",
+                "fujitsu-ssl2": "Fujitsu_SSL2",
+                "essl": "IBMESSL",
+                "nvhpc": "NVHPC",
+            }
+            if self.spec["lapack"].name in lapack_vendors.keys():
+                vendor = lapack_vendors[self.spec["lapack"].name]
+                args.append(self.define("BLA_VENDOR", vendor))
+
         # Static build of eckit not working, many places in eckit's build
         # system have SHARED hardcoded (in several CMakeLists.txt files).
         args.append("-DBUILD_SHARED_LIBS=ON")
