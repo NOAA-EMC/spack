@@ -202,6 +202,8 @@ class Hdf5(CMakePackage):
         preferred=True,
     )
 
+    provides("hdf5_virt")
+
     variant("shared", default=True, description="Builds a shared version of the library")
 
     variant("hl", default=False, description="Enable the high-level library")
