@@ -195,6 +195,8 @@ class Python(Package):
         deprecated=True,
     )
 
+    provides("python_virt")
+
     extendable = True
 
     # Variants to avoid cyclical dependencies for concretizer
