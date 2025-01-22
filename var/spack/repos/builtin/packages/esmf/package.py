@@ -65,6 +65,8 @@ class Esmf(MakefilePackage):
         deprecated=True,
     )
 
+    provides("esmf_virt")
+
     variant("mpi", default=True, description="Build with MPI support")
     variant("external-lapack", default=False, description="Build with external LAPACK library")
     variant("netcdf", default=True, description="Build with NetCDF support")
